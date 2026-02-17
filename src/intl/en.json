@@ -1639,9 +1639,6 @@
         "footer": "Once the trial period ends for your Koyeb organization, you can continue with the Pro plan or choose another plan that best fits your needs",
         "cta": "Deploy now"
       },
-      "banner": {
-        "content": "Your Pro trial ends in <strong>{days, plural, =0 {less than 24 hours} =1 {{days} day} other {{days} days}}</strong>. To maintain access to Pro features, <upgrade>upgrade</upgrade> now."
-      },
       "summaryPopup": {
         "currentPlan": "{plan} Plan",
         "badge": "Trial",
@@ -1726,6 +1723,7 @@
       "accountUnderReview": "We need more information to approve your account. Please <link>verify your identity</link> to prevent account suspension.",
       "paymentFailure": "We tried to charge your card, but the payment has failed. Please <stripe>update your payment method</stripe> and pay your past due invoices.",
       "subscriptionHasPendingUpdate": "The provided payment details could not be processed. Please check your payment information in the <stripe>billing portal</stripe> to resolve the issue.",
+      "banner": "Koyeb is joining Mistral AI to Build The Future of AI Infrastructure. Read More →",
       "createService": "Create service",
       "navigation": {
         "preview": "Preview",

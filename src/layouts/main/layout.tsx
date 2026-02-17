@@ -51,12 +51,10 @@ export function Layout({ banner, header, menu, menuCollapsed, main, context, con
 
   return (
     <>
-      {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
-
       <div
         onMouseEnter={() => dispatch({ type: 'sidebar:opened' })}
         onMouseLeave={() => dispatch({ type: 'sidebar:closed' })}
-        className={clsx('fixed z-20 hidden h-screen w-16 overflow-x-visible sm:block', banner && 'pt-8')}
+        className="fixed z-30 hidden h-screen w-16 overflow-x-visible sm:block"
       >
         <aside className={sidebarClass({ state: state.sidebar })}>
           {state.sidebar === 'opened' && menu}
@@ -64,7 +62,9 @@ export function Layout({ banner, header, menu, menuCollapsed, main, context, con
         </aside>
       </div>
 
-      <div className={clsx('sm:pl-16 xl:pl-64', banner && 'pt-8', contextExpanded && 'min-[120rem]:pr-128')}>
+      <div className={clsx('sm:pl-16 xl:pl-64', contextExpanded && 'min-[120rem]:pr-128')}>
+        {banner && <div className="z-20 bg-neutral">{banner}</div>}
+
         <div className="@container/main mx-auto max-w-300">
           <header
             className={clsx(
@@ -72,7 +72,6 @@ export function Layout({ banner, header, menu, menuCollapsed, main, context, con
               'max-sm:bg-neutral max-sm:shadow-sm',
               'max-sm:row max-sm:items-center max-sm:gap-1',
               'max-sm:sticky max-sm:top-0',
-              banner && 'max-sm:top-8',
             )}
           >
             <Button
@@ -136,11 +135,11 @@ function MobileMenu({ state, onOpen, onClose, children }: MobileMenuProps) {
   }
 
   return (
-    <FloatingOverlay
-      lockScroll
-      className={clsx('z-20 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
-    >
-      <FloatingPortal root={document.getElementById('root')}>
+    <FloatingPortal root={document.getElementById('root')}>
+      <FloatingOverlay
+        lockScroll
+        className={clsx('z-30 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
+      >
         <aside
           ref={refs.setFloating}
           style={{ ...floatingStyles, ...styles }}
@@ -149,8 +148,8 @@ function MobileMenu({ state, onOpen, onClose, children }: MobileMenuProps) {
         >
           {children}
         </aside>
-      </FloatingPortal>
-    </FloatingOverlay>
+      </FloatingOverlay>
+    </FloatingPortal>
   );
 }
 
@@ -159,7 +158,7 @@ const sidebarClass = cva('h-full overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[
     state: {
       collapsed: 'w-full',
       opened: 'w-64',
-      mobile: 'z-20 w-64',
+      mobile: 'w-64',
     },
   },
   defaultVariants: {

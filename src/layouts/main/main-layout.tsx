@@ -8,7 +8,7 @@ import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
 import { createValidationGuard } from 'src/application/validation';
 import { DocumentTitle } from 'src/components/document-title';
-import { Link, LinkButton } from 'src/components/link';
+import { ExternalLink, Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
@@ -20,9 +20,7 @@ import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { CommandPaletteProvider } from 'src/modules/command-palette';
-import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
-import { useTrial } from 'src/modules/trial/use-trial';
 import { inArray } from 'src/utils/arrays';
 
 import { OrganizationSwitcher } from '../organization-switcher';
@@ -45,7 +43,6 @@ type LayoutProps = {
 };
 
 export function MainLayout({ children }: LayoutProps) {
-  const trial = useTrial();
   const pageContext = usePageContext();
   const authKit = useAuth();
 
@@ -66,7 +63,7 @@ export function MainLayout({ children }: LayoutProps) {
       {authKit.impersonator && <Impersonation email={authKit.user?.email} />}
 
       <Layout
-        banner={trial && <TrialBanner />}
+        banner={<Banner />}
         header={<AppBreadcrumbs />}
         menu={<Menu />}
         menuCollapsed={<Menu collapsed />}
@@ -75,6 +72,20 @@ export function MainLayout({ children }: LayoutProps) {
         contextExpanded={pageContext.expanded}
       />
     </CommandPaletteProvider>
+  );
+}
+
+function Banner() {
+  return (
+    <div className="bg-green/10 px-4 py-1.5 text-center text-green md:h-full md:whitespace-nowrap">
+      <ExternalLink
+        openInNewTab
+        href="https://koyeb.com/blog/koyeb-is-joining-mistral-ai-to-build-the-future-of-ai-infrastructure"
+        className="hover:underline"
+      >
+        <T id="banner" />
+      </ExternalLink>
+    </div>
   );
 }
 
