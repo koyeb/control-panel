@@ -13,7 +13,6 @@ import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { Tooltip } from 'src/components/tooltip';
 import { IconChevronLeft, IconChevronsLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { App, Deployment, Service } from 'src/model';
@@ -213,60 +212,49 @@ function DeploymentsListActions({
   const hasUpcoming = deployments.filter(isUpcomingDeployment).length > 0;
 
   return (
-    <div className="mb-4 row items-center md:divide-x">
-      <div className="md:pe-2">
-        <IconButton
-          icon={
-            <>
-              <IconChevronLeft className="size-4 md:hidden" />
-              <IconChevronsLeft className={clsx('hidden size-4 md:block', !listExpanded && '-scale-x-100')} />
-            </>
-          }
-          variant="ghost"
-          color="gray"
-          size={1}
-          onClick={() => setListExpanded(!listExpanded)}
-          className={clsx(
-            'relative',
-            !listExpanded && hasUpcoming && 'after:absolute after:top-1 after:right-1 after:ping',
-          )}
-        />
-      </div>
-
-      <Tooltip
-        trigger={(props) => (
-          <div {...props} className="md:px-2">
-            <LinkButton
-              variant="ghost"
-              color="gray"
-              size={1}
-              disabled={selectedDeployment?.id === activeDeploymentId || activeDeploymentId === undefined}
-              to="/services/$serviceId"
-              params={{ serviceId }}
-              search={{ deploymentId: activeDeploymentId }}
-            >
-              <T id="deployments.actions.activeDeployment" />
-            </LinkButton>
-          </div>
-        )}
-        content={
-          service.activeDeploymentId === undefined && <T id="deployments.actions.noActiveDeployment" />
+    <div className="mb-4 row items-center gap-2 md:divide-x">
+      <IconButton
+        icon={
+          <>
+            <IconChevronLeft className="size-4 md:hidden" />
+            <IconChevronsLeft className={clsx('hidden size-4 md:block', !listExpanded && '-scale-x-100')} />
+          </>
         }
+        variant="ghost"
+        color="gray"
+        size={1}
+        onClick={() => setListExpanded(!listExpanded)}
+        className={clsx(
+          'relative',
+          !listExpanded && hasUpcoming && 'after:absolute after:top-1 after:right-1 after:ping',
+        )}
       />
 
-      <div className="md:ps-2">
+      {selectedDeployment?.id !== activeDeploymentId && service.activeDeploymentId !== undefined && (
         <LinkButton
-          variant="ghost"
+          variant="outline"
           color="gray"
           size={1}
-          disabled={selectedDeployment?.id === latestDeploymentId}
+          to="/services/$serviceId"
+          params={{ serviceId }}
+          search={{ deploymentId: activeDeploymentId }}
+        >
+          <T id="deployments.actions.activeDeployment" />
+        </LinkButton>
+      )}
+
+      {selectedDeployment?.id !== latestDeploymentId && (
+        <LinkButton
+          variant="outline"
+          color="gray"
+          size={1}
           to="/services/$serviceId"
           params={{ serviceId }}
           search={{ deploymentId: latestDeploymentId }}
         >
           <T id="deployments.actions.latestDeployment" />
         </LinkButton>
-      </div>
+      )}
     </div>
   );
 }
