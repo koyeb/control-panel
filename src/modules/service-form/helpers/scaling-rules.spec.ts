@@ -46,7 +46,7 @@ describe('useScalingRules', () => {
       hook.onScalingChanged(1, 1);
 
       expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
-      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 3900);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 300);
     });
 
     it('enables the requests autoscaling target for web services', () => {
