@@ -2549,7 +2549,6 @@
           "actions": {
             "toggleDeploymentsList": "Toggle deployments list",
             "activeDeployment": "View active deployment",
-            "noActiveDeployment": "The service does not have an active deployment",
             "latestDeployment": "View latest deployment"
           },
           "active": {
