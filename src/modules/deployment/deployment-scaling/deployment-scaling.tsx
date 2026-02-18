@@ -1,6 +1,3 @@
-import { Button } from '@koyeb/design-system';
-import clsx from 'clsx';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useDeploymentScalingQuery, useService, useServiceScaling } from 'src/api';
@@ -33,60 +30,38 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
     filters: filtersForm.watch(),
   });
 
-  const [initiateManualScaling, setInitiateManualScaling] = useState(false);
   const manualScaling = useServiceScaling(deployment.serviceId);
-  const showManualScaling = Boolean(manualScaling) || initiateManualScaling;
 
   return (
     <div id="scaling" className="m-4 mt-0 divide-y rounded-md border">
-      <div
-        className={clsx(
-          'col flex-wrap justify-between gap-4 px-3 py-4 md:row md:items-center',
-          showManualScaling && 'row items-center',
-        )}
-      >
+      <div className="row flex-wrap items-center justify-between gap-4 px-3 py-4">
         <div className="font-medium">
           <T id="title" />
         </div>
 
-        <div className="row flex-wrap items-center gap-4">
-          <FeatureFlag feature="manual-scaling">
-            <Button
-              color="gray"
-              onClick={() => setInitiateManualScaling(true)}
-              className={clsx({ 'hidden!': !isActiveDeployment || showManualScaling })}
-            >
-              <T id="initiateManualScaling" />
-            </Button>
-          </FeatureFlag>
-
-          <Controller
-            control={filtersForm.control}
-            name="regions"
-            render={({ field }) => (
-              <RegionsSelector
-                label={<T id="filters.regions" />}
-                regions={deployment.definition.regions}
-                value={field.value}
-                onChange={field.onChange}
-                dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
-                className="min-w-48"
-              />
-            )}
-          />
-        </div>
+        <Controller
+          control={filtersForm.control}
+          name="regions"
+          render={({ field }) => (
+            <RegionsSelector
+              label={<T id="filters.regions" />}
+              regions={deployment.definition.regions}
+              value={field.value}
+              onChange={field.onChange}
+              dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
+              className="min-w-48"
+            />
+          )}
+        />
       </div>
 
       <div className="col gap-3 p-3">
         <FeatureFlag feature="manual-scaling">
-          {isActiveDeployment && showManualScaling && (
+          {isActiveDeployment && (
             <ManualScaling
               deployment={deployment}
               defaultValue={manualScaling?.instances}
-              onChanged={() => {
-                setInitiateManualScaling(false);
-                void query.refetch();
-              }}
+              onChanged={() => void query.refetch()}
             />
           )}
         </FeatureFlag>
