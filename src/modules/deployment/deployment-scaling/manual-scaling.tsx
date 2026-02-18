@@ -111,7 +111,12 @@ export function ManualScaling({ deployment, defaultValue, onChanged }: ManualSca
 
       {showButtons && (
         <div className="row items-center gap-2">
-          <Button type="reset" color="gray" onClick={onCancel} className="flex-1">
+          <Button
+            type="reset"
+            color="gray"
+            onClick={onCancel}
+            className={clsx('flex-1', { invisible: !form.formState.isDirty })}
+          >
             <Translate id="common.cancel" />
           </Button>
           <Button
