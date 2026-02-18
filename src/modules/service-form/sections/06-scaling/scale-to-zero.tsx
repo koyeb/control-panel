@@ -131,7 +131,7 @@ function IdlePeriod({ disabled }: { disabled: boolean }) {
 function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) {
   const organization = useOrganization();
 
-  const { watch, trigger } = useFormContext<ServiceForm>();
+  const { watch, trigger, setValue } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
   const error = errors.scaling?.scaleToZero?.lightToDeepPeriod?.message;
 
@@ -144,7 +144,13 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
             name="scaling.scaleToZero.lightSleepEnabled"
             label={<T id="lightSleep.label" />}
             disabled={disabled}
-            onChangeEffect={() => void trigger('scaling.scaleToZero.lightToDeepPeriod')}
+            onChangeEffect={(event) => {
+              if (event.target.checked && organization?.plan === 'starter') {
+                setValue('scaling.scaleToZero.idlePeriod', 5 * 60);
+              }
+
+              void trigger('scaling.scaleToZero.lightToDeepPeriod');
+            }}
           />
 
           {isGpu && (
