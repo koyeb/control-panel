@@ -46,7 +46,8 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
     async onSuccess() {
       await queryClient.cancelQueries();
       await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
-      await Promise.all([queryClient.invalidateQueries(), invalidateWidgets()]);
+      await queryClient.invalidateQueries();
+      await invalidateWidgets();
       await onSuccess?.();
     },
   });
