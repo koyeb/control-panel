@@ -44,7 +44,7 @@ export function ScalingConfiguration() {
       />
 
       <ScaleToZeroConfiguration
-        disabled={isFreeInstance || min > 0}
+        isFreeInstance={isFreeInstance}
         isEcoInstance={isEcoInstance}
         hasVolumes={hasVolumes}
         allowLightSleepOnNvidiaGpu={allowLightSleepOnNvidiaGpu}

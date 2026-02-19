@@ -1388,6 +1388,10 @@
             "unit": "s"
           },
           "disabled": {
+            "freeInstance": {
+              "text": "With a Free instance, scale-to-zero is enforced and the idle period is fixed",
+              "cta": "Change instance"
+            },
             "ecoInstance": {
               "text": "Scale to zero requires a Standard or GPU instance type",
               "cta": "Change instance"

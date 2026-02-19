@@ -15,14 +15,14 @@ import { ScalingConfigValue } from './components/scaling-config-value';
 const T = createTranslate('modules.serviceForm.scaling.scaleToZero');
 
 type ScaleToZeroConfigurationProps = {
-  disabled: boolean;
+  isFreeInstance: boolean;
   isEcoInstance: boolean;
   hasVolumes: boolean;
   allowLightSleepOnNvidiaGpu?: boolean;
 };
 
 export function ScaleToZeroConfiguration({
-  disabled,
+  isFreeInstance,
   isEcoInstance,
   hasVolumes,
   allowLightSleepOnNvidiaGpu,
@@ -31,9 +31,10 @@ export function ScaleToZeroConfiguration({
   const instance = useCatalogInstance(watch('instance'));
   const isGpu = instance?.category === 'gpu';
   const isNvidiaGpu = isGpu && instance.id.includes('nvidia');
+  const min = watch('scaling.min');
 
   const lightSleepEnabled = () => {
-    if (disabled) {
+    if (isFreeInstance || min > 0) {
       return false;
     }
 
@@ -54,18 +55,42 @@ export function ScaleToZeroConfiguration({
   return (
     <ScalingConfigSection
       title={<T id="title" />}
-      footer={<ScaleToZeroFooter isEcoInstance={isEcoInstance} hasVolumes={hasVolumes} />}
+      footer={
+        <ScaleToZeroFooter
+          isFreeInstance={isFreeInstance}
+          isEcoInstance={isEcoInstance}
+          hasVolumes={hasVolumes}
+        />
+      }
       hasError={hasError}
     >
-      <IdlePeriod disabled={disabled} />
+      <IdlePeriod disabled={min > 0} readOnly={isFreeInstance} />
       <LightSleep disabled={!lightSleepEnabled()} isGpu={isGpu} />
     </ScalingConfigSection>
   );
 }
 
-function ScaleToZeroFooter({ isEcoInstance, hasVolumes }: { isEcoInstance: boolean; hasVolumes: boolean }) {
+type ScaleToZeroFooterProps = {
+  isFreeInstance: boolean;
+  isEcoInstance: boolean;
+  hasVolumes: boolean;
+};
+
+function ScaleToZeroFooter({ isFreeInstance, isEcoInstance, hasVolumes }: ScaleToZeroFooterProps) {
   const organization = useOrganization();
   const { watch, setValue } = useFormContext<ServiceForm>();
+
+  if (isFreeInstance) {
+    const onClick = () => setValue('meta.expandedSection', 'instance');
+
+    const cta = (
+      <Button variant="outline" color="gray" size={1} onClick={onClick} className="bg-neutral">
+        <T id="disabled.freeInstance.cta" />
+      </Button>
+    );
+
+    return <ScalingConfigSectionFooter text={<T id="disabled.freeInstance.text" />} cta={cta} />;
+  }
 
   if (isEcoInstance) {
     const onClick = () => setValue('meta.expandedSection', 'instance');
@@ -100,7 +125,7 @@ function ScaleToZeroFooter({ isEcoInstance, hasVolumes }: { isEcoInstance: boole
   return null;
 }
 
-function IdlePeriod({ disabled }: { disabled: boolean }) {
+function IdlePeriod({ disabled, readOnly }: { disabled: boolean; readOnly: boolean }) {
   const organization = useOrganization();
 
   const { watch, trigger } = useFormContext<ServiceForm>();
@@ -119,7 +144,9 @@ function IdlePeriod({ disabled }: { disabled: boolean }) {
           name="scaling.scaleToZero.idlePeriod"
           type="number"
           disabled={disabled}
-          readOnly={organization?.plan === 'starter' && watch('scaling.scaleToZero.lightSleepEnabled')}
+          readOnly={
+            readOnly || (organization?.plan === 'starter' && watch('scaling.scaleToZero.lightSleepEnabled'))
+          }
           error={false}
           end={
             <InputEnd>
