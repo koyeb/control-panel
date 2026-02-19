@@ -45,7 +45,7 @@ export function SetUserName() {
   });
 
   return (
-    <OnboardingLayout sentence={<T id="sidebar" />}>
+    <OnboardingLayout sentence={<T id="sidebar" />} className="max-w-xl">
       <section className="col flex-1 justify-center gap-8">
         <div>
           <div className="mb-1 row items-center gap-2">
