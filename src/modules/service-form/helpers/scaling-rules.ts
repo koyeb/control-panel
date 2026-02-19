@@ -27,7 +27,7 @@ export function useScalingRules() {
     const { serviceType, scaling } = getValues();
 
     if (min > 0) {
-      setValue('scaling.scaleToZero', defaultServiceForm().scaling.scaleToZero, { shouldValidate: true });
+      setValue('scaling.scaleToZero', defaultScaling.scaleToZero, { shouldValidate: true });
     }
 
     if (min !== max && max > 1) {
@@ -56,6 +56,16 @@ export function useScalingRules() {
 
     if (selected?.id === 'free') {
       set({ min: 0, max: 1 });
+
+      setValue(
+        'scaling.scaleToZero',
+        { idlePeriod: 65 * 60, lightToDeepPeriod: 60 * 60, lightSleepEnabled: false },
+        { shouldValidate: true },
+      );
+    }
+
+    if (previous?.id === 'free') {
+      setValue('scaling.scaleToZero', defaultScaling.scaleToZero, { shouldValidate: true });
     }
 
     if (selected?.category === 'eco' && selected.id !== 'free') {

@@ -109,6 +109,30 @@ describe('useScalingRules', () => {
       expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
     });
 
+    it('resets scale to zero configuration when the free instance is selected', () => {
+      form.setValue('scaling.scaleToZero.idlePeriod', 1);
+      form.setValue('scaling.scaleToZero.lightToDeepPeriod', 2);
+      form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
+
+      hook.onInstanceChanged(standard, free);
+
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 3900);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightToDeepPeriod', 3600);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
+    });
+
+    it('resets scale to zero configuration when the free instance was previously selected', () => {
+      form.setValue('scaling.scaleToZero.idlePeriod', 1);
+      form.setValue('scaling.scaleToZero.lightToDeepPeriod', 2);
+      form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
+
+      hook.onInstanceChanged(free, standard);
+
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 300);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightToDeepPeriod', 3600);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
+    });
+
     it('sets min = max when the a non free eco instance is selected', () => {
       form.setValue('scaling.min', 1);
       form.setValue('scaling.max', 2);

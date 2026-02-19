@@ -144,7 +144,6 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
             name="scaling.scaleToZero.lightSleepEnabled"
             label={<T id="lightSleep.label" />}
             disabled={disabled}
-            onChangeEffect={() => void trigger('scaling.scaleToZero.lightToDeepPeriod')}
           />
 
           {isGpu && (

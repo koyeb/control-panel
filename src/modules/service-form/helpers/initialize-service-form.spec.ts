@@ -113,9 +113,15 @@ describe('initializeServiceForm', () => {
       ...serviceForm,
       instance: 'free',
       scaling: {
-        ...serviceForm.scaling,
         min: 0,
-      },
+        max: 1,
+        scaleToZero: {
+          idlePeriod: 65 * 60,
+          lightToDeepPeriod: 60 * 60,
+          lightSleepEnabled: false,
+        },
+        targets: expect.any(Object),
+      } satisfies ServiceForm['scaling'],
     });
   });
 

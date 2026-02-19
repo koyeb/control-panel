@@ -397,6 +397,7 @@ function ensureServiceCreationBusinessRules(
 
   if (instance?.id === 'free') {
     values.scaling.min = 0;
+    values.scaling.scaleToZero.idlePeriod = 65 * 60;
   }
 
   if (serviceType === 'web' && instance?.category === 'gpu' && parsedParams.scaling?.min === undefined) {
