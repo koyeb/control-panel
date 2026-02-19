@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
+import clsx from 'clsx';
 
 import { apiQuery, useUser } from 'src/api';
 import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
@@ -17,11 +18,12 @@ import { SecondarySettings } from '../secondary/settings';
 const T = createTranslate('layouts.onboarding');
 
 type OnboardingLayoutProps = {
-  sentence: React.ReactNode;
+  sentence?: React.ReactNode;
+  className?: string;
   children: React.ReactNode;
 };
 
-export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) {
+export function OnboardingLayout({ sentence, className, children }: OnboardingLayoutProps) {
   const params = useSearchParams();
 
   useForceThemeMode('light');
@@ -41,13 +43,13 @@ export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) 
       </div>
 
       <div className="col flex-1 justify-center px-4 py-18 lg:ml-96 lg:py-4">
-        <main className="mx-auto w-full max-w-xl">{children}</main>
+        <main className={clsx('mx-auto w-full', className)}>{children}</main>
       </div>
     </div>
   );
 }
 
-function Slides({ sentence }: { sentence: React.ReactNode }) {
+function Slides({ sentence }: { sentence?: React.ReactNode }) {
   const { data: hasMultipleOrganizations } = useQuery({
     ...apiQuery('get /v1/account/organizations', { query: {} }),
     select: ({ organizations }) => organizations!.length > 1,
@@ -60,7 +62,7 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
       {hasMultipleOrganizations && <OrganizationSwitcher dark />}
 
       <div className="col flex-1 justify-center gap-6">
-        <div className="text-base/relaxed text-dim">{sentence}</div>
+        {sentence && <div className="text-base/relaxed text-dim">{sentence}</div>}
       </div>
 
       <UserMenu />
