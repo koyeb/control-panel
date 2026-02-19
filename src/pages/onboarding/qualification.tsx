@@ -125,7 +125,7 @@ export function Qualification() {
   };
 
   return (
-    <OnboardingLayout sentence={<T id={`${step}.sidebar`} />}>
+    <OnboardingLayout sentence={<T id={`${step}.sidebar`} />} className="max-w-xl">
       <section className="mb-8 row flex-wrap gap-6 lg:justify-between">
         <LogoKoyeb className="me-auto h-8 lg:hidden" />
 
