@@ -41,7 +41,7 @@ export function JoinOrganization() {
   }
 
   return (
-    <OnboardingLayout sentence={<T id="sidebar" />}>
+    <OnboardingLayout sentence={<T id="sidebar" />} className="max-w-xl">
       <QueryGuard query={invitationsQuery}>
         {(invitations) => (
           <>
