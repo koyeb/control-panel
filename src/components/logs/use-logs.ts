@@ -154,8 +154,8 @@ function useClearHistoryCache({ deploymentId }: Omit<UseLogsParams, 'tail' | 'an
     const predicate = ({ queryKey }: { queryKey: QueryKey }) => {
       return (
         isApiQueryKey(queryKey, 'get /v1/streams/logs/query') &&
-        queryKey[1]?.query?.deployment_id === deploymentId &&
-        queryKey[1]?.query?.type === 'build'
+        queryKey[1].query?.deployment_id === deploymentId &&
+        queryKey[1].query?.type === 'build'
       );
     };
 

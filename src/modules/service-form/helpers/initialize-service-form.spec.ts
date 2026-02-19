@@ -120,6 +120,7 @@ describe('initializeServiceForm', () => {
           lightToDeepPeriod: 60 * 60,
           lightSleepEnabled: false,
         },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         targets: expect.any(Object),
       } satisfies ServiceForm['scaling'],
     });
