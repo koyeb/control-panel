@@ -86,6 +86,16 @@ describe('useScalingRules', () => {
     });
   });
 
+  describe('onLightSleepChanged', () => {
+    it('enables resets idle period when light sleep is enabled', () => {
+      form.setValue('scaling.scaleToZero.idlePeriod', 1);
+
+      hook.onLightSleepChanged(true);
+
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 300);
+    });
+  });
+
   describe('onScalingTargetToggled', () => {
     it("resets the target's value when disabled", () => {
       form.setValue('scaling.targets.cpu', { enabled: true, value: 200 });

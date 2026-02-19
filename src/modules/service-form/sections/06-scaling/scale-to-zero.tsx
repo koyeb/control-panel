@@ -6,6 +6,7 @@ import { ControlledCheckbox, ControlledInput } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
+import { useScalingRules } from '../../helpers/scaling-rules';
 import { ServiceForm } from '../../service-form.types';
 
 import { ScalingConfigSection, ScalingConfigSectionFooter } from './components/scaling-config-section';
@@ -82,7 +83,11 @@ function ScaleToZeroFooter({ isEcoInstance, hasVolumes }: { isEcoInstance: boole
     return <ScalingConfigSectionFooter text={<T id="disabled.hasVolumes.text" />} />;
   }
 
-  if (watch('scaling.min') === 0 && organization?.plan === 'starter') {
+  if (
+    organization?.plan === 'starter' &&
+    watch('scaling.min') === 0 &&
+    watch('scaling.scaleToZero.lightSleepEnabled')
+  ) {
     const cta = (
       <LinkButton to="/settings/plans" variant="outline" color="gray" size={1} className="bg-neutral">
         <T id="disabled.starterPlan.cta" />
@@ -98,7 +103,7 @@ function ScaleToZeroFooter({ isEcoInstance, hasVolumes }: { isEcoInstance: boole
 function IdlePeriod({ disabled }: { disabled: boolean }) {
   const organization = useOrganization();
 
-  const { trigger } = useFormContext<ServiceForm>();
+  const { watch, trigger } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
   const error = errors.scaling?.scaleToZero?.idlePeriod?.message;
 
@@ -113,7 +118,8 @@ function IdlePeriod({ disabled }: { disabled: boolean }) {
         <ControlledInput<ServiceForm, 'scaling.scaleToZero.idlePeriod'>
           name="scaling.scaleToZero.idlePeriod"
           type="number"
-          disabled={disabled || organization?.plan === 'starter'}
+          disabled={disabled}
+          readOnly={organization?.plan === 'starter' && watch('scaling.scaleToZero.lightSleepEnabled')}
           error={false}
           end={
             <InputEnd>
@@ -129,11 +135,11 @@ function IdlePeriod({ disabled }: { disabled: boolean }) {
 }
 
 function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) {
-  const organization = useOrganization();
-
   const { watch, trigger } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
   const error = errors.scaling?.scaleToZero?.lightToDeepPeriod?.message;
+
+  const { onLightSleepChanged } = useScalingRules();
 
   return (
     <ScalingConfigValue
@@ -144,6 +150,7 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
             name="scaling.scaleToZero.lightSleepEnabled"
             label={<T id="lightSleep.label" />}
             disabled={disabled}
+            onChangeEffect={(event) => onLightSleepChanged(event.target.checked)}
           />
 
           {isGpu && (
@@ -161,7 +168,7 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
         <ControlledInput<ServiceForm, 'scaling.scaleToZero.lightToDeepPeriod'>
           name="scaling.scaleToZero.lightToDeepPeriod"
           type="number"
-          disabled={!watch('scaling.scaleToZero.lightSleepEnabled') || organization?.plan === 'starter'}
+          disabled={!watch('scaling.scaleToZero.lightSleepEnabled')}
           error={false}
           end={
             <InputEnd>

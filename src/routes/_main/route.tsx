@@ -101,13 +101,13 @@ async function switchOrganization(authKit: AuthKit, externalId: string) {
 async function preloadDatacentersLatencies(queryClient: QueryClient) {
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
-  if (getConfig('environment') !== 'production') {
-    return;
-  }
-
   const datacenters = await ensureApiQueryData('get /v1/catalog/datacenters', {}).then((result) =>
     result.datacenters!.map(mapCatalogDatacenter),
   );
+
+  if (getConfig('environment') !== 'production') {
+    return;
+  }
 
   await Promise.all(
     datacenters.map(async ({ id, domain }) => {

@@ -37,6 +37,14 @@ export function useScalingRules() {
     }
   };
 
+  const onLightSleepChanged = (enabled: boolean) => {
+    if (enabled) {
+      setValue('scaling.scaleToZero.idlePeriod', defaultScaling.scaleToZero.idlePeriod, {
+        shouldValidate: true,
+      });
+    }
+  };
+
   const onScalingTargetChanged = (target: Target, enabled: boolean) => {
     const defaultValue = defaultScaling.targets[target].value;
 
@@ -106,6 +114,7 @@ export function useScalingRules() {
 
   return {
     onScalingChanged,
+    onLightSleepChanged,
     onScalingTargetChanged,
     onInstanceChanged,
     onServiceTypeChanged,
