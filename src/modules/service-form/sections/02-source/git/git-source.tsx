@@ -1,6 +1,6 @@
-import { TabButton, TabButtons } from '@koyeb/design-system';
+import { Alert, TabButton, TabButtons } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { useGithubApp } from 'src/api';
 import { ControlledSelect } from 'src/components/forms';
@@ -8,7 +8,6 @@ import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../../service-form.types';
-import { useWatchServiceForm } from '../../../use-service-form';
 
 import { OrganizationRepository } from './organization-repository';
 import { PublicRepository } from './public-repository';
@@ -17,10 +16,20 @@ const T = createTranslate('modules.serviceForm.source.git');
 
 export function GitSource() {
   const githubApp = useGithubApp();
-  const repositoryType = useWatchServiceForm('source.git.repositoryType');
+
+  const { watch } = useFormContext<ServiceForm>();
+  const repositoryNotFound = watch('meta.repositoryNotFound');
+  const repositoryType = watch('source.git.repositoryType');
 
   return (
     <>
+      {repositoryNotFound && (
+        <Alert
+          variant="warning"
+          description={<T id="repositoryNotFound" values={{ repository: repositoryNotFound }} />}
+        />
+      )}
+
       <ControlledSelect<ServiceForm, 'source.git.repositoryType'>
         name="source.git.repositoryType"
         className="sm:hidden!"

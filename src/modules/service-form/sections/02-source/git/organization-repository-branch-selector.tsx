@@ -1,12 +1,11 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { apiQuery } from 'src/api';
+import { useRepositoryBranchesQuery } from 'src/api';
 import { ControlledCombobox } from 'src/components/forms/combobox';
 import { NoItems } from 'src/components/forms/helpers/no-items';
-import { useFormValues } from 'src/hooks/form';
 import { IconGitBranch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { useWatchServiceForm } from 'src/modules/service-form/use-service-form';
 import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../../service-form.types';
@@ -14,26 +13,10 @@ import { ServiceForm } from '../../../service-form.types';
 const T = createTranslate('modules.serviceForm.source.git');
 
 export function OrganizationRepositoryBranchSelector() {
-  const values = useFormValues<ServiceForm>();
-  const repositoryId = values.source.git.organizationRepository.id;
+  const selectedRepository = useWatchServiceForm('source.git.organizationRepository');
 
   const [search, setSearch] = useState('');
-
-  const selectedRepository = values.source.git.organizationRepository;
-  const searchQuery = search === selectedRepository.branch ? undefined : search;
-
-  const query = useQuery({
-    ...apiQuery('get /v1/git/branches', {
-      query: {
-        repository_id: repositoryId as string,
-        name: searchQuery || undefined,
-        limit: '100',
-      },
-    }),
-    enabled: repositoryId !== null,
-    placeholderData: keepPreviousData,
-    select: ({ branches }) => branches!.map((branch) => branch.name!),
-  });
+  const query = useRepositoryBranchesQuery(selectedRepository.id, search);
 
   return (
     <ControlledCombobox<ServiceForm, 'source.git.organizationRepository.branch', string>

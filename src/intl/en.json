@@ -1209,6 +1209,7 @@
           "documentationLink": "Learn more about deploying a directory"
         },
         "git": {
+          "repositoryNotFound": "Repository {repository} was not found. It might have been deleted or you don't have access to it anymore.",
           "repositoryTypeLabel": "Private or public repository",
           "repositoryLabel": "Select repository",
           "repositoryTooltip": "Choose the repository you want to deploy on Koyeb",
