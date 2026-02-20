@@ -53,3 +53,22 @@ export function useRepositoriesQuery(search: string) {
 export function useRepositories(search: string) {
   return useRepositoriesQuery(search).data ?? [];
 }
+
+export function useRepositoryBranchesQuery(repositoryId: string | null, search: string) {
+  return useQuery({
+    ...apiQuery('get /v1/git/branches', {
+      query: {
+        limit: '5',
+        repository_id: repositoryId!,
+        name: search || undefined,
+      },
+    }),
+    enabled: repositoryId !== null,
+    placeholderData: keepPreviousData,
+    select: ({ branches }) => branches!.map((branch) => branch.name!),
+  });
+}
+
+export function useRepositoryBranches(repositoryId: string | null, search: string) {
+  return useRepositoryBranchesQuery(repositoryId, search).data ?? [];
+}

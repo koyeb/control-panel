@@ -4,7 +4,6 @@ import { useFormContext } from 'react-hook-form';
 import { useRepositories } from 'src/api';
 import { ControlledCombobox } from 'src/components/forms';
 import { NoItems } from 'src/components/forms/helpers/no-items';
-import { useFormValues } from 'src/hooks/form';
 import { IconGithub, IconLock } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
@@ -21,12 +20,9 @@ export function OrganizationRepositorySelector() {
 
   const generateServiceName = useGenerateServiceName();
   const { setValue } = useFormContext<ServiceForm>();
+
   const [search, setSearch] = useState('');
-
-  const selected = useFormValues<ServiceForm>().source.git.organizationRepository;
-  const searchQuery = search === selected.repositoryName ? '' : search;
-
-  const repositories = useRepositories(searchQuery);
+  const repositories = useRepositories(search);
 
   return (
     <ControlledCombobox<ServiceForm, 'source.git.organizationRepository.repositoryName', GitRepository>
@@ -68,7 +64,7 @@ function RepositoryItem({ repository }: OrganizationRepositoryItemProps) {
         <span className="mx-1">&bull;</span>
 
         <span className="text-dim">
-          <FormattedDistanceToNow value={repository.lastPushDate} />
+          <FormattedDistanceToNow forceDesktop value={repository.lastPushDate} />
         </span>
       </span>
       {repository.isPrivate && <IconLock className="icon" />}

@@ -234,11 +234,25 @@ async function getGithubApp(api: ApiFn) {
 }
 
 async function getRepository(api: ApiFn, repositoryName: string) {
-  return api('get /v1/git/repositories', {
-    query: { name: repositoryName, name_search_op: 'equality' },
-  })
-    .then(({ repositories }) => repositories!.map(mapRepository))
-    .then(([repository]) => repository);
+  const [, repository] = await Promise.all([
+    // prefetch the repository selector's options
+    api('get /v1/git/repositories', { query: { limit: '5' } }),
+
+    api('get /v1/git/repositories', {
+      query: { limit: '5', name_search_op: 'equality', name: repositoryName },
+    })
+      .then(({ repositories }) => repositories!.map(mapRepository))
+      .then(([repository]) => repository),
+  ]);
+
+  if (repository) {
+    // prefetch the repository branch selector's options
+    await api('get /v1/git/branches', {
+      query: { repository_id: repository.id, limit: '5' },
+    });
+  }
+
+  return repository;
 }
 
 async function getApp(api: ApiFn, appId: string) {
