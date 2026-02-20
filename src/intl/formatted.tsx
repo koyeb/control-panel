@@ -27,6 +27,7 @@ type RelativeTimeFormatSingularUnit = React.ComponentProps<typeof FormattedRelat
 type FormattedDistanceToNowTimeOwnProps = {
   value: Date | string;
   style?: Intl.RelativeTimeFormatStyle;
+  forceDesktop?: boolean;
   children?: (formatted: React.ReactNode) => React.ReactNode;
 };
 
@@ -36,6 +37,7 @@ type FormattedDistanceToNowTimeProps = Omit<React.HTMLAttributes<HTMLSpanElement
 export function FormattedDistanceToNow({
   value,
   style,
+  forceDesktop,
   children = identity,
   ...props
 }: FormattedDistanceToNowTimeProps) {
@@ -50,6 +52,7 @@ export function FormattedDistanceToNow({
   return (
     <Tooltip
       arrow
+      forceDesktop={forceDesktop}
       placement="top"
       trigger={(triggerProps) => (
         <span {...triggerProps} {...props}>
