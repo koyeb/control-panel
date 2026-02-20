@@ -145,6 +145,7 @@ export async function initializeServiceForm(
         } else {
           values.source.git.organizationRepository.repositoryName = null;
           values.source.git.organizationRepository.branch = null;
+          values.meta.repositoryNotFound = repositoryName;
         }
       }
     }
@@ -166,6 +167,7 @@ export async function initializeServiceForm(
         values.source.git.publicRepository.url = '';
         values.source.git.publicRepository.repositoryName = null;
         values.source.git.publicRepository.branch = null;
+        values.meta.repositoryNotFound = repositoryName;
       }
     }
   }
@@ -269,6 +271,7 @@ export function defaultServiceForm(): ServiceForm {
       expandedSection: null,
       appId: null,
       serviceId: null,
+      repositoryNotFound: null,
       previousInstance: null,
       hasPreviousBuild: false,
       skipBuild: false,
