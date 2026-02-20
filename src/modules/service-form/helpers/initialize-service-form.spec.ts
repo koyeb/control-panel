@@ -138,6 +138,8 @@ describe('initializeServiceForm', () => {
       { repositories: [] },
     );
 
+    serviceForm.meta.repositoryNotFound = 'org/repo';
+
     expect(await initialize()).toEqual(serviceForm);
   });
 
@@ -147,6 +149,7 @@ describe('initializeServiceForm', () => {
 
     mockFetchGithubRepository.mockRejectedValue(new Error());
 
+    serviceForm.meta.repositoryNotFound = 'org/repo';
     serviceForm.source.git.repositoryType = 'public';
 
     expect(await initialize()).toEqual(serviceForm);

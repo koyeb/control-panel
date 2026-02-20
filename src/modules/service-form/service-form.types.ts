@@ -34,6 +34,7 @@ type ServiceFormMeta = {
   expandedSection: ServiceFormSection | null;
   appId: string | null;
   serviceId: string | null;
+  repositoryNotFound: string | null;
   previousInstance: string | null;
   hasPreviousBuild: boolean;
   skipBuild: boolean;
