@@ -111,7 +111,7 @@
     "happy-dom": "^20.3.4",
     "openapi-typescript": "^7.10.1",
     "prettier": "^3.8.1",
-    "storybook": "^10.2.0",
+    "storybook": "^10.2.10",
     "tailwindcss": "^4.1.18",
     "totp-generator": "^2.0.1",
     "tsx": "^4.21.0",
