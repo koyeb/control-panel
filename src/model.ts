@@ -656,6 +656,7 @@ export type Organization = {
   status: OrganizationStatus;
   statusMessage: OrganizationStatusMessage;
   plan: OrganizationPlan;
+  defaultProjectId: string;
   hasSignupQualification: boolean;
   signupQualification?: Record<string, unknown>;
   currentSubscriptionId?: string;
@@ -783,6 +784,14 @@ export type Address = {
   city: string;
   state?: string;
   country: string;
+};
+
+// projects
+
+export type Project = {
+  id: string;
+  name: string;
+  serviceCount: string;
 };
 
 // volumes

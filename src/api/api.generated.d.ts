@@ -1291,6 +1291,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/organizations/{id}/default_project": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Organization's default project */
+        put: operations["UpdateOrganizationDefaultProject"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/organizations/{id}/name": {
         parameters: {
             query?: never;
@@ -4629,6 +4646,11 @@ export interface components {
             id?: string;
             name?: string;
             organization_id?: string;
+            /**
+             * Number of services in this project
+             * Format: int64
+             */
+            service_count?: string;
             /** Format: date-time */
             updated_at?: string;
         };
@@ -5275,6 +5297,9 @@ export interface components {
         };
         UpdateDomainReply: {
             domain?: components["schemas"]["Domain"];
+        };
+        UpdateOrganizationDefaultProjectReply: {
+            organization?: components["schemas"]["Organization"];
         };
         UpdateOrganizationNameReply: {
             organization?: components["schemas"]["Organization"];
@@ -13355,6 +13380,97 @@ export interface operations {
             };
         };
     };
+    UpdateOrganizationDefaultProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    default_project_id?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateOrganizationDefaultProjectReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     UpdateOrganizationName: {
         parameters: {
             query?: never;
@@ -14782,6 +14898,8 @@ export interface operations {
             query?: {
                 /** @description (Optional) The number of items to return */
                 limit?: string;
+                /** @description (Optional) Filter by project name */
+                name?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
             };

@@ -1748,6 +1748,22 @@
       "filtered": "Showing {count} of {total}",
       "createOrganization": "Create organization"
     },
+    "organizationProjectSwitcher": {
+      "tabs": {
+        "organization": "Organization",
+        "project": "Project"
+      },
+      "organization": {
+        "placeholder": "Search by organization ID",
+        "filtered": "Showing {count} of {total}",
+        "create": "Create organization"
+      },
+      "project": {
+        "placeholder": "Search your project",
+        "services": "{count} {count, plural, =0 {service} =1 {service} other {services}}",
+        "create": "Create project"
+      }
+    },
     "onboarding": {
       "userSettings": "Settings",
       "logout": "Log out"

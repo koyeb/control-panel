@@ -8,9 +8,11 @@ import {
 import { useAuth } from '@workos-inc/authkit-react';
 import { unstable_useWidgetsInvalidator as useWidgetsInvalidator } from '@workos-inc/widgets/utils';
 
-import { apiQuery, getApiQueryKey, refetchInterval } from 'src/api';
+import { apiQuery, refetchInterval } from 'src/api';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
+
+import { useCurrentProjectId } from './project';
 
 export function useUserQuery() {
   return useQuery({
@@ -39,15 +41,29 @@ export function useOrganization() {
 export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | Promise<void> } = {}) {
   const queryClient = useQueryClient();
   const { switchToOrganization } = useAuth();
+  const [, setCurrentProjectId] = useCurrentProjectId();
   const invalidateWidgets = useWidgetsInvalidator();
 
   return useMutation({
     mutationFn: (externalId: string) => switchToOrganization({ organizationId: externalId }),
     async onSuccess() {
       await queryClient.cancelQueries();
-      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
+
+      const organization = await queryClient
+        .fetchQuery(apiQuery('get /v1/account/organization', {}))
+        .then(({ organization }) => mapOrganization(organization!));
+
+      await queryClient.fetchQuery(
+        apiQuery('get /v1/projects/{id}', { path: { id: organization.defaultProjectId } }),
+      );
+
+      setCurrentProjectId(organization.defaultProjectId);
+
       await queryClient.invalidateQueries();
+      queryClient.removeQueries({ predicate: (query) => !query.isActive() });
+
       await invalidateWidgets();
+
       await onSuccess?.();
     },
   });
@@ -57,7 +73,7 @@ export function useOrganizationsList({ search, limit }: { search?: string; limit
   const { data } = useQuery({
     ...apiQuery('get /v1/account/organizations', {
       query: {
-        search,
+        search: search || undefined,
         limit: limit ? String(limit) : undefined,
         statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
       },

@@ -7,9 +7,11 @@ import {
   createEnsureApiQueryData,
   mapCatalogDatacenter,
   mapOrganization,
+  mapUser,
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
+import { getCurrentProjectId, setCurrentProjectId } from 'src/api/hooks/project';
 import { AuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useOnboardingStep } from 'src/application/onboarding';
@@ -51,14 +53,16 @@ export const Route = createFileRoute('/_main')({
 
     void preloadDatacentersLatencies(queryClient);
 
-    void ensureApiQueryData('get /v1/account/profile', {
-      header: { 'seon-fp': await seon.getFingerprint() },
-    });
+    const [_user, organization] = await Promise.all([
+      ensureApiQueryData('get /v1/account/profile', {
+        header: { 'seon-fp': await seon.getFingerprint() },
+      }).then((result) => mapUser(result.user!)),
 
-    const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
-      (result) => mapOrganization(result.organization!),
-      () => undefined,
-    );
+      ensureApiQueryData('get /v1/account/organization', {}).then(
+        (result) => mapOrganization(result.organization!),
+        () => undefined,
+      ),
+    ]);
 
     const promises = new Set<Promise<unknown>>();
 
@@ -71,6 +75,7 @@ export const Route = createFileRoute('/_main')({
           path: { organization_id: organization.id },
         }),
       );
+
       promises.add(
         ensureApiQueryData('get /v1/organizations/{organization_id}/quotas', {
           path: { organization_id: organization.id },
@@ -84,6 +89,40 @@ export const Route = createFileRoute('/_main')({
           }),
         );
       }
+
+      promises.add(
+        ensureApiQueryData('get /v1/account/organizations', {
+          query: {
+            limit: '10',
+            statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
+          },
+        }),
+      );
+
+      promises.add(
+        ensureApiQueryData('get /v1/organization_members', {
+          query: { limit: '10' },
+        }),
+      );
+
+      promises.add(
+        ensureApiQueryData('get /v1/projects', {
+          query: { limit: '10' },
+        }),
+      );
+
+      let currentProjectId = getCurrentProjectId();
+
+      if (currentProjectId === null) {
+        currentProjectId = organization.defaultProjectId;
+        setCurrentProjectId(currentProjectId);
+      }
+
+      promises.add(
+        ensureApiQueryData('get /v1/projects/{id}', {
+          path: { id: currentProjectId },
+        }),
+      );
     }
 
     await Promise.all(promises);

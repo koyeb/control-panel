@@ -15,6 +15,7 @@ import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { RequestQuotaIncreaseDialog } from 'src/components/quota-increase-request-dialog';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useLocation } from 'src/hooks/router';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus } from 'src/icons';
@@ -23,6 +24,7 @@ import { CommandPaletteProvider } from 'src/modules/command-palette';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { inArray } from 'src/utils/arrays';
 
+import { OrganizationProjectSwitcher } from '../organization-project-switcher';
 import { OrganizationSwitcher } from '../organization-switcher';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
@@ -108,7 +110,9 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
       {!collapsed && (
         <div className="col px-3">
-          <OrganizationSwitcher showCreateOrganization />
+          <FeatureFlag feature="simple-projects" fallback={<OrganizationSwitcher showCreateOrganization />}>
+            <OrganizationProjectSwitcher showCreateOrganization />
+          </FeatureFlag>
         </div>
       )}
 
