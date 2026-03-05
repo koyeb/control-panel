@@ -14,6 +14,7 @@ import {
   useModels,
   useRegionsCatalog,
 } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
@@ -60,6 +61,7 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
   const api = useApi();
   const navigate = useNavigate();
 
+  const [projectId] = useCurrentProjectId();
   const instances = useInstancesCatalog();
   const models = useModels();
 
@@ -88,7 +90,7 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
       assert(serviceForm.ports[0] !== undefined);
       serviceForm.ports[0].healthCheck.gracePeriod = 300;
 
-      return submitServiceForm(api, serviceForm);
+      return submitServiceForm(api, projectId, serviceForm);
     },
     onError: (error) => notify.error(error.message),
     async onSuccess({ serviceId }) {

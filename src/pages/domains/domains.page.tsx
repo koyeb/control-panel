@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { apiQuery, refetchInterval, useApi, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { mapDomain } from 'src/api/mappers/domain';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
@@ -99,9 +100,12 @@ export function DomainsPage() {
 }
 
 function useCustomDomainsQuery() {
+  const [projectId] = useCurrentProjectId();
+
   return useQuery({
     ...apiQuery('get /v1/domains', {
       query: {
+        project_id: projectId,
         limit: '100',
         types: ['CUSTOM'],
       },

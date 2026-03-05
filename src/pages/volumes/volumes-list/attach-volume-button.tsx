@@ -5,6 +5,7 @@ import { useCombobox } from 'downshift';
 import { useState } from 'react';
 
 import { ApiFn, apiQuery, mapApp, mapService, useApi, useCatalogRegion } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { Input } from 'src/components/forms';
 import { InputEndSpinner } from 'src/components/forms/helpers/input-end-spinner';
 import { NoItems } from 'src/components/forms/helpers/no-items';
@@ -25,6 +26,8 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
+  const [projectId] = useCurrentProjectId();
+
   const regionId = volume.region;
   const region = useCatalogRegion(regionId);
 
@@ -32,7 +35,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const searchQuery = useSearchServicesQuery(regionId, search);
 
   const servicesCountQuery = useQuery({
-    ...apiQuery('get /v1/services', { query: { limit: '1', regions: [regionId] } }),
+    ...apiQuery('get /v1/services', { query: { project_id: projectId, limit: '1', regions: [regionId] } }),
     select: ({ count }) => count,
   });
 
@@ -137,16 +140,16 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
 
 function useSearchServicesQuery(region: string, search: string) {
   const api = useApi();
+  const [projectId] = useCurrentProjectId();
 
   return useQuery({
-    queryKey: ['searchServices', { api, region, search }],
-    placeholderData: keepPreviousData,
+    queryKey: ['searchServices', { api, projectId, region, search }],
     queryFn: async ({ signal }) => {
       await wait(200, signal);
 
       const [apps, services] = await Promise.all([
-        listApps(api, signal),
-        searchServices(api, region, search, signal),
+        listApps(api, projectId, signal),
+        searchServices(api, projectId, region, search, signal),
       ]);
 
       await Promise.all(
@@ -162,11 +165,14 @@ function useSearchServicesQuery(region: string, search: string) {
         services,
       };
     },
+    placeholderData: keepPreviousData,
   });
 }
 
-async function listApps(api: ApiFn, signal: AbortSignal): Promise<App[]> {
-  return api('get /v1/apps', { query: { limit: '100' } }, { signal }).then(({ apps }) => apps!.map(mapApp));
+async function listApps(api: ApiFn, projectId: string, signal: AbortSignal): Promise<App[]> {
+  return api('get /v1/apps', { query: { project_id: projectId, limit: '100' } }, { signal }).then(
+    ({ apps }) => apps!.map(mapApp),
+  );
 }
 
 async function getApp(api: ApiFn, appId: string, signal: AbortSignal): Promise<App> {
@@ -175,13 +181,22 @@ async function getApp(api: ApiFn, appId: string, signal: AbortSignal): Promise<A
 
 async function searchServices(
   api: ApiFn,
+  projectId: string,
   region: string,
   search: string,
   signal: AbortSignal,
 ): Promise<Service[]> {
   return api(
     'get /v1/services',
-    { query: { name: search, regions: [region], limit: String(limit), types: ['WEB', 'WORKER'] } },
+    {
+      query: {
+        project_id: projectId,
+        name: search,
+        regions: [region],
+        limit: String(limit),
+        types: ['WEB', 'WORKER'],
+      },
+    },
     { signal },
   ).then(({ services }) => services!.map(mapService));
 }

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 
 import { API, ApiFn, apiQuery, useApi, useInvalidateApiQuery, useOrganization } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
@@ -25,6 +26,8 @@ export function useSubmitDatabaseServiceForm(
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
+  const [projectId] = useCurrentProjectId();
+
   const mutation = useMutation({
     async mutationFn(values: DatabaseServiceForm) {
       const { appId, databaseServiceId } = values.meta;
@@ -39,7 +42,11 @@ export function useSubmitDatabaseServiceForm(
       } else {
         const { service } = await api('post /v1/services', {
           query: { dry_run: false },
-          body: createApiService(appId ?? (await getDatabaseAppId(api, values.serviceName)), values),
+          body: createApiService(
+            projectId,
+            appId ?? (await getDatabaseAppId(api, projectId, values.serviceName)),
+            values,
+          ),
         });
 
         return service!.id!;
@@ -70,9 +77,9 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(api: ApiFn, appName: string): Promise<string> {
+async function getDatabaseAppId(api: ApiFn, projectId: string, appName: string): Promise<string> {
   const { apps } = await api('get /v1/apps', {
-    query: { name: appName },
+    query: { name: appName, project_id: projectId },
   });
 
   for (const app of apps!) {
@@ -82,15 +89,16 @@ async function getDatabaseAppId(api: ApiFn, appName: string): Promise<string> {
   }
 
   const { app } = await api('post /v1/apps', {
-    body: { name: appName },
+    body: { name: appName, project_id: projectId },
   });
 
   return app!.id!;
 }
 
-function createApiService(appId: string, values: DatabaseServiceForm): API.CreateService {
+function createApiService(projectId: string, appId: string, values: DatabaseServiceForm): API.CreateService {
   return {
     app_id: appId,
+    project_id: projectId,
     definition: {
       type: 'DATABASE',
       name: values.serviceName,

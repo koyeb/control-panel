@@ -92,7 +92,7 @@ describe('initializeServiceForm', () => {
   });
 
   async function initialize(serviceId?: string) {
-    return initializeServiceForm(params, serviceId, undefined, queryClient);
+    return initializeServiceForm(params, 'projectId', serviceId, undefined, queryClient);
   }
 
   let serviceForm: ServiceForm;
@@ -178,7 +178,7 @@ describe('initializeServiceForm', () => {
       { deployment: createApiDeployment({ definition: createApiDeploymentDefinition() }) },
     );
 
-    mockApi('get /v1/volumes', { query: { limit: '100' } }, { volumes: [volume] });
+    mockApi('get /v1/volumes', { query: { project_id: 'projectId', limit: '100' } }, { volumes: [volume] });
 
     const values = await initialize('serviceId');
 

@@ -5,6 +5,7 @@ import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, mapVolume, useInvalidateApiQuery } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { CloseDialogButton, Dialog, DialogFooter, closeDialog } from 'src/components/dialog';
 import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -55,6 +56,8 @@ export function CreateVolumeForm({ regions, onCreated }: CreateVolumeFormProps) 
   const invalidate = useInvalidateApiQuery();
   const t = T.useTranslate();
 
+  const [projectId] = useCurrentProjectId();
+
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       name: '',
@@ -66,6 +69,7 @@ export function CreateVolumeForm({ regions, onCreated }: CreateVolumeFormProps) 
   const mutation = useMutation({
     ...apiMutation('post /v1/volumes', ({ name, size }: FormValues<typeof form>) => ({
       body: {
+        project_id: projectId,
         volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK' as const,
         name,
         max_size: size,

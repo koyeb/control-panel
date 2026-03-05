@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 
 import { apiQuery, mapService, refetchInterval } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { usePagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
 import { useDebouncedValue } from 'src/hooks/timers';
@@ -32,11 +33,13 @@ function SandboxesListRoute() {
   }
 
   const pagination = usePagination(100);
+  const [projectId] = useCurrentProjectId();
 
   const query = useQuery({
     ...apiQuery('get /v1/services', {
       query: {
         ...pagination.query,
+        project_id: projectId,
         types: ['SANDBOX'],
         name: search || undefined,
         statuses,
@@ -51,7 +54,7 @@ function SandboxesListRoute() {
   });
 
   const hasSandboxes = useQuery({
-    ...apiQuery('get /v1/services', { query: { types: ['SANDBOX'] } }),
+    ...apiQuery('get /v1/services', { query: { project_id: projectId, types: ['SANDBOX'] } }),
     refetchInterval: refetchInterval(),
     select: ({ count }) => count! > 0,
   });

@@ -16,9 +16,13 @@ import {
 import { mapService } from '../mappers/service';
 import { apiQuery, getApiQueryKey, refetchInterval } from '../query';
 
+import { useCurrentProjectId } from './project';
+
 export function useServicesQuery(appId?: string) {
+  const [projectId] = useCurrentProjectId();
+
   return useQuery({
-    ...apiQuery('get /v1/services', { query: { limit: '100', app_id: appId } }),
+    ...apiQuery('get /v1/services', { query: { limit: '100', app_id: appId, project_id: projectId } }),
     refetchInterval: refetchInterval(),
     select: ({ services }) => services!.map(mapService),
   });

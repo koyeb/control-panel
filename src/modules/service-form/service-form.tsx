@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
 import { useApi, useCatalogInstance, useInvalidateApiQuery } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { notify } from 'src/application/notify';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
@@ -44,13 +45,14 @@ export function ServiceForm({ form, className, onDeployed, onSaved, onBack }: Se
   const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
+  const [projectId] = useCurrentProjectId();
   const instance = useCatalogInstance(form.watch('instance'));
 
   const formRef = useRef<HTMLFormElement>(null);
   const preSubmit = usePreSubmitServiceForm(formRef.current, form.watch('meta.previousInstance'));
 
   const mutation = useMutation({
-    mutationFn: (values: FormValues<typeof form>) => submitServiceForm(api, values),
+    mutationFn: (values: FormValues<typeof form>) => submitServiceForm(api, projectId, values),
     onError: useFormErrorHandler(form, mapError),
     async onSuccess(result, { meta }) {
       await Promise.all([
