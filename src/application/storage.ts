@@ -28,7 +28,7 @@ export class StoredValue<T> {
     };
   }
 
-  read(): T | null {
+  read = (): T | null => {
     const { storage, parse } = this.options;
     const value = storage.getItem(this.key);
 
@@ -37,9 +37,9 @@ export class StoredValue<T> {
     }
 
     return parse(value);
-  }
+  };
 
-  write(value: T | null): void {
+  write = (value: T | null): void => {
     const { storage, stringify } = this.options;
 
     if (value === null) {
@@ -47,9 +47,9 @@ export class StoredValue<T> {
     } else {
       storage.setItem(this.key, stringify(value));
     }
-  }
+  };
 
-  listen(onChange: ChangeListener<T>): () => void {
+  listen = (onChange: ChangeListener<T>): (() => void) => {
     const { parse } = this.options;
 
     const listener = (event: StorageEvent) => {
@@ -63,5 +63,5 @@ export class StoredValue<T> {
     return () => {
       window.removeEventListener('storage', listener);
     };
-  }
+  };
 }
