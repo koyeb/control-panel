@@ -42,6 +42,9 @@ type Dialogs = {
   CreateSnapshotFromVolume: Volume;
   EditSnapshot: VolumeSnapshot;
 
+  // project
+  CreateProject: null;
+
   // app
   EditApp: App;
 
