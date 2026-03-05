@@ -10,6 +10,7 @@ import { Activities } from 'src/modules/home/activities/activities';
 import { Apps } from 'src/modules/home/apps/apps';
 import { HomePageBanner } from 'src/modules/home/banner/banner';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
+import { assert } from 'src/utils/assert';
 
 export const Route = createFileRoute('/_main/')({
   component: HomePage,
@@ -30,7 +31,7 @@ export const Route = createFileRoute('/_main/')({
       .optional(),
   }),
 
-  async loader({ context: { queryClient } }) {
+  async loader({ context: { queryClient, projectId } }) {
     const api = createEnsureApiQueryData(queryClient);
 
     const organization = await api('get /v1/account/organization', {}).then(({ organization }) =>
@@ -38,9 +39,11 @@ export const Route = createFileRoute('/_main/')({
     );
 
     if (organization.status === 'ACTIVE') {
+      assert(projectId !== null);
+
       await queryClient.ensureQueryData({
-        queryKey: ['listAppsFull', { api, filters: { types: ['WEB', 'WORKER', 'DATABASE'] } }],
-        queryFn: () => listAppsFull(api, { types: ['WEB', 'WORKER', 'DATABASE'] }),
+        queryKey: ['listAppsFull', { api, projectId, filters: { types: ['WEB', 'WORKER', 'DATABASE'] } }],
+        queryFn: () => listAppsFull(api, projectId, { types: ['WEB', 'WORKER', 'DATABASE'] }),
       });
     }
   },

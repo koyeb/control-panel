@@ -41,7 +41,7 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ search, context: { authKit, queryClient } }) {
+  async beforeLoad({ search, context: { authKit, seon, queryClient } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (search['organization-id']) {
@@ -49,11 +49,20 @@ export const Route = createFileRoute('/_main')({
     }
 
     const [user, organization] = await Promise.all([
-      ensureApiQueryData('get /v1/account/profile', {}).then(({ user }) => mapUser(user!)),
+      ensureApiQueryData('get /v1/account/profile', {
+        header: { 'seon-fp': await seon.getFingerprint() },
+      }).then(({ user }) => mapUser(user!)),
       ensureApiQueryData('get /v1/account/organization', {})
         .then(({ organization }) => mapOrganization(organization!))
         .catch(() => undefined),
     ]);
+
+    let projectId = getCurrentProjectId();
+
+    if (organization && projectId === null) {
+      projectId = organization.defaultProjectId;
+      setCurrentProjectId(projectId);
+    }
 
     const posthog = initPosthog();
 
@@ -64,25 +73,17 @@ export const Route = createFileRoute('/_main')({
     }
 
     return {
+      user,
+      organization,
+      projectId,
       posthog,
     };
   },
 
-  async loader({ context: { queryClient, seon } }) {
+  async loader({ context: { queryClient, organization, projectId } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     void preloadDatacentersLatencies(queryClient);
-
-    const [_user, organization] = await Promise.all([
-      ensureApiQueryData('get /v1/account/profile', {
-        header: { 'seon-fp': await seon.getFingerprint() },
-      }).then((result) => mapUser(result.user!)),
-
-      ensureApiQueryData('get /v1/account/organization', {}).then(
-        (result) => mapOrganization(result.organization!),
-        () => undefined,
-      ),
-    ]);
 
     const promises = new Set<Promise<unknown>>();
 
@@ -131,18 +132,13 @@ export const Route = createFileRoute('/_main')({
         }),
       );
 
-      let currentProjectId = getCurrentProjectId();
-
-      if (currentProjectId === null) {
-        currentProjectId = organization.defaultProjectId;
-        setCurrentProjectId(currentProjectId);
+      if (projectId) {
+        promises.add(
+          ensureApiQueryData('get /v1/projects/{id}', {
+            path: { id: projectId },
+          }),
+        );
       }
-
-      promises.add(
-        ensureApiQueryData('get /v1/projects/{id}', {
-          path: { id: currentProjectId },
-        }),
-      );
     }
 
     await Promise.all(promises);

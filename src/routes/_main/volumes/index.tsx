@@ -4,6 +4,7 @@ import { createEnsureApiQueryData, mapVolume } from 'src/api';
 import { DocumentTitle } from 'src/components/document-title';
 import { createTranslate } from 'src/intl/translate';
 import { VolumesListSection } from 'src/pages/volumes/volumes-list/volumes-list';
+import { assert } from 'src/utils/assert';
 
 const T = createTranslate('pages.volumes');
 
@@ -19,11 +20,13 @@ export const Route = createFileRoute('/_main/volumes/')({
     );
   },
 
-  async loader({ context: { queryClient } }) {
+  async loader({ context: { queryClient, projectId } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
+    assert(projectId !== null);
+
     const volumes = await ensureApiQueryData('get /v1/volumes', {
-      query: { offset: '0', limit: '10' },
+      query: { project_id: projectId, offset: '0', limit: '10' },
     }).then(({ volumes }) => volumes!.map(mapVolume));
 
     await Promise.all(
