@@ -21,11 +21,17 @@ export class ApiError extends Error {
     return ApiError.is(value) && accountLockedErrorSchema.safeParse(value.body).success;
   }
 
+  private static rateLimitBody = {
+    status: 429,
+    code: 'rate_limit_exceeded',
+    message: 'Rate limit exceeded',
+  };
+
   public readonly response: Response;
   public readonly body: ApiErrorBody;
 
   constructor(response: Response, body: unknown) {
-    const result = apiErrorSchema.safeParse(body);
+    const result = apiErrorSchema.safeParse(response.status === 429 ? ApiError.rateLimitBody : body);
 
     if (!result.success) {
       throw new UnexpectedError('Unknown API error', { status: response.status, body });
