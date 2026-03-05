@@ -5,11 +5,13 @@ import { apiQuery, useUser } from 'src/api';
 import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { UserAvatar } from 'src/components/user-avatar';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { useForceThemeMode } from 'src/hooks/theme';
 import { IconChevronRight, IconLogOut, IconUser } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
+import { OrganizationProjectSwitcher } from '../organization-project-switcher';
 import { OrganizationSwitcher } from '../organization-switcher';
 import { SecondaryLayoutHeader } from '../secondary/secondary-layout-header';
 import { SecondarySettings } from '../secondary/settings';
@@ -57,7 +59,11 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
     <aside className="dark col h-full gap-8 rounded-2xl bg-neutral/95 px-12 py-16">
       <LogoKoyeb className="h-8 self-start" />
 
-      {hasMultipleOrganizations && <OrganizationSwitcher dark />}
+      {hasMultipleOrganizations && (
+        <FeatureFlag feature="simple-projects" fallback={<OrganizationSwitcher dark />}>
+          <OrganizationProjectSwitcher dark />
+        </FeatureFlag>
+      )}
 
       <div className="col flex-1 justify-center gap-6">
         <div className="text-base/relaxed text-dim">{sentence}</div>

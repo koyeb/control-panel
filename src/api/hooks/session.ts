@@ -14,6 +14,8 @@ import { apiQuery, refetchInterval } from 'src/api';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 
+import { useCurrentProjectId } from './project';
+
 export function useUserQuery() {
   return useQuery({
     ...apiQuery('get /v1/account/profile', {}),
@@ -42,6 +44,7 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
   const posthog = usePostHog();
   const queryClient = useQueryClient();
   const { switchToOrganization } = useAuth();
+  const [, setCurrentProjectId] = useCurrentProjectId();
   const invalidateWidgets = useWidgetsInvalidator();
 
   return useMutation({
@@ -55,7 +58,15 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
 
       posthog.group('segment_group', organization.id);
 
+      await queryClient.fetchQuery(
+        apiQuery('get /v1/projects/{id}', { path: { id: organization.defaultProjectId } }),
+      );
+
+      setCurrentProjectId(organization.defaultProjectId);
+
       await queryClient.invalidateQueries();
+      queryClient.removeQueries({ predicate: (query) => !query.isActive() });
+
       await invalidateWidgets();
 
       await onSuccess?.();
@@ -67,7 +78,7 @@ export function useOrganizationsList({ search, limit }: { search?: string; limit
   const { data } = useQuery({
     ...apiQuery('get /v1/account/organizations', {
       query: {
-        search,
+        search: search || undefined,
         limit: limit ? String(limit) : undefined,
         statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
       },

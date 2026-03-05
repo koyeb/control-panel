@@ -38,6 +38,7 @@ const organization = createFactory<Organization>(() => ({
   status: 'ACTIVE',
   statusMessage: 'VALID',
   plan: 'no_plan',
+  defaultProjectId: '',
   hasSignupQualification: false,
   hasPaymentMethod: false,
   billing: {},
