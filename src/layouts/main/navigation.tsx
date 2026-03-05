@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { useOrganization } from 'src/api';
 import { BadgeNew } from 'src/components/badge-new';
 import { Link, ValidateLinkOptions } from 'src/components/link';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { usePathname } from 'src/hooks/router';
 import {
   IconActivity,
@@ -27,79 +28,170 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
     organization === undefined || inArray(organization.status, ['WARNING', 'DEACTIVATING', 'DEACTIVATED']);
 
   return (
-    <nav className="flex-1">
-      <ol className="col gap-1 sm:gap-2">
-        <NavigationItem
-          collapsed={collapsed}
-          disabled={disableComputeLinks}
-          Icon={IconLayoutDashboard}
-          label={<T id="overview" />}
-          to="/"
-          isActive={(pathname) => pathname === '/'}
-        />
+    <FeatureFlag
+      feature="simple-projects"
+      fallback={
+        <nav className="flex-1">
+          <ol className="col gap-1 sm:gap-2">
+            <NavigationItem
+              collapsed={collapsed}
+              disabled={disableComputeLinks}
+              Icon={IconLayoutDashboard}
+              label={<T id="overview" />}
+              to="/"
+              isActive={(pathname) => pathname === '/'}
+            />
 
-        <NavigationItem
-          collapsed={collapsed}
-          disabled={disableComputeLinks}
-          Icon={IconBoxes}
-          label={<T id="services" />}
-          to="/services"
-          isActive={(pathname) =>
-            pathname.startsWith('/services') || pathname.startsWith('/database-services')
-          }
-        />
+            <NavigationItem
+              collapsed={collapsed}
+              disabled={disableComputeLinks}
+              Icon={IconBoxes}
+              label={<T id="services" />}
+              to="/services"
+              isActive={(pathname) =>
+                pathname.startsWith('/services') || pathname.startsWith('/database-services')
+              }
+            />
 
-        <NavigationItem
-          collapsed={collapsed}
-          disabled={disableComputeLinks}
-          Icon={IconBox}
-          label={<T id="sandboxes" />}
-          to="/sandboxes"
-          newBadge
-        />
+            <NavigationItem
+              collapsed={collapsed}
+              disabled={disableComputeLinks}
+              Icon={IconBox}
+              label={<T id="sandboxes" />}
+              to="/sandboxes"
+              newBadge
+            />
 
-        <NavigationItem
-          collapsed={collapsed}
-          disabled={disableComputeLinks}
-          Icon={IconGlobe}
-          label={<T id="domains" />}
-          to="/domains"
-        />
+            <NavigationItem
+              collapsed={collapsed}
+              disabled={disableComputeLinks}
+              Icon={IconGlobe}
+              label={<T id="domains" />}
+              to="/domains"
+            />
 
-        <NavigationItem
-          collapsed={collapsed}
-          disabled={disableComputeLinks}
-          Icon={IconFileKey}
-          label={<T id="secrets" />}
-          to="/secrets"
-        />
+            <NavigationItem
+              collapsed={collapsed}
+              disabled={disableComputeLinks}
+              Icon={IconFileKey}
+              label={<T id="secrets" />}
+              to="/secrets"
+            />
 
-        <NavigationItem
-          collapsed={collapsed}
-          disabled={disableComputeLinks}
-          Icon={IconFolders}
-          label={<T id="volumes" />}
-          to="/volumes"
-          newBadge
-        />
+            <NavigationItem
+              collapsed={collapsed}
+              disabled={disableComputeLinks}
+              Icon={IconFolders}
+              label={<T id="volumes" />}
+              to="/volumes"
+              newBadge
+            />
 
-        <NavigationItem
-          collapsed={collapsed}
-          Icon={IconActivity}
-          label={<T id="activity" />}
-          to="/activity"
-        />
+            <NavigationItem
+              collapsed={collapsed}
+              Icon={IconActivity}
+              label={<T id="activity" />}
+              to="/activity"
+            />
 
-        <NavigationItem collapsed={collapsed} Icon={IconUsers} label={<T id="team" />} to="/team" />
+            <NavigationItem collapsed={collapsed} Icon={IconUsers} label={<T id="team" />} to="/team" />
 
-        <NavigationItem
-          collapsed={collapsed}
-          Icon={IconSettings}
-          label={<T id="settings" />}
-          to="/settings"
-        />
-      </ol>
-    </nav>
+            <NavigationItem
+              collapsed={collapsed}
+              Icon={IconSettings}
+              label={<T id="settings" />}
+              to="/settings"
+            />
+          </ol>
+        </nav>
+      }
+    >
+      <nav>
+        <div className="mx-3 mb-2 truncate text-sm font-bold text-dim">
+          <T id="project" />
+        </div>
+
+        <ol className="col gap-1 sm:gap-2">
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconLayoutDashboard}
+            label={<T id="overview" />}
+            to="/"
+            isActive={(pathname) => pathname === '/'}
+          />
+
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconBoxes}
+            label={<T id="services" />}
+            to="/services"
+            isActive={(pathname) =>
+              pathname.startsWith('/services') || pathname.startsWith('/database-services')
+            }
+          />
+
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconBox}
+            label={<T id="sandboxes" />}
+            to="/sandboxes"
+            newBadge
+          />
+
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconGlobe}
+            label={<T id="domains" />}
+            to="/domains"
+          />
+
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconFolders}
+            label={<T id="volumes" />}
+            to="/volumes"
+            newBadge
+          />
+
+          <NavigationItem
+            collapsed={collapsed}
+            Icon={IconActivity}
+            label={<T id="activity" />}
+            to="/activity"
+          />
+        </ol>
+      </nav>
+
+      <nav>
+        <div className="mx-3 mb-2 truncate text-sm font-bold text-dim">
+          <T id="organization" />
+        </div>
+
+        <ol className="col gap-1 sm:gap-2">
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconFileKey}
+            label={<T id="secrets" />}
+            to="/secrets"
+          />
+
+          <NavigationItem collapsed={collapsed} Icon={IconUsers} label={<T id="team" />} to="/team" />
+
+          <NavigationItem
+            collapsed={collapsed}
+            Icon={IconSettings}
+            label={<T id="settings" />}
+            to="/settings"
+          />
+        </ol>
+      </nav>
+    </FeatureFlag>
   );
 }
 

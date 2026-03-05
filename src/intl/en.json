@@ -1788,6 +1788,8 @@
       "createService": "Create service",
       "navigation": {
         "preview": "Preview",
+        "project": "Project",
+        "organization": "Organization",
         "overview": "Overview",
         "services": "Services",
         "volumes": "Volumes",

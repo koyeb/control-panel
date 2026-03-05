@@ -103,7 +103,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
       </Link>
 
       {collapsed && (
-        <div className="mx-3 my-px px-2 py-1">
+        <div className="col h-12 items-center justify-center">
           <OrganizationAvatar className="size-6 rounded-full" />
         </div>
       )}
@@ -127,7 +127,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
       <Navigation collapsed={collapsed} />
 
-      <div className="col gap-4">
+      <div className="mt-auto col gap-4">
         {!collapsed && (
           <div role="menu" className="mx-4 divide-y rounded-md border bg-neutral">
             <UserMenu collapsed={collapsed} />
