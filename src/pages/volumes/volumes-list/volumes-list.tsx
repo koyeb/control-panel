@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { apiQuery, mapSnapshot, mapVolume, refetchInterval, useService } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { formatBytes } from 'src/application/memory';
 import { Input } from 'src/components/forms/input';
 import { LinkButton } from 'src/components/link';
@@ -30,6 +31,8 @@ const T = createTranslate('pages.volumes.list');
 export function VolumesListSection() {
   const t = T.useTranslate();
 
+  const [projectId] = useCurrentProjectId();
+
   const pagination = usePagination();
   const [name, setName] = useState('');
 
@@ -37,6 +40,7 @@ export function VolumesListSection() {
     ...apiQuery('get /v1/volumes', {
       query: {
         ...pagination.query,
+        project_id: projectId,
         name: name || undefined,
       },
     }),

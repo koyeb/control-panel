@@ -3,6 +3,7 @@ import { useSyncExternalStore } from 'react';
 
 import { StoredValue } from 'src/application/storage';
 import { Project } from 'src/model';
+import { assert } from 'src/utils/assert';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
 import { apiQuery } from '../query';
@@ -44,8 +45,10 @@ const storedCurrentProjectId = new StoredValue<string>('currentProjectId', {
 export const getCurrentProjectId = storedCurrentProjectId.read;
 export const setCurrentProjectId = storedCurrentProjectId.write;
 
-export function useCurrentProjectId(): [string | null, (projectId: string | null) => void] {
+export function useCurrentProjectId(): [string, (projectId: string) => void] {
   const projectId = useSyncExternalStore(storedCurrentProjectId.listen, storedCurrentProjectId.read);
+
+  assert(projectId !== null);
 
   return [projectId, storedCurrentProjectId.write];
 }
@@ -55,9 +58,8 @@ export function useCurrentProjectQuery() {
 
   return useQuery({
     ...apiQuery('get /v1/projects/{id}', {
-      path: { id: projectId! },
+      path: { id: projectId },
     }),
-    enabled: projectId !== null,
     select: ({ project }) => snakeToCamelDeep(requiredDeep(project)),
   });
 }

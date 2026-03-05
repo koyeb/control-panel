@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { apiQuery, mapVolume, useCatalogRegion } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/forms';
 import { Select } from 'src/components/forms/select';
@@ -144,8 +145,10 @@ function useVolumeItems() {
   const [region] = useWatchServiceForm('regions');
   const formVolumes = useWatchServiceForm('volumes');
 
+  const [projectId] = useCurrentProjectId();
+
   const volumesQuery = useQuery({
-    ...apiQuery('get /v1/volumes', { query: { limit: '100', region } }),
+    ...apiQuery('get /v1/volumes', { query: { project_id: projectId, limit: '100', region } }),
     select({ volumes }) {
       return volumes!
         .map(mapVolume)

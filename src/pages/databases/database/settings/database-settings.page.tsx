@@ -10,6 +10,7 @@ import {
   useInvalidateApiQuery,
   useService,
 } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { notify } from 'src/application/notify';
 import { openDialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
@@ -55,6 +56,7 @@ function DeleteDatabaseService({ service }: { service: Service }) {
   const api = useApi();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
+  const [projectId] = useCurrentProjectId();
 
   const deleteAppMutation = useMutation({
     ...apiMutation('delete /v1/apps/{id}', (appId: string) => ({
@@ -68,7 +70,7 @@ function DeleteDatabaseService({ service }: { service: Service }) {
     })),
     async onSuccess() {
       const { services } = await api('get /v1/services', {
-        query: { app_id: service.appId },
+        query: { project_id: projectId, app_id: service.appId },
       });
 
       if (services?.length === 0) {

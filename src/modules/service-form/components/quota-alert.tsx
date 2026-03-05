@@ -2,6 +2,7 @@ import { Alert } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { ApiError, useApi } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { ExternalLinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';
@@ -22,6 +23,7 @@ export function QuotaAlert(props: QuotaAlertProps) {
   const values = getValues(props);
 
   const api = useApi();
+  const [projectId] = useCurrentProjectId();
 
   const { data: message } = useQuery({
     placeholderData: keepPreviousData,
@@ -43,7 +45,11 @@ export function QuotaAlert(props: QuotaAlertProps) {
         } else {
           await api('post /v1/services', {
             query: { dry_run: true },
-            body: { app_id: values.meta.appId ?? '15c6a049-6594-4df0-99c3-a5c262e69624', definition },
+            body: {
+              project_id: projectId,
+              app_id: values.meta.appId ?? '15c6a049-6594-4df0-99c3-a5c262e69624',
+              definition,
+            },
           });
         }
 

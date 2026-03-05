@@ -42,6 +42,7 @@ type ApiFn = ReturnType<typeof createEnsureApiQueryData>;
 
 export async function initializeServiceForm(
   params: URLSearchParams,
+  projectId: string,
   serviceId: string | undefined,
   expandedSection: ServiceFormSection | undefined,
   queryClient: QueryClient,
@@ -55,7 +56,7 @@ export async function initializeServiceForm(
   if (serviceId) {
     const service = await getService(api, serviceId);
     const app = await getApp(api, service.appId);
-    const volumes = await getVolumes(api);
+    const volumes = await getVolumes(api, projectId);
     const deployment = await getDeployment(api, service.latestDeploymentId);
 
     values.meta.serviceId = service.id;
@@ -274,9 +275,11 @@ async function getDeployment(api: ApiFn, deploymentId: string) {
     });
 }
 
-async function getVolumes(api: ApiFn) {
+async function getVolumes(api: ApiFn, projectId: string) {
   // todo: handle pagination at some point
-  return api('get /v1/volumes', { query: { limit: '100' } }).then(({ volumes }) => volumes);
+  return api('get /v1/volumes', { query: { project_id: projectId, limit: '100' } }).then(
+    ({ volumes }) => volumes,
+  );
 }
 
 export function defaultServiceForm(): ServiceForm {

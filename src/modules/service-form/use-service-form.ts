@@ -5,6 +5,7 @@ import { FieldPath, Resolver, UseFormReturn, useForm, useWatch } from 'react-hoo
 import { z } from 'zod';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { createValidationGuard } from 'src/application/validation';
 import { useHistoryState, useSearchParams } from 'src/hooks/router';
 import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
@@ -17,13 +18,14 @@ import { useUnknownInterpolationErrors } from './helpers/unknown-interpolations'
 import { ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
-  const params = useSearchParams();
-  const { expandedSection } = useHistoryState();
   const queryClient = useQueryClient();
+  const params = useSearchParams();
+  const [projectId] = useCurrentProjectId();
+  const { expandedSection } = useHistoryState();
 
   const form = useForm({
     mode: 'onChange',
-    defaultValues: () => initializeServiceForm(params, serviceId, expandedSection, queryClient),
+    defaultValues: () => initializeServiceForm(params, projectId, serviceId, expandedSection, queryClient),
     resolver: useServiceFormResolver(),
   });
 
