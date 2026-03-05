@@ -24,6 +24,8 @@ import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { IconCheck, IconChevronDown, IconPlus, IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
+import { CreateProjectDialog } from './create-project-dialog';
+
 const T = createTranslate('layouts.organizationProjectSwitcher');
 
 const limit = 10;
@@ -66,6 +68,8 @@ export function OrganizationProjectSwitcher({
 
   return (
     <>
+      <CreateProjectDialog />
+
       <button
         type="button"
         className={clsx('rounded-sm border px-2 py-1 text-start', className)}

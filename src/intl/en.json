@@ -1764,6 +1764,17 @@
         "create": "Create project"
       }
     },
+    "createProjectDialog": {
+      "title": "Create a new project",
+      "name": {
+        "label": "Project name"
+      },
+      "description": {
+        "label": "Description"
+      },
+      "submit": "Create project",
+      "created": "Project {name} created"
+    },
     "onboarding": {
       "userSettings": "Settings",
       "logout": "Log out"
