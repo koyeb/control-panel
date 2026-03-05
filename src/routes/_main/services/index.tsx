@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import { getApi, listAppsFull } from 'src/api';
+import { AppsFullFilters, getApi, listAppsFull } from 'src/api';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 import { AppsServicesList } from 'src/modules/services-list/apps-services-list';
+import { assert } from 'src/utils/assert';
 
 export const Route = createFileRoute('/_main/services/')({
   component: AppsServicesList,
@@ -29,12 +30,19 @@ export const Route = createFileRoute('/_main/services/')({
     breadcrumb: () => <CrumbLink to={Route.fullPath} />,
   }),
 
-  async loader({ context: { authKit, queryClient } }) {
+  async loader({ context: { authKit, queryClient, projectId } }) {
     const api = getApi(authKit.getAccessToken);
 
+    assert(projectId !== null);
+
+    const filters: AppsFullFilters = {
+      types: ['WEB', 'WORKER', 'DATABASE'],
+      statuses: ['STARTING', 'RESUMING', 'HEALTHY', 'DEGRADED', 'UNHEALTHY', 'PAUSED', 'DELETED'],
+    };
+
     await queryClient.ensureQueryData({
-      queryKey: ['listAppsFull', { api }],
-      queryFn: () => listAppsFull(api),
+      queryKey: ['listAppsFull', { api, projectId, filters }],
+      queryFn: () => listAppsFull(api, projectId, filters),
     });
   },
 });

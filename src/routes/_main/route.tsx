@@ -35,34 +35,40 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ search, context: { authKit, queryClient } }) {
+  async beforeLoad({ search, context: { authKit, seon, queryClient } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (search['organization-id']) {
       await switchOrganization(authKit, search['organization-id']);
     }
 
-    await Promise.all([
-      ensureApiQueryData('get /v1/account/profile', {}),
-      ensureApiQueryData('get /v1/account/organization', {}).catch(() => undefined),
-    ]);
-  },
-
-  async loader({ context: { queryClient, seon } }) {
-    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
-
-    void preloadDatacentersLatencies(queryClient);
-
-    const [_user, organization] = await Promise.all([
+    const [user, organization] = await Promise.all([
       ensureApiQueryData('get /v1/account/profile', {
         header: { 'seon-fp': await seon.getFingerprint() },
       }).then((result) => mapUser(result.user!)),
-
-      ensureApiQueryData('get /v1/account/organization', {}).then(
-        (result) => mapOrganization(result.organization!),
-        () => undefined,
-      ),
+      ensureApiQueryData('get /v1/account/organization', {})
+        .then((result) => mapOrganization(result.organization!))
+        .catch(() => undefined),
     ]);
+
+    let projectId = getCurrentProjectId();
+
+    if (organization && projectId === null) {
+      projectId = organization.defaultProjectId;
+      setCurrentProjectId(projectId);
+    }
+
+    return {
+      user,
+      organization,
+      projectId,
+    };
+  },
+
+  async loader({ context: { queryClient, organization, projectId } }) {
+    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
+
+    void preloadDatacentersLatencies(queryClient);
 
     const promises = new Set<Promise<unknown>>();
 
@@ -111,18 +117,13 @@ export const Route = createFileRoute('/_main')({
         }),
       );
 
-      let currentProjectId = getCurrentProjectId();
-
-      if (currentProjectId === null) {
-        currentProjectId = organization.defaultProjectId;
-        setCurrentProjectId(currentProjectId);
+      if (projectId) {
+        promises.add(
+          ensureApiQueryData('get /v1/projects/{id}', {
+            path: { id: projectId },
+          }),
+        );
       }
-
-      promises.add(
-        ensureApiQueryData('get /v1/projects/{id}', {
-          path: { id: currentProjectId },
-        }),
-      );
     }
 
     await Promise.all(promises);
