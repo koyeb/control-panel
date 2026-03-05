@@ -2830,7 +2830,8 @@
       "general": {
         "organizationName": {
           "title": "Organization name",
-          "description": "This is your organization's visible name within Koyeb"
+          "description": "This is your organization's visible name within Koyeb",
+          "updated": "Your organization's name was updated"
         },
         "organizationQuotas": {
           "title": "Organization limits",
@@ -2859,6 +2860,14 @@
             "description": "You're on the Hobby plan which let you run one Web Service and Database for free. Upgrade to Starter to get the full Koyeb experience.",
             "cta": "Upgrade plan"
           }
+        },
+        "defaultProject": {
+          "title": "Projects",
+          "description": "New resources are automatically added in the default project",
+          "defaultProject": {
+            "label": "Default project"
+          },
+          "updated": "Your organization's default project was updated"
         }
       },
       "billing": {

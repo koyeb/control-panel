@@ -20,6 +20,7 @@ const schema = z.object({
 
 export function OrganizationName() {
   const organization = useOrganization();
+  const t = T.useTranslate();
 
   const form = useForm({
     defaultValues: {
@@ -43,7 +44,7 @@ export function OrganizationName() {
     onSuccess(_, values) {
       void invalidate('get /v1/account/organization');
       form.reset(values);
-      notify.success("Your organization's name was updated");
+      notify.success(t('updated'));
     },
     onError: useFormErrorHandler(form, (error) => ({ organizationName: error.name })),
   });
