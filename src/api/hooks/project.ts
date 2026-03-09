@@ -8,7 +8,7 @@ import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
 import { apiQuery } from '../query';
 
-export function useProjectsQuery({ search, limit }: { search: string; limit: number }) {
+export function useProjectsQuery({ search, limit }: Partial<{ search: string; limit: number }> = {}) {
   return useQuery({
     ...apiQuery('get /v1/projects', {
       query: {

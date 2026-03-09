@@ -47,6 +47,7 @@ import { Route as MainDatabaseServicesDatabaseServiceIdRouteRouteImport } from '
 import { Route as MainUserSettingsIndexRouteImport } from './routes/_main/user.settings/index'
 import { Route as MainServicesServiceIdIndexRouteImport } from './routes/_main/services/$serviceId/index'
 import { Route as MainSandboxesServiceIdIndexRouteImport } from './routes/_main/sandboxes/$serviceId/index'
+import { Route as MainProjectSettingsIndexRouteImport } from './routes/_main/project.settings/index'
 import { Route as MainOneClicksSlugIndexRouteImport } from './routes/_main/one-clicks/$slug.index'
 import { Route as MainDatabaseServicesDatabaseServiceIdIndexRouteImport } from './routes/_main/database-services/$databaseServiceId/index'
 import { Route as OrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/organization/deactivate.confirm.$confirmationId'
@@ -261,6 +262,12 @@ const MainSandboxesServiceIdIndexRoute =
     path: '/',
     getParentRoute: () => MainSandboxesServiceIdRouteRoute,
   } as any)
+const MainProjectSettingsIndexRoute =
+  MainProjectSettingsIndexRouteImport.update({
+    id: '/project/settings/',
+    path: '/project/settings/',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
 const MainOneClicksSlugIndexRoute = MainOneClicksSlugIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -411,6 +418,7 @@ export interface FileRoutesByFullPath {
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
+  '/project/settings': typeof MainProjectSettingsIndexRoute
   '/sandboxes/$serviceId/': typeof MainSandboxesServiceIdIndexRoute
   '/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/user/settings/': typeof MainUserSettingsIndexRoute
@@ -458,6 +466,7 @@ export interface FileRoutesByTo {
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-clicks/$slug': typeof MainOneClicksSlugIndexRoute
+  '/project/settings': typeof MainProjectSettingsIndexRoute
   '/sandboxes/$serviceId': typeof MainSandboxesServiceIdIndexRoute
   '/services/$serviceId': typeof MainServicesServiceIdIndexRoute
   '/user/settings': typeof MainUserSettingsIndexRoute
@@ -516,6 +525,7 @@ export interface FileRoutesById {
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/_main/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/_main/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
+  '/_main/project/settings/': typeof MainProjectSettingsIndexRoute
   '/_main/sandboxes/$serviceId/': typeof MainSandboxesServiceIdIndexRoute
   '/_main/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/_main/user/settings/': typeof MainUserSettingsIndexRoute
@@ -574,6 +584,7 @@ export interface FileRouteTypes {
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId/'
     | '/one-clicks/$slug/'
+    | '/project/settings'
     | '/sandboxes/$serviceId/'
     | '/services/$serviceId/'
     | '/user/settings/'
@@ -621,6 +632,7 @@ export interface FileRouteTypes {
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId'
     | '/one-clicks/$slug'
+    | '/project/settings'
     | '/sandboxes/$serviceId'
     | '/services/$serviceId'
     | '/user/settings'
@@ -678,6 +690,7 @@ export interface FileRouteTypes {
     | '/organization/deactivate/confirm/$confirmationId'
     | '/_main/database-services/$databaseServiceId/'
     | '/_main/one-clicks/$slug/'
+    | '/_main/project/settings/'
     | '/_main/sandboxes/$serviceId/'
     | '/_main/services/$serviceId/'
     | '/_main/user/settings/'
@@ -961,6 +974,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sandboxes/$serviceId/'
       preLoaderRoute: typeof MainSandboxesServiceIdIndexRouteImport
       parentRoute: typeof MainSandboxesServiceIdRouteRoute
+    }
+    '/_main/project/settings/': {
+      id: '/_main/project/settings/'
+      path: '/project/settings'
+      fullPath: '/project/settings'
+      preLoaderRoute: typeof MainProjectSettingsIndexRouteImport
+      parentRoute: typeof MainRouteRoute
     }
     '/_main/one-clicks/$slug/': {
       id: '/_main/one-clicks/$slug/'
@@ -1261,6 +1281,7 @@ interface MainRouteRouteChildren {
   MainServicesIndexRoute: typeof MainServicesIndexRoute
   MainAuthSsoCannyRoute: typeof MainAuthSsoCannyRoute
   MainAuthSsoDiscourseRoute: typeof MainAuthSsoDiscourseRoute
+  MainProjectSettingsIndexRoute: typeof MainProjectSettingsIndexRoute
 }
 
 const MainRouteRouteChildren: MainRouteRouteChildren = {
@@ -1284,6 +1305,7 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainServicesIndexRoute: MainServicesIndexRoute,
   MainAuthSsoCannyRoute: MainAuthSsoCannyRoute,
   MainAuthSsoDiscourseRoute: MainAuthSsoDiscourseRoute,
+  MainProjectSettingsIndexRoute: MainProjectSettingsIndexRoute,
 }
 
 const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(

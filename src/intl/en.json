@@ -1886,7 +1886,8 @@
         "/database-services/$databaseServiceId/settings": "Settings",
         "/sandboxes": "Sandboxes",
         "/sandboxes/$serviceId/metrics": "Metrics",
-        "/sandboxes/$serviceId/console": "Console"
+        "/sandboxes/$serviceId/console": "Console",
+        "/project/settings/": "Project settings"
       }
     },
     "secondary": {
@@ -2814,6 +2815,40 @@
     "sso": {
       "cannyError": "Error: failed to sign in to canny",
       "discourseError": "Error: failed to sign in to discourse"
+    },
+    "projectSettings": {
+      "title": "Project settings",
+      "defaultProject": {
+        "info": "This is your default project. You can update your default project from the <link>Organization settings page</link>."
+      },
+      "projectInfo": {
+        "title": "Project information",
+        "projectId": {
+          "label": "ID",
+          "tooltip": "Used when interacting with the Koyeb API"
+        },
+        "projectName": {
+          "label": "Name",
+          "tooltip": "This is your project name visible within Koyeb"
+        },
+        "projectDescription": {
+          "label": "Description"
+        },
+        "documentationLink": "Learn more about <link>projects</link>",
+        "updated": "Your project's information were updated"
+      },
+      "deleteProject": {
+        "title": "Delete Project",
+        "description": "Permanently delete this project. All associated resources must be deleted before the project can be removed.",
+        "delete": "Delete",
+        "isDefaultProject": "This is your default project, which can't be deleted",
+        "deleting": "Your project is being deleted",
+        "confirmation": {
+          "title": "Delete project",
+          "description": "By deleting this project you will lose all the resources, the data, deployments, domains, environment variables, serverless functions, and settings",
+          "confirm": "Delete"
+        }
+      }
     },
     "organizationSettings": {
       "layout": {
