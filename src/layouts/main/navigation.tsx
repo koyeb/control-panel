@@ -164,6 +164,13 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
             label={<T id="activity" />}
             to="/activity"
           />
+
+          <NavigationItem
+            collapsed={collapsed}
+            Icon={IconSettings}
+            label={<T id="settings" />}
+            to="/project/settings"
+          />
         </ol>
       </nav>
 
