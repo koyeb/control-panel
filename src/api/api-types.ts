@@ -57,6 +57,7 @@ export namespace API {
   export type RepositoryBranch = schemas['kgitproxy.Branch'];
   export type Route = schemas['Route'];
   export type Secret = schemas['Secret'];
+  export type SecurityPolicies = schemas['SecurityPolicies'];
   export type Service = schemas['Service'];
   export type Snapshot = schemas['Snapshot'];
   export type Subscription = schemas['Subscription'];

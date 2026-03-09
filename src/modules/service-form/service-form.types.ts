@@ -140,10 +140,24 @@ export type Port = {
   path: string;
   public: boolean;
   tcpProxy: boolean;
+  securityPolicies: PortSecurityPolicy[];
   healthCheck: HealthCheck;
 };
 
 export type PortProtocol = 'http' | 'http2' | 'tcp';
+
+export type PortSecurityPolicy = ApiKeyPortSecurityPolicy | BasicAuthPortSecurityPolicy;
+
+export type ApiKeyPortSecurityPolicy = {
+  type: 'apiKey';
+  key: string;
+};
+
+export type BasicAuthPortSecurityPolicy = {
+  type: 'basicAuth';
+  username: string;
+  password: string;
+};
 
 export type HealthCheck = {
   protocol: HealthCheckProtocol;

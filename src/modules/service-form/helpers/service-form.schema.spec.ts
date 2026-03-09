@@ -150,6 +150,7 @@ describe('serviceFormSchema', () => {
       protocol: 'http',
       public: true,
       tcpProxy: false,
+      securityPolicies: [],
       healthCheck: defaultHealthCheck(),
     });
 
@@ -159,6 +160,7 @@ describe('serviceFormSchema', () => {
       protocol: 'http',
       public: true,
       tcpProxy: false,
+      securityPolicies: [],
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       healthCheck: expect.any(Object),
     });

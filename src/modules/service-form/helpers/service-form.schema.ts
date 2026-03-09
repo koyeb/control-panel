@@ -232,6 +232,12 @@ const portCommon = z.object({
   portNumber: z.number().min(1).lt(65000),
   protocol: z.string(),
   tcpProxy: z.boolean(),
+  securityPolicies: z.array(
+    z.discriminatedUnion('type', [
+      z.object({ type: z.literal('apiKey'), key: z.string().min(1) }),
+      z.object({ type: z.literal('basicAuth'), username: z.string().min(1), password: z.string().min(1) }),
+    ]),
+  ),
   healthCheck,
 });
 

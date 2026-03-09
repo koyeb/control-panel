@@ -219,6 +219,7 @@ class ServiceFormBuilder {
       public: protocol !== 'tcp' && path !== '',
       tcpProxy: tcpProxy === 'true',
       path,
+      securityPolicies: [],
       healthCheck: defaultHealthCheck(),
     };
   }

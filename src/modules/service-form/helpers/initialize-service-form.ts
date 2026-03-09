@@ -375,6 +375,7 @@ export function defaultServiceForm(): ServiceForm {
         path: '/',
         public: true,
         tcpProxy: false,
+        securityPolicies: [],
         healthCheck: defaultHealthCheck(),
       },
     ],

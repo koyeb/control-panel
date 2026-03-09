@@ -200,9 +200,33 @@ describe('parseDeployParams', () => {
       test.params.append('ports', '3;tcp');
 
       expect(test.getValues()).toHaveProperty<Port[]>('ports', [
-        { portNumber: 1, public: true, tcpProxy: false, protocol: 'http', path: '/1', healthCheck },
-        { portNumber: 2, public: true, tcpProxy: false, protocol: 'http2', path: '/2', healthCheck },
-        { portNumber: 3, public: false, tcpProxy: false, protocol: 'tcp', path: '', healthCheck },
+        {
+          portNumber: 1,
+          public: true,
+          tcpProxy: false,
+          protocol: 'http',
+          path: '/1',
+          securityPolicies: [],
+          healthCheck,
+        },
+        {
+          portNumber: 2,
+          public: true,
+          tcpProxy: false,
+          protocol: 'http2',
+          path: '/2',
+          securityPolicies: [],
+          healthCheck,
+        },
+        {
+          portNumber: 3,
+          public: false,
+          tcpProxy: false,
+          protocol: 'tcp',
+          path: '',
+          securityPolicies: [],
+          healthCheck,
+        },
       ]);
     });
 
@@ -218,8 +242,24 @@ describe('parseDeployParams', () => {
       test.params.append('ports', '1;tcp');
 
       expect(test.getValues()).toHaveProperty<Port[]>('ports', [
-        { portNumber: 1, public: true, tcpProxy: false, protocol: 'http', path: '/', healthCheck },
-        { portNumber: 1, public: false, tcpProxy: false, protocol: 'tcp', path: '', healthCheck },
+        {
+          portNumber: 1,
+          public: true,
+          tcpProxy: false,
+          protocol: 'http',
+          path: '/',
+          securityPolicies: [],
+          healthCheck,
+        },
+        {
+          portNumber: 1,
+          public: false,
+          tcpProxy: false,
+          protocol: 'tcp',
+          path: '',
+          securityPolicies: [],
+          healthCheck,
+        },
       ]);
     });
 
@@ -228,8 +268,24 @@ describe('parseDeployParams', () => {
       test.params.append('ports', '2;tcp;/;true');
 
       expect(test.getValues()).toHaveProperty<Port[]>('ports', [
-        { portNumber: 1, public: false, tcpProxy: true, protocol: 'tcp', path: '', healthCheck },
-        { portNumber: 2, public: false, tcpProxy: true, protocol: 'tcp', path: '/', healthCheck },
+        {
+          portNumber: 1,
+          public: false,
+          tcpProxy: true,
+          protocol: 'tcp',
+          path: '',
+          securityPolicies: [],
+          healthCheck,
+        },
+        {
+          portNumber: 2,
+          public: false,
+          tcpProxy: true,
+          protocol: 'tcp',
+          path: '/',
+          securityPolicies: [],
+          healthCheck,
+        },
       ]);
     });
   });

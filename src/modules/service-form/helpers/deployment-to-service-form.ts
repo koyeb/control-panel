@@ -7,6 +7,8 @@ import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import {
+  ApiKeyPortSecurityPolicy,
+  BasicAuthPortSecurityPolicy,
   Builder,
   DockerDeploymentOptions,
   DockerSource,
@@ -226,12 +228,34 @@ function files(definition: API.DeploymentDefinition): Array<Partial<File>> | und
 }
 
 function ports(definition: API.DeploymentDefinition): Array<DeepPartial<Port>> | undefined {
+  const route = ({ port }: API.Port) => definition.routes?.find((route) => route.port === port);
+
+  const getSecurityPolicies = (route: API.Route | undefined) => {
+    const apiKeys: ApiKeyPortSecurityPolicy[] | undefined = route?.security_policies?.api_keys?.map(
+      (key): ApiKeyPortSecurityPolicy => ({
+        type: 'apiKey',
+        key,
+      }),
+    );
+
+    const basicAuths: BasicAuthPortSecurityPolicy[] | undefined = route?.security_policies?.basic_auths?.map(
+      ({ username, password }): BasicAuthPortSecurityPolicy => ({
+        type: 'basicAuth',
+        username: username!,
+        password: password!,
+      }),
+    );
+
+    return [...(apiKeys ?? []), ...(basicAuths ?? [])];
+  };
+
   return definition.ports?.map((port) => ({
     portNumber: port.port,
     protocol: port.protocol as PortProtocol,
     public: port.protocol !== 'tcp',
     tcpProxy: definition.proxy_ports?.find((proxyPort) => proxyPort.port === port.port) !== undefined,
-    path: definition.routes?.find((route) => route.port === port.port)?.path,
+    path: route(port)?.path,
+    securityPolicies: getSecurityPolicies(route(port)),
     healthCheck: healthCheck(definition, port),
   }));
 }

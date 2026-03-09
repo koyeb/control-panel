@@ -49,6 +49,10 @@ describe('serviceFormToDeploymentDefinition', () => {
         {
           port: 8000,
           path: '/',
+          security_policies: {
+            api_keys: [],
+            basic_auths: [],
+          },
         },
       ],
       health_checks: [

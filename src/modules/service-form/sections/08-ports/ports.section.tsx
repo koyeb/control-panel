@@ -45,6 +45,7 @@ export function PortsSection() {
             path: '/',
             public: true,
             tcpProxy: false,
+            securityPolicies: [],
             healthCheck: defaultHealthCheck(),
           });
         }}

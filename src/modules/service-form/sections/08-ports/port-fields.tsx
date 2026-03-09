@@ -1,10 +1,11 @@
-import { Badge, IconButton } from '@koyeb/design-system';
-import { useFormContext } from 'react-hook-form';
+import { Badge, Button, IconButton } from '@koyeb/design-system';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
-import { IconTrash } from 'src/icons';
+import { FeatureFlag } from 'src/hooks/feature-flag';
+import { IconPlus, IconTrash } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
@@ -122,10 +123,79 @@ export function PortFields({ index, onRemove }: { index: number; onRemove?: () =
           <T id="tcpProxy.info" />
         </div>
       </div>
+
+      <FeatureFlag feature="protected-endpoints">
+        <SecurityPolicies index={index} />
+      </FeatureFlag>
     </div>
   );
 }
 
 function url(path: string) {
   return <span className="text-default">https://[subdomain].koyeb.app{path}</span>;
+}
+
+function SecurityPolicies({ index: portIndex }: { index: number }) {
+  type Prefix = `ports.${number}.securityPolicies.${number}`;
+  const prefix = (index: number): Prefix => `ports.${portIndex}.securityPolicies.${index}`;
+
+  const { watch } = useFormContext<ServiceForm>();
+
+  const { fields, append, remove } = useFieldArray<ServiceForm, `ports.${number}.securityPolicies`>({
+    name: `ports.${portIndex}.securityPolicies`,
+  });
+
+  return (
+    <div className="col gap-4">
+      {fields.map((field, index) => (
+        <div key={field.id} className="row items-center gap-4">
+          <ControlledSelect<ServiceForm, `${Prefix}.type`>
+            items={['apiKey', 'basicAuth']}
+            name={`${prefix(index)}.type`}
+            label={<T id="securityPolicy.type" />}
+            getKey={identity}
+            getValue={identity}
+            itemToString={identity}
+            renderItem={(value) => <TranslateEnum enum="portSecurityPolicyType" value={value} />}
+            className="min-w-32"
+          />
+
+          {watch(`${prefix(index)}.type`) === 'apiKey' && (
+            <ControlledInput<ServiceForm, `${Prefix}.key`>
+              name={`${prefix(index)}.key`}
+              label={<T id="securityPolicy.key" />}
+              type="password"
+              autoComplete="one-time-code"
+              className="flex-1"
+            />
+          )}
+
+          {watch(`${prefix(index)}.type`) === 'basicAuth' && (
+            <>
+              <ControlledInput<ServiceForm, `${Prefix}.username`>
+                name={`${prefix(index)}.username`}
+                label={<T id="securityPolicy.username" />}
+                className="flex-1"
+              />
+
+              <ControlledInput<ServiceForm, `${Prefix}.password`>
+                name={`${prefix(index)}.password`}
+                label={<T id="securityPolicy.password" />}
+                type="password"
+                autoComplete="one-time-code"
+                className="flex-1"
+              />
+            </>
+          )}
+
+          <IconButton color="gray" Icon={IconTrash} onClick={() => remove(index)} className="mt-6.5" />
+        </div>
+      ))}
+
+      <Button color="gray" onClick={() => append({ type: 'apiKey', key: '' })} className="self-start">
+        <IconPlus className="size-4" />
+        <T id="securityPolicy.add" />
+      </Button>
+    </div>
+  );
 }

@@ -198,6 +198,14 @@ function routes(ports: Array<Port>): Array<API.Route> {
       return {
         port: Number(port.portNumber),
         path: port.path,
+        security_policies: {
+          api_keys: port.securityPolicies
+            .filter((policy) => policy.type === 'apiKey')
+            .map((policy) => policy.key),
+          basic_auths: port.securityPolicies
+            .filter((policy) => policy.type === 'basicAuth')
+            .map((policy) => ({ username: policy.username, password: policy.password })),
+        },
       };
     })
     .filter((value): value is API.Route => value !== undefined);

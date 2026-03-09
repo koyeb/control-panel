@@ -97,6 +97,10 @@
       "http": "HTTP",
       "http2": "HTTP/2"
     },
+    "portSecurityPolicyType": {
+      "apiKey": "API Key",
+      "basicAuth": "Basic Auth"
+    },
     "serviceType": {
       "web": "Web service",
       "private": "Private service",
@@ -1568,6 +1572,13 @@
         "path": {
           "label": "Path",
           "helperText": "Will be publicly accessible at: {url}"
+        },
+        "securityPolicy": {
+          "type": "Type",
+          "key": "Key",
+          "username": "Username",
+          "password": "Password",
+          "add": "Add security policy"
         }
       },
       "healthChecks": {

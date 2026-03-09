@@ -728,6 +728,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/coupons/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Check Coupon
+         * @description This API allows to check if a given coupon is valid. It is heavily rate-limited.
+         */
+        get: operations["CheckCoupon"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/credentials": {
         parameters: {
             query?: never;
@@ -2341,6 +2361,10 @@ export interface components {
             registry_name?: string;
             username?: string;
         };
+        BasicAuthPolicy: {
+            password?: string;
+            username?: string;
+        };
         Budget: {
             /** Format: int64 */
             amount?: string;
@@ -2467,6 +2491,14 @@ export interface components {
                 [key: string]: components["schemas"]["InstanceAvailability"];
             };
         };
+        CheckCouponReply: {
+            /** Format: int64 */
+            amount_off?: string;
+            currency?: string;
+            name?: string;
+            /** Format: float */
+            percent_off?: number;
+        };
         ClearIdenfyVerificationResultReply: Record<string, never>;
         ClearIdenfyVerificationResultRequest: {
             organization_id?: string;
@@ -2508,11 +2540,15 @@ export interface components {
         CreateApp: {
             life_cycle?: components["schemas"]["AppLifeCycle"];
             name?: string;
+            /** (Optional) The project ID to associate with the app */
+            project_id?: string;
         };
         CreateAppReply: {
             app?: components["schemas"]["App"];
         };
         CreateArchive: {
+            /** (Optional) The project ID to associate with the archive */
+            project_id?: string;
             /**
              * Format: uint64
              * @description How much space to provision for the archive, in bytes.
@@ -2547,6 +2583,8 @@ export interface components {
             cloudflare?: components["schemas"]["Domain.LoadBalancerCloudflare"];
             koyeb?: components["schemas"]["Domain.LoadBalancerKoyeb"];
             name?: string;
+            /** (Optional) The project ID to associate with the domain */
+            project_id?: string;
             type?: components["schemas"]["Domain.Type"];
         };
         CreateDomainReply: {
@@ -2580,6 +2618,8 @@ export interface components {
             max_size?: number;
             /** the volume name */
             name?: string;
+            /** (Optional) The project ID to associate with the volume */
+            project_id?: string;
             /** whether the volume must be set as read only */
             read_only?: boolean;
             /** the volume region */
@@ -2606,6 +2646,8 @@ export interface components {
             gitlab_registry?: components["schemas"]["GitLabRegistryConfiguration"];
             name?: string;
             private_registry?: components["schemas"]["PrivateRegistryConfiguration"];
+            /** (Optional) The project ID to associate with the secret */
+            project_id?: string;
             type?: components["schemas"]["SecretType"];
             value?: string;
         };
@@ -2616,6 +2658,8 @@ export interface components {
             app_id?: string;
             definition?: components["schemas"]["DeploymentDefinition"];
             life_cycle?: components["schemas"]["ServiceLifeCycle"];
+            /** (Optional) The project ID to associate with the service */
+            project_id?: string;
         };
         CreateServiceReply: {
             service?: components["schemas"]["Service"];
@@ -2628,6 +2672,8 @@ export interface components {
             name?: string;
             /** The id of the volume to snapshot */
             parent_volume_id?: string;
+            /** (Optional) The project ID to associate with the snapshot */
+            project_id?: string;
         };
         CreateStageAttemptReply: Record<string, never>;
         Credential: {
@@ -2976,6 +3022,7 @@ export interface components {
             path?: string;
             /** Format: int64 */
             port?: number;
+            security_policies?: components["schemas"]["SecurityPolicies"];
         };
         DeploymentScaling: {
             /** Format: int64 */
@@ -4335,6 +4382,7 @@ export interface components {
             country?: string;
             current_subscription_id?: string;
             deactivation_reason?: components["schemas"]["Organization.DeactivationReason"];
+            default_project_id?: string;
             email_domain_allowlist?: string[];
             external_id?: string;
             has_payment_method?: boolean;
@@ -4868,6 +4916,7 @@ export interface components {
             path?: string;
             /** Format: int64 */
             port?: number;
+            security_policies?: components["schemas"]["SecurityPolicies"];
         };
         Sample: {
             timestamp?: string;
@@ -4930,6 +4979,10 @@ export interface components {
          * @enum {string}
          */
         SecretType: "SIMPLE" | "REGISTRY" | "MANAGED";
+        SecurityPolicies: {
+            api_keys?: string[];
+            basic_auths?: components["schemas"]["BasicAuthPolicy"][];
+        };
         Service: {
             active_deployment_id?: string;
             app_id?: string;
@@ -7964,6 +8017,8 @@ export interface operations {
                 name?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
+                /** @description (Optional) A filter for the project ID */
+                project_id?: string;
             };
             header?: never;
             path?: never;
@@ -9366,6 +9421,91 @@ export interface operations {
             };
         };
     };
+    CheckCoupon: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CheckCouponReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     ListCredentials: {
         parameters: {
             query?: {
@@ -10450,6 +10590,8 @@ export interface operations {
                 name?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
+                /** @description (Optional) A filter for the project ID */
+                project_id?: string;
                 /** @description (Optional) A filter for statuses */
                 statuses?: ("PENDING" | "ACTIVE" | "ERROR" | "DELETING" | "DELETED")[];
                 /**
@@ -13316,6 +13458,7 @@ export interface operations {
         requestBody: {
             content: {
                 "*/*": {
+                    coupon_code?: string;
                     plan?: components["schemas"]["Plan"];
                 };
             };
@@ -15908,6 +16051,8 @@ export interface operations {
                 limit?: string;
                 name?: string;
                 offset?: string;
+                /** @description (Optional) A filter for the project ID */
+                project_id?: string;
                 /** @description Filter by secret types */
                 types?: ("SIMPLE" | "REGISTRY" | "MANAGED")[];
             };
@@ -16624,6 +16769,8 @@ export interface operations {
                 name?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
+                /** @description (Optional) A filter for the project ID */
+                project_id?: string;
                 /** @description (Optional) Filter on regions */
                 regions?: string[];
                 /** @description (Optional) Filter on service statuses */
@@ -19278,6 +19425,8 @@ export interface operations {
                 name?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
+                /** @description (Optional) A filter for the project ID */
+                project_id?: string;
                 /** @description (Optional) A filter for the region */
                 region?: string;
                 /** @description (Optional) A filter for the service id */
