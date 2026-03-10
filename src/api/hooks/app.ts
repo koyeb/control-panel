@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { ApiFn, useApi } from 'src/api';
+import { API, ApiFn, useApi } from 'src/api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { AppList, ServiceStatus, ServiceType } from 'src/model';
 import { exclude } from 'src/utils/arrays';
@@ -49,7 +49,7 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
     queryFn: ({ signal }) => listAppsFull(api, filters, signal),
     placeholderData: keepPreviousData,
     refetchInterval(query) {
-      const servicesCount = query.state.data?.services.count ?? 0;
+      const servicesCount = query.state.data?.services.length ?? 0;
 
       if (servicesCount <= 5) {
         return 5_000;
@@ -63,14 +63,11 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
     },
     select(results): AppList {
       const apps = results.apps
-        .apps!.map(mapApp)
-        .filter((app) => results.services.services!.find(hasProperty('app_id', app.id)));
+        .map(mapApp)
+        .filter((app) => results.services.find(hasProperty('app_id', app.id)));
 
       const services = new Map(
-        apps.map((app) => [
-          app.id,
-          results.services.services!.map(mapService).filter(hasProperty('appId', app.id)),
-        ]),
+        apps.map((app) => [app.id, results.services.map(mapService).filter(hasProperty('appId', app.id))]),
       );
 
       const activeDeployments = new Map(
@@ -93,12 +90,12 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
 
 export async function listAppsFull(api: ApiFn, filters: AppsFullFilters = {}, signal?: AbortSignal) {
   if (filters.types?.length === 0 || filters.statuses?.length === 0) {
-    return { apps: { apps: [] }, services: { services: [] }, activeDeployments: [], latestDeployments: [] };
+    return { apps: [], services: [], activeDeployments: [], latestDeployments: [] };
   }
 
   const [apps, services, deployments] = await Promise.all([
-    api('get /v1/apps', { query: { limit: '100' } }, { signal }),
-    api('get /v1/services', { query: { limit: '100', ...filters } }, { signal }),
+    listApps(api, signal),
+    listServices(api, filters, signal),
     api('get /v1/deployments', { query: { limit: '100' } }, { signal }),
   ]);
 
@@ -135,11 +132,11 @@ export async function listAppsFull(api: ApiFn, filters: AppsFullFilters = {}, si
   const [activeDeployments, latestDeployments] = await Promise.all([
     Promise.all(
       services
-        .services!.map((service) => service.active_deployment_id!)
+        .map((service) => service.active_deployment_id!)
         .filter(Boolean)
         .map(findDeployment),
     ),
-    Promise.all(services.services!.map((service) => findLatestNonStashedDeployment(service.id!))),
+    Promise.all(services.map((service) => findLatestNonStashedDeployment(service.id!))),
   ]);
 
   return {
@@ -148,4 +145,40 @@ export async function listAppsFull(api: ApiFn, filters: AppsFullFilters = {}, si
     activeDeployments,
     latestDeployments,
   };
+}
+
+async function listApps(api: ApiFn, signal?: AbortSignal) {
+  const apps: API.App[] = [];
+  let hasNext = true;
+
+  while (hasNext) {
+    const response = await api(
+      'get /v1/apps',
+      { query: { limit: '100', offset: String(apps.length) } },
+      { signal },
+    );
+
+    apps.push(...response.apps!);
+    hasNext = response.has_next!;
+  }
+
+  return apps;
+}
+
+async function listServices(api: ApiFn, filters: AppsFullFilters, signal?: AbortSignal) {
+  const services: API.Service[] = [];
+  let hasNext = true;
+
+  while (hasNext) {
+    const response = await api(
+      'get /v1/services',
+      { query: { limit: '100', offset: String(services.length), ...filters } },
+      { signal },
+    );
+
+    services.push(...response.services!);
+    hasNext = response.has_next!;
+  }
+
+  return services;
 }
