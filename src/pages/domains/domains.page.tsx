@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { apiQuery, useApi, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
+import { apiQuery, refetchInterval, useApi, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
 import { mapDomain } from 'src/api/mappers/domain';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
@@ -106,7 +106,7 @@ function useCustomDomainsQuery() {
         types: ['CUSTOM'],
       },
     }),
-    refetchInterval: 10_000,
+    refetchInterval: refetchInterval(),
     select: ({ domains }) => domains!.map(mapDomain),
   });
 }

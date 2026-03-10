@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 
-import { apiQuery, mapService } from 'src/api';
+import { apiQuery, mapService, refetchInterval } from 'src/api';
 import { usePagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
 import { useDebouncedValue } from 'src/hooks/timers';
@@ -42,7 +42,7 @@ function SandboxesListRoute() {
         statuses,
       },
     }),
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     placeholderData: keepPreviousData,
     select: ({ services, has_next }) => ({
       services: services!.map(mapService),
@@ -52,7 +52,7 @@ function SandboxesListRoute() {
 
   const hasSandboxes = useQuery({
     ...apiQuery('get /v1/services', { query: { types: ['SANDBOX'] } }),
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ count }) => count! > 0,
   });
 

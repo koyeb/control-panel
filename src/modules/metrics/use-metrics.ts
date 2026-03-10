@@ -3,7 +3,7 @@ import { useAuth } from '@workos-inc/authkit-react';
 import { Duration, sub } from 'date-fns';
 
 import type { API } from 'src/api';
-import { getApiQueryKey, useApi } from 'src/api';
+import { getApiQueryKey, refetchInterval, useApi } from 'src/api';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
 
@@ -53,7 +53,7 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
 
       return {
         meta: { getAccessToken, showError: false },
-        refetchInterval: 60 * 1000,
+        refetchInterval: refetchInterval(60 * 1000, 5 * 60 * 1000),
         queryKey: getApiQueryKey('get /v1/streams/metrics', { query }),
         queryFn: () => {
           const duration = timeFrameToDuration[timeFrame];

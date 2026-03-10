@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { useDatacentersCatalog } from 'src/api';
+import { refetchInterval, useDatacentersCatalog } from 'src/api';
 import { getUrlLatency } from 'src/application/url-latency';
 import { CatalogRegion } from 'src/model';
 
@@ -31,7 +31,7 @@ function useDatacenterLatencies() {
       queryKey: ['datacenterLatency', datacenter.domain],
       queryFn: () => getUrlLatency(`https://${datacenter.domain}/health`),
       select: (latency: number | null) => [datacenter.id, latency] as const,
-      refetchInterval: 10_000,
+      refetchInterval: refetchInterval(10_000, 60_000),
       retry: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,

@@ -147,7 +147,7 @@ type ComputeDeploymentInfoProps = {
 };
 
 function ComputeDeploymentInfo({ latestDeployment, activeDeployment }: ComputeDeploymentInfoProps) {
-  const replicas = useDeploymentScaling(activeDeployment, { refetchInterval: 15_000 });
+  const replicas = useDeploymentScaling(activeDeployment);
 
   const definition = activeDeployment?.definition ?? latestDeployment.definition;
   const sleeping = activeDeployment?.status === 'SLEEPING';

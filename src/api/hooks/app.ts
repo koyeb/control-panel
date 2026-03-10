@@ -8,12 +8,12 @@ import { hasProperty } from 'src/utils/object';
 
 import { mapDeployment } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
-import { apiQuery } from '../query';
+import { apiQuery, refetchInterval } from '../query';
 
 export function useAppsQuery() {
   return useQuery({
     ...apiQuery('get /v1/apps', { query: { limit: '100' } }),
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ apps }) => apps!.map(mapApp),
   });
 }
@@ -26,7 +26,7 @@ export function useAppQuery(appId?: string) {
   return useQuery({
     ...apiQuery('get /v1/apps/{id}', { path: { id: appId! } }),
     enabled: appId !== undefined,
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ app }) => mapApp(app!),
   });
 }

@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { apiQuery, mapSnapshot, mapVolume, useService } from 'src/api';
+import { apiQuery, mapSnapshot, mapVolume, refetchInterval, useService } from 'src/api';
 import { formatBytes } from 'src/application/memory';
 import { Input } from 'src/components/forms/input';
 import { LinkButton } from 'src/components/link';
@@ -153,7 +153,7 @@ function VolumeName({ volume }: { volume: Volume }) {
   const snapshot = useQuery({
     ...apiQuery('get /v1/snapshots/{id}', { path: { id: volume.snapshotId! } }),
     enabled: volume.snapshotId !== undefined,
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ snapshot }) => mapSnapshot(snapshot!),
   });
 

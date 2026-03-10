@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { apiQuery, mapActivity } from 'src/api';
+import { apiQuery, mapActivity, refetchInterval } from 'src/api';
 import { Link } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -51,7 +51,7 @@ function ActivityList() {
         ],
       },
     }),
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ activities }) => activities!.map(mapActivity),
   });
 

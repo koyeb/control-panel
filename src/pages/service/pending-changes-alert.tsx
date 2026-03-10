@@ -10,6 +10,7 @@ import {
   apiQuery,
   isComputeDeployment,
   mapDeployment,
+  refetchInterval,
   useDeployment,
   useInvalidateApiQuery,
 } from 'src/api';
@@ -83,7 +84,7 @@ function useLatestNonStashedDeployment(service: Service) {
         limit: '1',
       },
     }),
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ deployments }) => deployments!.map(mapDeployment).at(0),
   });
 

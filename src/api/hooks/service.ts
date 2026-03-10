@@ -14,12 +14,12 @@ import {
   mapReplica,
 } from '../mappers/deployment';
 import { mapService } from '../mappers/service';
-import { apiQuery, getApiQueryKey } from '../query';
+import { apiQuery, getApiQueryKey, refetchInterval } from '../query';
 
 export function useServicesQuery(appId?: string) {
   return useQuery({
     ...apiQuery('get /v1/services', { query: { limit: '100', app_id: appId } }),
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ services }) => services!.map(mapService),
   });
 }
@@ -32,7 +32,7 @@ export function useServiceQuery(serviceId?: string) {
   return useQuery({
     ...apiQuery('get /v1/services/{id}', { path: { id: serviceId! } }),
     enabled: serviceId !== undefined,
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ service }) => mapService(service!),
   });
 }
@@ -85,7 +85,7 @@ export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStat
       return nextPage;
     },
 
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
 
     select({ pages }) {
       return {
@@ -100,7 +100,7 @@ export function useDeploymentQuery(deploymentId: string | undefined) {
   return useQuery({
     ...apiQuery('get /v1/deployments/{id}', { path: { id: deploymentId as string } }),
     enabled: deploymentId !== undefined,
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ deployment }) => mapDeployment(deployment!),
   });
 }
@@ -123,7 +123,7 @@ export function useRegionalDeploymentsQuery(deploymentId: string | undefined) {
   return useQuery({
     ...apiQuery('get /v1/regional_deployments', { query: { deployment_id: deploymentId } }),
     enabled: deploymentId !== undefined,
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ regional_deployments }) => regional_deployments!.map(mapRegionalDeployment),
   });
 }
@@ -143,12 +143,11 @@ type DeploymentScalingFilters = {
 
 type DeploymentScalingOptions = {
   filters?: DeploymentScalingFilters;
-  refetchInterval?: number;
 };
 
 export function useDeploymentScalingQuery(
   deployment?: ComputeDeployment,
-  { filters, refetchInterval = 5_000 }: DeploymentScalingOptions = {},
+  { filters }: DeploymentScalingOptions = {},
 ) {
   const deploymentId = deployment?.id;
 
@@ -167,7 +166,7 @@ export function useDeploymentScalingQuery(
         limit: '100',
       },
     }),
-    refetchInterval,
+    refetchInterval: refetchInterval(15_000, 60_000),
     enabled: deploymentId !== undefined,
     placeholderData: keepPreviousData,
     select: ({ instances }) => {
@@ -236,7 +235,7 @@ export function useInstancesQuery({
     }),
     placeholderData: keepPreviousData,
     enabled: serviceId !== undefined || deploymentId !== undefined || regionalDeploymentId !== undefined,
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ count, instances }) => ({
       instances: instances!.map((instance) => mapInstance(instance)),
       count: count!,
@@ -248,7 +247,7 @@ export function useInstanceQuery(instanceId: string) {
   return useQuery({
     ...apiQuery('get /v1/instances/{id}', { path: { id: instanceId } }),
     placeholderData: keepPreviousData,
-    refetchInterval: 5_000,
+    refetchInterval: refetchInterval(),
     select: ({ instance }) => mapInstance(instance!),
   });
 }

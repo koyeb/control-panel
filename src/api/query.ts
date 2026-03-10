@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { getConfig } from 'src/application/config';
 
 import { ApiEndpoint, ApiRequestParams, api } from './api';
+import { ApiError } from './api-error';
 
 type Meta = {
   [key: string]: unknown;
@@ -89,5 +90,11 @@ export function useInvalidateApiQuery() {
 export function createEnsureApiQueryData(queryClient: QueryClient) {
   return <E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) => {
     return queryClient.ensureQueryData(apiQuery(endpoint, params));
+  };
+}
+
+export function refetchInterval(interval = 5_000, rateLimitedInterval = 30_000) {
+  return <E extends Error>(query: { state: { error: E | null } }) => {
+    return ApiError.is(query.state.error, 429) ? rateLimitedInterval : interval;
   };
 }
