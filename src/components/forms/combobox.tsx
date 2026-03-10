@@ -2,8 +2,10 @@ import {
   Dropdown,
   Field,
   FieldHelperText,
+  InputEnd,
   Menu,
   MenuItem,
+  Spinner,
   UseDropdown,
   UseDropdownProps,
   useDropdown,
@@ -21,6 +23,7 @@ import { createPortal } from 'react-dom';
 import { FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
 
 import { usePureFunction } from 'src/hooks/lifecycle';
+import { IconChevronDown } from 'src/icons';
 import { inArray } from 'src/utils/arrays';
 import { Extend } from 'src/utils/types';
 
@@ -54,6 +57,7 @@ type ComboboxProps<T> = {
   disabled?: boolean;
   readOnly?: boolean;
   invalid?: boolean;
+  loading?: boolean;
   start?: React.ReactNode;
   end?: React.ReactNode;
   className?: string;
@@ -87,6 +91,7 @@ export function Combobox<T>({
   disabled,
   readOnly,
   invalid,
+  loading,
   start,
   end,
   className,
@@ -124,18 +129,42 @@ export function Combobox<T>({
     ),
   );
 
-  const defaultInput = ({ combobox }: ComboboxContext<T>) => (
+  const inputEnd = () => {
+    if (end) {
+      return end;
+    }
+
+    if (loading) {
+      return (
+        <InputEnd background={false}>
+          <Spinner className="size-4" />
+        </InputEnd>
+      );
+    }
+
+    return (
+      <button
+        type="button"
+        className={clsx('mx-2', combobox.isOpen && '-scale-y-100')}
+        {...combobox.getToggleButtonProps()}
+      >
+        <IconChevronDown className={clsx('size-4')} />
+      </button>
+    );
+  };
+
+  const defaultInput = () => (
     <Input
       {...combobox.getInputProps({ ref, required, disabled, readOnly, type: 'search' })}
       root={{ ref: dropdown.refs.setReference }}
       size={size}
       placeholder={placeholder}
       start={start}
-      end={end}
+      end={inputEnd()}
     />
   );
 
-  const defaultMenu = ({ combobox, dropdown }: ComboboxContext<T>) => {
+  const defaultMenu = () => {
     return (
       <Dropdown dropdown={dropdown} onClosed={onClosed}>
         {items.length === 0 && renderNoItems?.()}
