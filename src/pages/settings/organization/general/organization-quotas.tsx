@@ -120,14 +120,19 @@ function useGeneralQuotaItems(): QuotaItem[] {
 
     return [
       {
+        key: 'projects',
+        label: <T id="projects" />,
+        value: quotas.maxProjects,
+      },
+      {
         key: 'apps',
         label: <T id="apps" />,
-        value: quotas.maxNumberOfApps,
+        value: quotas.maxApps,
       },
       {
         key: 'services',
         label: <T id="services" />,
-        value: quotas.maxNumberOfServices,
+        value: quotas.maxServices,
       },
       {
         key: 'domains',

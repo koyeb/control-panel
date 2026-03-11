@@ -745,8 +745,9 @@ export type OrganizationMember = {
 };
 
 export type OrganizationQuotas = {
-  maxNumberOfApps: number;
-  maxNumberOfServices: number;
+  maxProjects: number;
+  maxApps: number;
+  maxServices: number;
   maxOrganizationMembers: number;
   instanceTypes?: string[];
   maxInstancesByType: Record<string, number>;

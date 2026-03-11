@@ -2877,6 +2877,7 @@
           "gpuInstanceType": "GPU instance",
           "volumes": "Volumes",
           "quota": "Allowed",
+          "projects": "Projects",
           "apps": "Apps",
           "services": "Services",
           "domains": "Custom domains",
