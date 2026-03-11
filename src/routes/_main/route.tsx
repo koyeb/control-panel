@@ -59,9 +59,23 @@ export const Route = createFileRoute('/_main')({
 
     let projectId = getCurrentProjectId();
 
-    if (organization && projectId === null) {
-      projectId = organization.defaultProjectId;
-      setCurrentProjectId(projectId);
+    if (organization !== undefined) {
+      if (projectId === null) {
+        projectId = organization.defaultProjectId;
+        setCurrentProjectId(projectId);
+      }
+
+      try {
+        await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
+      } catch (error) {
+        if (ApiError.is(error, 404)) {
+          projectId = organization.defaultProjectId;
+          setCurrentProjectId(projectId);
+          await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
+        } else {
+          throw error;
+        }
+      }
     }
 
     const posthog = initPosthog();
@@ -80,7 +94,7 @@ export const Route = createFileRoute('/_main')({
     };
   },
 
-  async loader({ context: { queryClient, organization, projectId } }) {
+  async loader({ context: { queryClient, organization } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     void preloadDatacentersLatencies(queryClient);
@@ -131,14 +145,6 @@ export const Route = createFileRoute('/_main')({
           query: { limit: '10' },
         }),
       );
-
-      if (projectId) {
-        promises.add(
-          ensureApiQueryData('get /v1/projects/{id}', {
-            path: { id: projectId },
-          }),
-        );
-      }
     }
 
     await Promise.all(promises);
