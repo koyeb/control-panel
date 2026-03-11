@@ -39,8 +39,8 @@ export const Route = createFileRoute('/_main/')({
 
     if (organization.status === 'ACTIVE') {
       await queryClient.ensureQueryData({
-        queryKey: ['listAppsFull', { api }],
-        queryFn: () => listAppsFull(api),
+        queryKey: ['listAppsFull', { api, filters: { types: ['WEB', 'WORKER', 'DATABASE'] } }],
+        queryFn: () => listAppsFull(api, { types: ['WEB', 'WORKER', 'DATABASE'] }),
       });
     }
   },
@@ -60,7 +60,7 @@ const banner = {
 };
 
 function HomePage() {
-  const query = useAppsFull();
+  const query = useAppsFull({ types: ['WEB', 'WORKER', 'DATABASE'] });
 
   if (query.isPending) {
     return <Loading />;
