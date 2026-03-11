@@ -91,8 +91,9 @@ export function mapOrganizationSummary(summary: API.OrganizationSummary): Organi
 
 export function mapOrganizationQuotas(quotas: API.Quotas): OrganizationQuotas {
   return {
-    maxNumberOfApps: Number(quotas.apps),
-    maxNumberOfServices: Number(quotas.services),
+    maxProjects: Number(quotas.max_projects),
+    maxApps: Number(quotas.apps),
+    maxServices: Number(quotas.services),
     maxOrganizationMembers: Number(quotas.max_organization_members),
     instanceTypes: quotas.instance_types!.length > 0 ? quotas.instance_types! : undefined,
     maxInstancesByType: toObject(
