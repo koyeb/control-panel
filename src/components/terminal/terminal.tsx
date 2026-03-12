@@ -10,7 +10,7 @@ import '@xterm/xterm/css/xterm.css';
 export type TerminalRef = {
   focus(): void;
   clear(): void;
-  write(chunk: string): void;
+  write(chunk: string | Uint8Array): void;
 };
 
 type TerminalProps = {
