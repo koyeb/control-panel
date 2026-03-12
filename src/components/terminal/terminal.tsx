@@ -20,7 +20,7 @@ type TerminalProps = {
 };
 
 export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
-  const xterm = useMemo(() => new XTerm(), []);
+  const xterm = useMemo(() => new XTerm({ macOptionIsMeta: true }), []);
   const fitAddon = useMemo(() => new FitAddon(), []);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
@@ -45,6 +45,16 @@ export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
     return () => {
       disposable.dispose();
     };
+  }, [xterm, onData]);
+
+  useEffect(() => {
+    xterm.attachCustomKeyEventHandler((e) => {
+      if (e.type === 'keydown' && e.metaKey && e.key === 'Backspace') {
+        onData('\x15');
+        return false;
+      }
+      return true;
+    });
   }, [xterm, onData]);
 
   useWatchElementSize(container, () => fitAddon.fit());
