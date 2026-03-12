@@ -128,11 +128,11 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
       const { stdout, stderr, exited, exit_code: exitCode } = data.result;
 
       if (stdout !== null) {
-        terminal?.write(atob(stdout.data));
+        terminal?.write(Uint8Array.from(atob(stdout.data), (c) => c.charCodeAt(0)));
       }
 
       if (stderr !== null) {
-        terminal?.write(atob(stderr.data));
+        terminal?.write(Uint8Array.from(atob(stderr.data), (c) => c.charCodeAt(0)));
       }
 
       if (exited) {
