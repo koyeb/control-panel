@@ -656,6 +656,7 @@ export type Organization = {
   status: OrganizationStatus;
   statusMessage: OrganizationStatusMessage;
   plan: OrganizationPlan;
+  defaultProjectId: string;
   hasSignupQualification: boolean;
   signupQualification?: Record<string, unknown>;
   currentSubscriptionId?: string;
@@ -744,8 +745,9 @@ export type OrganizationMember = {
 };
 
 export type OrganizationQuotas = {
-  maxNumberOfApps: number;
-  maxNumberOfServices: number;
+  maxProjects: number;
+  maxApps: number;
+  maxServices: number;
   maxOrganizationMembers: number;
   instanceTypes?: string[];
   maxInstancesByType: Record<string, number>;
@@ -783,6 +785,14 @@ export type Address = {
   city: string;
   state?: string;
   country: string;
+};
+
+// projects
+
+export type Project = {
+  id: string;
+  name: string;
+  serviceCount: string;
 };
 
 // volumes

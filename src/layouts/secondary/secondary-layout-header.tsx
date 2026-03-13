@@ -4,7 +4,9 @@ import clsx from 'clsx';
 import { apiQuery } from 'src/api';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 
+import { OrganizationProjectSwitcher } from '../organization-project-switcher';
 import { OrganizationSwitcher } from '../organization-switcher';
 
 import { UserMenu } from './user-menu';
@@ -26,7 +28,11 @@ export function SecondaryLayoutHeader({ className }: { className?: string }) {
         <LogoKoyeb className="h-8" />
       </Link>
 
-      {hasMultipleOrganizations && <OrganizationSwitcher className="w-48" />}
+      {hasMultipleOrganizations && (
+        <FeatureFlag feature="simple-projects" fallback={<OrganizationSwitcher />}>
+          <OrganizationProjectSwitcher className="w-48" />
+        </FeatureFlag>
+      )}
 
       <div className="ml-auto">
         <UserMenu />

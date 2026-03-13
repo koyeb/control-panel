@@ -10,9 +10,13 @@ import { mapDeployment } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
 import { apiQuery, refetchInterval } from '../query';
 
+import { useCurrentProjectId } from './project';
+
 export function useAppsQuery() {
+  const [projectId] = useCurrentProjectId();
+
   return useQuery({
-    ...apiQuery('get /v1/apps', { query: { limit: '100' } }),
+    ...apiQuery('get /v1/apps', { query: { limit: '100', project_id: projectId } }),
     refetchInterval: refetchInterval(),
     select: ({ apps }) => apps!.map(mapApp),
   });
@@ -35,7 +39,7 @@ export function useApp(appId?: string) {
   return useAppQuery(appId).data;
 }
 
-type AppsFullFilters = Partial<{
+export type AppsFullFilters = Partial<{
   name: string;
   types: Uppercase<ServiceType>[];
   statuses: ServiceStatus[];
@@ -43,10 +47,11 @@ type AppsFullFilters = Partial<{
 
 export function useAppsFull(filters: AppsFullFilters = {}) {
   const api = useApi();
+  const [projectId] = useCurrentProjectId();
 
   return useQuery({
-    queryKey: ['listAppsFull', { filters, api }],
-    queryFn: ({ signal }) => listAppsFull(api, filters, signal),
+    queryKey: ['listAppsFull', { api, projectId, filters }],
+    queryFn: ({ signal }) => listAppsFull(api, projectId, filters, signal),
     placeholderData: keepPreviousData,
     refetchInterval(query) {
       const servicesCount = query.state.data?.services.length ?? 0;
@@ -88,14 +93,19 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
   });
 }
 
-export async function listAppsFull(api: ApiFn, filters: AppsFullFilters = {}, signal?: AbortSignal) {
+export async function listAppsFull(
+  api: ApiFn,
+  projectId: string,
+  filters: AppsFullFilters = {},
+  signal?: AbortSignal,
+) {
   if (filters.types?.length === 0 || filters.statuses?.length === 0) {
     return { apps: [], services: [], activeDeployments: [], latestDeployments: [] };
   }
 
   const [apps, services, deployments] = await Promise.all([
-    listApps(api, signal),
-    listServices(api, filters, signal),
+    listApps(api, projectId, signal),
+    listServices(api, filters, projectId, signal),
     api('get /v1/deployments', { query: { limit: '100' } }, { signal }),
   ]);
 
@@ -147,14 +157,14 @@ export async function listAppsFull(api: ApiFn, filters: AppsFullFilters = {}, si
   };
 }
 
-async function listApps(api: ApiFn, signal?: AbortSignal) {
+async function listApps(api: ApiFn, projectId: string, signal?: AbortSignal) {
   const apps: API.App[] = [];
   let hasNext = true;
 
   while (hasNext) {
     const response = await api(
       'get /v1/apps',
-      { query: { limit: '100', offset: String(apps.length) } },
+      { query: { limit: '100', offset: String(apps.length), project_id: projectId } },
       { signal },
     );
 
@@ -165,14 +175,14 @@ async function listApps(api: ApiFn, signal?: AbortSignal) {
   return apps;
 }
 
-async function listServices(api: ApiFn, filters: AppsFullFilters, signal?: AbortSignal) {
+async function listServices(api: ApiFn, filters: AppsFullFilters, projectId: string, signal?: AbortSignal) {
   const services: API.Service[] = [];
   let hasNext = true;
 
   while (hasNext) {
     const response = await api(
       'get /v1/services',
-      { query: { limit: '100', offset: String(services.length), ...filters } },
+      { query: { limit: '100', offset: String(services.length), project_id: projectId, ...filters } },
       { signal },
     );
 

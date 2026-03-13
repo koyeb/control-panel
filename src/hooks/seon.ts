@@ -1,5 +1,7 @@
 import seon, { SDKOptions } from '@seontechnologies/seon-javascript-sdk';
 
+import { getConfig } from 'src/application/config';
+
 // cSpell:ignore seontechnologies deviceinfresolver
 
 export class SeonAdapter {
@@ -13,6 +15,10 @@ export class SeonAdapter {
   private initialized = false;
 
   async getFingerprint(): Promise<string> {
+    if (getConfig('environment') === 'development') {
+      return '';
+    }
+
     if (!this.initialized) {
       seon.init();
       this.initialized = true;

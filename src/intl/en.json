@@ -1748,6 +1748,33 @@
       "filtered": "Showing {count} of {total}",
       "createOrganization": "Create organization"
     },
+    "organizationProjectSwitcher": {
+      "tabs": {
+        "organization": "Organization",
+        "project": "Project"
+      },
+      "organization": {
+        "placeholder": "Search by organization ID",
+        "filtered": "Showing {count} of {total}",
+        "create": "Create organization"
+      },
+      "project": {
+        "placeholder": "Search your project",
+        "services": "{count} {count, plural, =0 {service} =1 {service} other {services}}",
+        "create": "Create project"
+      }
+    },
+    "createProjectDialog": {
+      "title": "Create a new project",
+      "name": {
+        "label": "Project name"
+      },
+      "description": {
+        "label": "Description"
+      },
+      "submit": "Create project",
+      "created": "Project {name} created"
+    },
     "onboarding": {
       "userSettings": "Settings",
       "logout": "Log out"
@@ -1761,6 +1788,8 @@
       "createService": "Create service",
       "navigation": {
         "preview": "Preview",
+        "project": "Project",
+        "organization": "Organization",
         "overview": "Overview",
         "services": "Services",
         "volumes": "Volumes",
@@ -1857,7 +1886,8 @@
         "/database-services/$databaseServiceId/settings": "Settings",
         "/sandboxes": "Sandboxes",
         "/sandboxes/$serviceId/metrics": "Metrics",
-        "/sandboxes/$serviceId/console": "Console"
+        "/sandboxes/$serviceId/console": "Console",
+        "/project/settings/": "Project settings"
       }
     },
     "secondary": {
@@ -2786,6 +2816,40 @@
       "cannyError": "Error: failed to sign in to canny",
       "discourseError": "Error: failed to sign in to discourse"
     },
+    "projectSettings": {
+      "title": "Project settings",
+      "defaultProject": {
+        "info": "This is your default project. You can update your default project from the <link>Organization settings page</link>."
+      },
+      "projectInfo": {
+        "title": "Project information",
+        "projectId": {
+          "label": "ID",
+          "tooltip": "Used when interacting with the Koyeb API"
+        },
+        "projectName": {
+          "label": "Name",
+          "tooltip": "This is your project name visible within Koyeb"
+        },
+        "projectDescription": {
+          "label": "Description"
+        },
+        "documentationLink": "Learn more about <link>projects</link>",
+        "updated": "Your project's information were updated"
+      },
+      "deleteProject": {
+        "title": "Delete Project",
+        "description": "Permanently delete this project. All associated resources must be deleted before the project can be removed.",
+        "delete": "Delete",
+        "isDefaultProject": "This is your default project, which can't be deleted",
+        "deleting": "Your project is being deleted",
+        "confirmation": {
+          "title": "Delete project",
+          "description": "By deleting this project you will lose all the resources, the data, deployments, domains, environment variables, serverless functions, and settings",
+          "confirm": "Delete"
+        }
+      }
+    },
     "organizationSettings": {
       "layout": {
         "documentTitle": "Settings",
@@ -2801,7 +2865,8 @@
       "general": {
         "organizationName": {
           "title": "Organization name",
-          "description": "This is your organization's visible name within Koyeb"
+          "description": "This is your organization's visible name within Koyeb",
+          "updated": "Your organization's name was updated"
         },
         "organizationQuotas": {
           "title": "Organization limits",
@@ -2812,6 +2877,7 @@
           "gpuInstanceType": "GPU instance",
           "volumes": "Volumes",
           "quota": "Allowed",
+          "projects": "Projects",
           "apps": "Apps",
           "services": "Services",
           "domains": "Custom domains",
@@ -2830,6 +2896,14 @@
             "description": "You're on the Hobby plan which let you run one Web Service and Database for free. Upgrade to Starter to get the full Koyeb experience.",
             "cta": "Upgrade plan"
           }
+        },
+        "defaultProject": {
+          "title": "Projects",
+          "description": "New resources are automatically added in the default project",
+          "defaultProject": {
+            "label": "Default project"
+          },
+          "updated": "Your organization's default project was updated"
         }
       },
       "billing": {

@@ -5,6 +5,7 @@ import { FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, useApps, useInvalidateApiQuery } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ControlledInput, ControlledSelect } from 'src/components/forms';
@@ -76,9 +77,12 @@ function DomainForm({ onCreated, renderFooter }: DomainFormProps) {
 
   const invalidate = useInvalidateApiQuery();
 
+  const [projectId] = useCurrentProjectId();
+
   const mutation = useMutation({
     ...apiMutation('post /v1/domains', (values: FormValues) => ({
       body: {
+        project_id: projectId,
         name: values.domainName,
         app_id: values.appId ?? undefined,
         type: 'CUSTOM' as const,

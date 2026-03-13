@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, useApi, useInvalidateApiQuery, useRegionsCatalog } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { notify } from 'src/application/notify';
 import { DocumentTitle } from 'src/components/document-title';
 import { ControlledInput } from 'src/components/forms';
@@ -33,6 +34,7 @@ export function CreateVolumePage() {
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const api = useApi();
+  const [projectId] = useCurrentProjectId();
 
   const snapshotId = useSearchParams().get('snapshot');
   const [scope, setScope] = useState<RegionScope>('continental');
@@ -59,6 +61,7 @@ export function CreateVolumePage() {
   const mutation = useMutation({
     ...apiMutation('post /v1/volumes', ({ name, size, region }: FormValues<typeof form>) => ({
       body: {
+        project_id: projectId,
         volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK' as const,
         name,
         region,

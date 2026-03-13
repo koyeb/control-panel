@@ -15,6 +15,7 @@ import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { RequestQuotaIncreaseDialog } from 'src/components/quota-increase-request-dialog';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useLocation } from 'src/hooks/router';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus } from 'src/icons';
@@ -23,6 +24,7 @@ import { CommandPaletteProvider } from 'src/modules/command-palette';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { inArray } from 'src/utils/arrays';
 
+import { OrganizationProjectSwitcher } from '../organization-project-switcher';
 import { OrganizationSwitcher } from '../organization-switcher';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
@@ -101,14 +103,16 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
       </Link>
 
       {collapsed && (
-        <div className="mx-3 my-px px-2 py-1">
+        <div className="col h-12 items-center justify-center">
           <OrganizationAvatar className="size-6 rounded-full" />
         </div>
       )}
 
       {!collapsed && (
         <div className="col px-3">
-          <OrganizationSwitcher showCreateOrganization />
+          <FeatureFlag feature="simple-projects" fallback={<OrganizationSwitcher showCreateOrganization />}>
+            <OrganizationProjectSwitcher showCreateOrganization />
+          </FeatureFlag>
         </div>
       )}
 
@@ -123,7 +127,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
       <Navigation collapsed={collapsed} />
 
-      <div className="col gap-4">
+      <div className="mt-auto col gap-4">
         {!collapsed && (
           <div role="menu" className="mx-4 divide-y rounded-md border bg-neutral">
             <UserMenu collapsed={collapsed} />

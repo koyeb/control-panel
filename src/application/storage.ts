@@ -1,6 +1,10 @@
+import { assert } from 'src/utils/assert';
+
 type Parse<T> = (value: string) => T;
 type Serialize<T> = (value: T) => string;
 type ChangeListener<T> = (value: T | null) => void;
+
+const emitter = new EventTarget();
 
 type StoredValueOptions<T> = {
   storage?: Storage;
@@ -28,7 +32,7 @@ export class StoredValue<T> {
     };
   }
 
-  read(): T | null {
+  read = (): T | null => {
     const { storage, parse } = this.options;
     const value = storage.getItem(this.key);
 
@@ -37,9 +41,9 @@ export class StoredValue<T> {
     }
 
     return parse(value);
-  }
+  };
 
-  write(value: T | null): void {
+  write = (value: T | null): void => {
     const { storage, stringify } = this.options;
 
     if (value === null) {
@@ -47,21 +51,32 @@ export class StoredValue<T> {
     } else {
       storage.setItem(this.key, stringify(value));
     }
-  }
 
-  listen(onChange: ChangeListener<T>): () => void {
+    emitter.dispatchEvent(
+      new StorageEvent('change', {
+        key: this.key,
+        newValue: value === null ? null : stringify(value),
+      }),
+    );
+  };
+
+  listen = (onChange: ChangeListener<T>): (() => void) => {
     const { parse } = this.options;
 
-    const listener = (event: StorageEvent) => {
+    const listener = (event: Event) => {
+      assert(event instanceof StorageEvent);
+
       if (event.key === this.key) {
         onChange(event.newValue === null ? null : parse(event.newValue));
       }
     };
 
+    emitter.addEventListener('change', listener);
     window.addEventListener('storage', listener);
 
     return () => {
+      emitter.removeEventListener('change', listener);
       window.removeEventListener('storage', listener);
     };
-  }
+  };
 }

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { ControlledInput } from 'src/components/forms';
@@ -39,6 +40,7 @@ export function CreateSnapshotDialog() {
 function CreateSnapshotForm({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
+  const [projectId] = useCurrentProjectId();
 
   const form = useForm({
     defaultValues: {
@@ -50,6 +52,7 @@ function CreateSnapshotForm({ volume }: { volume: Volume }) {
   const mutation = useMutation({
     ...apiMutation('post /v1/snapshots', ({ name }: FormValues<typeof form>) => ({
       body: {
+        project_id: projectId,
         parent_volume_id: volume.id,
         name,
       },

@@ -38,6 +38,7 @@ const organization = createFactory<Organization>(() => ({
   status: 'ACTIVE',
   statusMessage: 'VALID',
   plan: 'no_plan',
+  defaultProjectId: '',
   hasSignupQualification: false,
   hasPaymentMethod: false,
   billing: {},
@@ -50,8 +51,9 @@ const organizationSummary = createFactory<OrganizationSummary>(() => ({
 }));
 
 const quotas = createFactory<OrganizationQuotas>(() => ({
-  maxNumberOfApps: 0,
-  maxNumberOfServices: 0,
+  maxProjects: 0,
+  maxApps: 0,
+  maxServices: 0,
   maxOrganizationMembers: 0,
   maxInstancesByType: {},
   volumesByRegion: {},

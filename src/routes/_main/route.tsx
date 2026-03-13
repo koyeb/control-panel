@@ -7,9 +7,11 @@ import {
   createEnsureApiQueryData,
   mapCatalogDatacenter,
   mapOrganization,
+  mapUser,
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
+import { getCurrentProjectId, setCurrentProjectId } from 'src/api/hooks/project';
 import { AuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useOnboardingStep } from 'src/application/onboarding';
@@ -33,32 +35,54 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ search, context: { authKit, queryClient } }) {
+  async beforeLoad({ search, context: { authKit, seon, queryClient } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (search['organization-id']) {
       await switchOrganization(authKit, search['organization-id']);
     }
 
-    await Promise.all([
-      ensureApiQueryData('get /v1/account/profile', {}),
-      ensureApiQueryData('get /v1/account/organization', {}).catch(() => undefined),
+    const [user, organization] = await Promise.all([
+      ensureApiQueryData('get /v1/account/profile', {
+        header: { 'seon-fp': await seon.getFingerprint() },
+      }).then((result) => mapUser(result.user!)),
+      ensureApiQueryData('get /v1/account/organization', {})
+        .then((result) => mapOrganization(result.organization!))
+        .catch(() => undefined),
     ]);
+
+    let projectId = getCurrentProjectId();
+
+    if (organization !== undefined) {
+      if (projectId === null) {
+        projectId = organization.defaultProjectId;
+        setCurrentProjectId(projectId);
+      }
+
+      try {
+        await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
+      } catch (error) {
+        if (ApiError.is(error, 404)) {
+          projectId = organization.defaultProjectId;
+          setCurrentProjectId(projectId);
+          await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    return {
+      user,
+      organization,
+      projectId,
+    };
   },
 
-  async loader({ context: { queryClient, seon } }) {
+  async loader({ context: { queryClient, organization } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     void preloadDatacentersLatencies(queryClient);
-
-    void ensureApiQueryData('get /v1/account/profile', {
-      header: { 'seon-fp': await seon.getFingerprint() },
-    });
-
-    const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
-      (result) => mapOrganization(result.organization!),
-      () => undefined,
-    );
 
     const promises = new Set<Promise<unknown>>();
 
@@ -71,6 +95,7 @@ export const Route = createFileRoute('/_main')({
           path: { organization_id: organization.id },
         }),
       );
+
       promises.add(
         ensureApiQueryData('get /v1/organizations/{organization_id}/quotas', {
           path: { organization_id: organization.id },
@@ -84,6 +109,27 @@ export const Route = createFileRoute('/_main')({
           }),
         );
       }
+
+      promises.add(
+        ensureApiQueryData('get /v1/account/organizations', {
+          query: {
+            limit: '10',
+            statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
+          },
+        }),
+      );
+
+      promises.add(
+        ensureApiQueryData('get /v1/organization_members', {
+          query: { limit: '10' },
+        }),
+      );
+
+      promises.add(
+        ensureApiQueryData('get /v1/projects', {
+          query: { limit: '10' },
+        }),
+      );
     }
 
     await Promise.all(promises);

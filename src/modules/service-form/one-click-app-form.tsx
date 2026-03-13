@@ -22,6 +22,7 @@ import {
   useInstancesCatalog,
   useRegionsCatalog,
 } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { Checkbox, ControlledInput, ControlledSelect } from 'src/components/forms';
@@ -73,18 +74,19 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   const navigate = useNavigate();
 
   const instances = useInstancesCatalog();
+  const [projectId] = useCurrentProjectId();
 
   const serviceFormRef = useRef(defaultServiceForm());
   const serviceForm = serviceFormRef.current;
 
   const form = useForm<OneClickAppForm>({
-    defaultValues: () => initialize(app, serviceFormRef.current, searchParams, queryClient),
+    defaultValues: () => initialize(app, projectId, serviceFormRef.current, searchParams, queryClient),
     resolver: zodResolver(createSchema(app)),
   });
 
   const mutation = useMutation({
     mutationKey: ['deployOneClickApp'],
-    mutationFn: (values: OneClickAppForm) => submitServiceForm(api, merge(serviceForm, values)),
+    mutationFn: (values: OneClickAppForm) => submitServiceForm(api, projectId, merge(serviceForm, values)),
     async onSuccess({ serviceId }) {
       await navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
@@ -128,6 +130,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
 
 async function initialize(
   app: OneClickApp,
+  projectId: string,
   serviceForm: ServiceForm,
   searchParams: URLSearchParams,
   queryClient: QueryClient,
@@ -138,8 +141,8 @@ async function initialize(
     .then(mapGithubApp)
     .catch(() => null);
 
-  const volumes = await api('get /v1/volumes', { query: { limit: '100' } }).then(({ volumes }) =>
-    volumes!.map(mapVolume),
+  const volumes = await api('get /v1/volumes', { query: { project_id: projectId, limit: '100' } }).then(
+    ({ volumes }) => volumes!.map(mapVolume),
   );
 
   merge(
