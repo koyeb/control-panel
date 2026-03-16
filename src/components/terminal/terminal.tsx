@@ -20,7 +20,7 @@ type TerminalProps = {
 };
 
 export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
-  const xterm = useMemo(() => new XTerm({}), []);
+  const xterm = useMemo(() => new XTerm(), []);
   const fitAddon = useMemo(() => new FitAddon(), []);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
