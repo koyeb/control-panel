@@ -2,40 +2,20 @@
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 
-import { useApi, useOrganization, useUser } from 'src/api';
 import { useLocation } from 'src/hooks/router';
-import { Organization, User } from 'src/model';
-
-import { getConfig } from './config';
-import { identifyUserInIntercom } from './intercom';
-import { identifyUserInSentry } from './sentry';
-
-// cSpell:ignore pageleave autocapture
 
 type PostHogProviderProps = {
+  client: PostHog | null;
   children: React.ReactNode;
 };
 
-export function PostHogProvider({ children }: PostHogProviderProps) {
-  const posthogApiHost = getConfig('posthogApiHost');
-  const posthogKey = getConfig('posthogKey');
-
-  if (posthogApiHost === undefined || posthogKey === undefined) {
-    return children;
+export function PostHogProvider({ client, children }: PostHogProviderProps) {
+  if (!client) {
+    return null;
   }
 
   return (
-    <PostHogJsProvider
-      apiKey={posthogKey}
-      options={{
-        api_host: posthogApiHost,
-        ui_host: 'https://eu.posthog.com',
-        capture_pageview: false,
-        capture_pageleave: true,
-        autocapture: false,
-      }}
-    >
-      <Identify />
+    <PostHogJsProvider client={client}>
       <TrackPageViews />
       {children}
     </PostHogJsProvider>
@@ -44,26 +24,6 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
 
 function usePostHog(): PostHog | undefined {
   return usePostHogJs();
-}
-
-function Identify() {
-  const user = useUser();
-  const organization = useOrganization();
-  const [identify, group] = useIdentifyUser();
-
-  useEffect(() => {
-    if (user) {
-      identify(user);
-    }
-  }, [identify, user]);
-
-  useEffect(() => {
-    if (organization) {
-      group(organization);
-    }
-  }, [group, organization]);
-
-  return null;
 }
 
 function TrackPageViews() {
@@ -77,36 +37,6 @@ function TrackPageViews() {
   }, [location, posthog]);
 
   return null;
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function useIdentifyUser() {
-  const api = useApi();
-  const posthog = usePostHog();
-
-  const identify = useCallback(
-    (user: User) => {
-      posthog?.identify(user.id);
-      identifyUserInSentry(user);
-      void identifyUserInIntercom(api, user);
-    },
-    [posthog, api],
-  );
-
-  const group = useCallback(
-    (organization: Organization) => {
-      posthog?.group('segment_group', organization.id);
-    },
-    [posthog],
-  );
-
-  const clear = useCallback(() => {
-    posthog?.reset();
-    identifyUserInSentry(null);
-    void identifyUserInIntercom(api, null);
-  }, [posthog, api]);
-
-  return [identify, group, clear] as const;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

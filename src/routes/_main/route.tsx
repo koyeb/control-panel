@@ -1,5 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+// eslint-disable-next-line no-restricted-imports
+import posthog from 'posthog-js';
 import z from 'zod';
 
 import {
@@ -7,6 +9,7 @@ import {
   createEnsureApiQueryData,
   mapCatalogDatacenter,
   mapOrganization,
+  mapUser,
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
@@ -22,11 +25,15 @@ import { useTrial } from 'src/modules/trial/use-trial';
 import { OnboardingPage } from 'src/pages/onboarding/onboarding.page';
 
 export const Route = createFileRoute('/_main')({
-  component: () => (
-    <PostHogProvider>
-      <Component />
-    </PostHogProvider>
-  ),
+  component: function RouteComponent() {
+    const { posthog } = Route.useRouteContext();
+
+    return (
+      <PostHogProvider client={posthog}>
+        <Component />
+      </PostHogProvider>
+    );
+  },
 
   validateSearch: z.object({
     'organization-id': z.string().optional(),
@@ -40,10 +47,24 @@ export const Route = createFileRoute('/_main')({
       await switchOrganization(authKit, search['organization-id']);
     }
 
-    await Promise.all([
-      ensureApiQueryData('get /v1/account/profile', {}),
-      ensureApiQueryData('get /v1/account/organization', {}).catch(() => undefined),
+    const [user, organization] = await Promise.all([
+      ensureApiQueryData('get /v1/account/profile', {}).then(({ user }) => mapUser(user!)),
+      ensureApiQueryData('get /v1/account/organization', {})
+        .then(({ organization }) => mapOrganization(organization!))
+        .catch(() => undefined),
     ]);
+
+    const posthog = initPosthog();
+
+    posthog?.identify(user.id);
+
+    if (organization) {
+      posthog?.group('segment_group', organization.id);
+    }
+
+    return {
+      posthog,
+    };
   },
 
   async loader({ context: { queryClient, seon } }) {
@@ -95,6 +116,24 @@ async function switchOrganization(authKit: AuthKit, externalId: string) {
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),
+  });
+}
+
+function initPosthog() {
+  const posthogApiHost = getConfig('posthogApiHost');
+  const posthogKey = getConfig('posthogKey');
+
+  if (posthogApiHost === undefined || posthogKey === undefined) {
+    return null;
+  }
+
+  // cSpell:ignore pageleave autocapture
+  return posthog.init(posthogKey, {
+    api_host: posthogApiHost,
+    ui_host: 'https://eu.posthog.com',
+    capture_pageview: false,
+    capture_pageleave: true,
+    autocapture: false,
   });
 }
 

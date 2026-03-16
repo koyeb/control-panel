@@ -140,6 +140,7 @@ const router = createRouter({
     authKit: undefined!,
     queryClient,
     seon,
+    posthog: null,
     translate,
   },
   Wrap({ children }) {

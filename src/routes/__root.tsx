@@ -2,6 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Outlet, createRootRouteWithContext, useRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { PostHog } from 'posthog-js';
 import { useEffect } from 'react';
 
 import { AuthKit } from 'src/application/authkit';
@@ -16,6 +17,7 @@ type RouterContext = {
   queryClient: QueryClient;
   seon: SeonAdapter;
   authKit: AuthKit;
+  posthog: PostHog | null;
   translate: TranslateFn;
   breadcrumb?: () => React.ReactNode;
 };

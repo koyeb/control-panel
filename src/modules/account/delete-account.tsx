@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiMutation, useOrganization, useUser } from 'src/api';
-import { useIdentifyUser } from 'src/application/posthog';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 import { User } from 'src/model';
@@ -58,7 +57,6 @@ export function DeleteAccount() {
 }
 
 function useDeleteMutation() {
-  const [, , clearIdentify] = useIdentifyUser();
   const { signOut } = useAuth();
 
   return useMutation({
@@ -67,7 +65,6 @@ function useDeleteMutation() {
     })),
     onSuccess() {
       closeDialog();
-      clearIdentify();
       signOut();
     },
   });

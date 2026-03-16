@@ -7,8 +7,10 @@ import {
 } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 import { unstable_useWidgetsInvalidator as useWidgetsInvalidator } from '@workos-inc/widgets/utils';
+// eslint-disable-next-line no-restricted-imports
+import { usePostHog } from 'posthog-js/react';
 
-import { apiQuery, getApiQueryKey, refetchInterval } from 'src/api';
+import { apiQuery, refetchInterval } from 'src/api';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 
@@ -37,6 +39,7 @@ export function useOrganization() {
 }
 
 export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | Promise<void> } = {}) {
+  const posthog = usePostHog();
   const queryClient = useQueryClient();
   const { switchToOrganization } = useAuth();
   const invalidateWidgets = useWidgetsInvalidator();
@@ -45,9 +48,16 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
     mutationFn: (externalId: string) => switchToOrganization({ organizationId: externalId }),
     async onSuccess() {
       await queryClient.cancelQueries();
-      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
+
+      const organization = await queryClient
+        .fetchQuery(apiQuery('get /v1/account/organization', {}))
+        .then(({ organization }) => mapOrganization(organization!));
+
+      posthog.group('segment_group', organization.id);
+
       await queryClient.invalidateQueries();
       await invalidateWidgets();
+
       await onSuccess?.();
     },
   });
