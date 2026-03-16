@@ -55,6 +55,10 @@ export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
       }
       return true;
     });
+
+    return () => {
+      xterm.attachCustomKeyEventHandler(() => true);
+    };
   }, [xterm, onData]);
 
   useWatchElementSize(container, () => fitAddon.fit());
