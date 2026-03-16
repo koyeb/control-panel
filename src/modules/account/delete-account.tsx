@@ -58,7 +58,7 @@ export function DeleteAccount() {
 }
 
 function useDeleteMutation() {
-  const [, clearIdentify] = useIdentifyUser();
+  const [, , clearIdentify] = useIdentifyUser();
   const { signOut } = useAuth();
 
   return useMutation({

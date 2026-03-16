@@ -2,9 +2,9 @@
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 
-import { useApi, useUser } from 'src/api';
+import { useApi, useOrganization, useUser } from 'src/api';
 import { useLocation } from 'src/hooks/router';
-import { User } from 'src/model';
+import { Organization, User } from 'src/model';
 
 import { getConfig } from './config';
 import { identifyUserInIntercom } from './intercom';
@@ -48,13 +48,20 @@ function usePostHog(): PostHog | undefined {
 
 function Identify() {
   const user = useUser();
-  const [identify] = useIdentifyUser();
+  const organization = useOrganization();
+  const [identify, group] = useIdentifyUser();
 
   useEffect(() => {
     if (user) {
       identify(user);
     }
   }, [identify, user]);
+
+  useEffect(() => {
+    if (organization) {
+      group(organization);
+    }
+  }, [group, organization]);
 
   return null;
 }
@@ -86,13 +93,20 @@ export function useIdentifyUser() {
     [posthog, api],
   );
 
+  const group = useCallback(
+    (organization: Organization) => {
+      posthog?.group('segment_group', organization.id);
+    },
+    [posthog],
+  );
+
   const clear = useCallback(() => {
     posthog?.reset();
     identifyUserInSentry(null);
     void identifyUserInIntercom(api, null);
   }, [posthog, api]);
 
-  return [identify, clear] as const;
+  return [identify, group, clear] as const;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
