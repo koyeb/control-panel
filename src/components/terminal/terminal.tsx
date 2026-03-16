@@ -10,7 +10,7 @@ import '@xterm/xterm/css/xterm.css';
 export type TerminalRef = {
   focus(): void;
   clear(): void;
-  write(chunk: string): void;
+  write(chunk: string | Uint8Array): void;
 };
 
 type TerminalProps = {
@@ -45,6 +45,16 @@ export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
     return () => {
       disposable.dispose();
     };
+  }, [xterm, onData]);
+
+  useEffect(() => {
+    xterm.attachCustomKeyEventHandler((e) => {
+      if (e.type === 'keydown' && e.metaKey && e.key === 'Backspace') {
+        onData('\x15');
+        return false;
+      }
+      return true;
+    });
   }, [xterm, onData]);
 
   useWatchElementSize(container, () => fitAddon.fit());
