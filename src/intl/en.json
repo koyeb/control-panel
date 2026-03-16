@@ -1948,6 +1948,8 @@
     "activity": {
       "documentTitle": "Activity",
       "title": "Recent activity",
+      "types": "{count, plural, one {# type} other {# types}} selected",
+      "empty": "No activities",
       "loadMore": "Load more"
     },
     "createDatabaseService": {

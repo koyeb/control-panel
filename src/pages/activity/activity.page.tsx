@@ -1,40 +1,45 @@
 import { Spinner } from '@koyeb/design-system';
 import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 import { getApiQueryKey, mapActivity, useApi } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
 import { DocumentTitle } from 'src/components/document-title';
+import { MultiSelectMenu, Select, multiSelectStateReducer } from 'src/components/forms';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useIntersectionObserver } from 'src/hooks/observers';
-import { useSearchParams } from 'src/hooks/router';
+import { IconCheck } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { Activity } from 'src/model';
 import { ActivityIcon } from 'src/modules/activity/activity-icon';
 import { ActivityItem } from 'src/modules/activity/activity-item';
-import { createArray } from 'src/utils/arrays';
+import { arrayToggle, createArray } from 'src/utils/arrays';
+import { identity } from 'src/utils/generic';
 
 const T = createTranslate('pages.activity');
 
 const pageSize = 20;
 
 const allTypes = [
-  'session',
-  'secret',
-  'deployment',
-  'domain',
-  'service',
-  'subscription',
-  'user',
   'app',
   'credential',
-  'organization_member',
+  'deployment',
+  'domain',
   'organization_invitation',
+  'organization_member',
   'organization',
+  'persistent_volume',
+  'secret',
+  'service',
+  'session',
+  'subscription',
+  'user',
 ];
 
 export function ActivityPage() {
@@ -43,12 +48,15 @@ export function ActivityPage() {
   const api = useApi();
   const queryClient = useQueryClient();
 
-  const params = useSearchParams();
-  const types = params.has('types') ? params.getAll('types') : allTypes;
+  const [types, setTypes] = useState(allTypes.filter((type) => type !== 'session'));
 
   const query = useInfiniteQuery({
     queryKey: getApiQueryKey('get /v1/activities', { query: { types } }),
     async queryFn({ pageParam }) {
+      if (types.length === 0) {
+        return [];
+      }
+
       return api('get /v1/activities', {
         query: {
           offset: String(pageParam * pageSize),
@@ -81,7 +89,14 @@ export function ActivityPage() {
     <>
       <DocumentTitle title={t('documentTitle')} />
 
-      <Title title={<T id="title" />} />
+      <Title
+        title={<T id="title" />}
+        end={
+          <FeatureFlag feature="activities-filter">
+            <ActivityTypesSelector types={types} setTypes={setTypes} />
+          </FeatureFlag>
+        }
+      />
 
       <div className="col">
         {query.isPending && (
@@ -118,6 +133,40 @@ function useInfiniteScroll(query: UseInfiniteQueryResult) {
   );
 }
 
+type ActivityTypesSelectorProps = {
+  types: string[];
+  setTypes: (types: string[]) => void;
+};
+
+function ActivityTypesSelector({ types, setTypes }: ActivityTypesSelectorProps) {
+  return (
+    <Select
+      items={allTypes}
+      onChange={(type) => setTypes(arrayToggle(types, type))}
+      select={{ stateReducer: multiSelectStateReducer }}
+      value={null}
+      renderValue={() => <T id="types" values={{ count: types.length }} />}
+      menu={(context) => (
+        <MultiSelectMenu
+          context={context}
+          items={allTypes}
+          selected={types}
+          getKey={identity}
+          onClearAll={() => setTypes([])}
+          onSelectAll={() => setTypes(allTypes)}
+          renderItem={(type, selected) => (
+            <div className="row items-center justify-between gap-4 px-3 py-1.5">
+              <div className="grow capitalize">{type.replaceAll('_', ' ')}</div>
+              {selected && <IconCheck className="size-4 text-green" />}
+            </div>
+          )}
+        />
+      )}
+      className="min-w-64"
+    />
+  );
+}
+
 function ActivitySkeleton() {
   return (
     <>
@@ -144,6 +193,14 @@ function ActivitySkeleton() {
 }
 
 function ActivityList({ activities }: { activities: Activity[] }) {
+  if (activities.length === 0) {
+    return (
+      <div className="mt-4 row min-h-48 items-center justify-center rounded-sm border text-dim">
+        <T id="empty" />
+      </div>
+    );
+  }
+
   return (
     <>
       {activities.map((activity, index) => (
