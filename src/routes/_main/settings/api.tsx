@@ -7,6 +7,6 @@ export const Route = createFileRoute('/_main/settings/api')({
   component: () => <BaseApiCredentialsPage type="organization" />,
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

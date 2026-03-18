@@ -7,6 +7,6 @@ export const Route = createFileRoute('/_main/services/$serviceId/console')({
   component: ServiceConsolePage,
 
   beforeLoad: ({ params }) => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} params={params} />,
+    breadcrumb: () => <CrumbLink to={Route.to} params={params} />,
   }),
 });

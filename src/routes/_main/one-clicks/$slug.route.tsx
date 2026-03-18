@@ -28,7 +28,7 @@ function Breadcrumb({ slug }: { slug: string }) {
   }
 
   return (
-    <CrumbLink to={Route.fullPath} params={{ slug }}>
+    <CrumbLink to={Route.to} params={{ slug }}>
       {app.data.metadata.name}
     </CrumbLink>
   );

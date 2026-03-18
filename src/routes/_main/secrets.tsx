@@ -7,6 +7,6 @@ export const Route = createFileRoute('/_main/secrets')({
   component: SecretsPage,
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

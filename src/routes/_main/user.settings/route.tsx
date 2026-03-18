@@ -11,6 +11,6 @@ export const Route = createFileRoute('/_main/user/settings')({
   ),
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

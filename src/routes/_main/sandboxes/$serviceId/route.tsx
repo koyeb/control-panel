@@ -32,7 +32,7 @@ function Crumb({ serviceId }: { serviceId: string }) {
   }
 
   return (
-    <CrumbLink to={Route.fullPath} params={{ serviceId }}>
+    <CrumbLink to={Route.to} params={{ serviceId }}>
       {query.data?.name ?? <TextSkeleton width={8} />}
     </CrumbLink>
   );

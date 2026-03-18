@@ -28,7 +28,7 @@ export const Route = createFileRoute('/_main/services/$serviceId/settings')({
   component: ServiceSettingsPage,
 
   beforeLoad: ({ params }) => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} params={params} />,
+    breadcrumb: () => <CrumbLink to={Route.to} params={params} />,
   }),
 });
 

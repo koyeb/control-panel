@@ -49,7 +49,7 @@ export function AppsServicesList() {
   });
 
   if (showServiceCreation) {
-    return <ServiceCreation from="/services" />;
+    return <ServiceCreation from="/services/" />;
   }
 
   return (

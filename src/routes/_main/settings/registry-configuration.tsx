@@ -7,6 +7,6 @@ export const Route = createFileRoute('/_main/settings/registry-configuration')({
   component: RegistrySecretsPage,
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

@@ -7,6 +7,6 @@ export const Route = createFileRoute('/_main/user/settings/organizations')({
   component: OrganizationsPage,
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

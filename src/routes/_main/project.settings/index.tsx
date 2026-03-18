@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_main/project/settings/')({
   component: RouteComponent,
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });
 

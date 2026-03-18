@@ -28,6 +28,6 @@ export const Route = createFileRoute('/_main/services/$serviceId/metrics')({
   }),
 
   beforeLoad: ({ params }) => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} params={params} />,
+    breadcrumb: () => <CrumbLink to={Route.to} params={params} />,
   }),
 });

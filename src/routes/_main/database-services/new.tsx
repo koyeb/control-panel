@@ -12,6 +12,6 @@ export const Route = createFileRoute('/_main/database-services/new')({
   }),
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

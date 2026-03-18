@@ -31,7 +31,7 @@ function isBefore(left: Step, right: Step) {
   return steps.indexOf(left) < steps.indexOf(right);
 }
 
-export function ServiceCreation({ from }: { from: '/' | '/services' | '/services/new' }) {
+export function ServiceCreation({ from }: { from: '/' | '/services/' | '/services/new' }) {
   const searchParams = useSearchParams();
   const { step: currentStep = 'serviceType' }: { step: Step } = useSearch({ strict: false });
 

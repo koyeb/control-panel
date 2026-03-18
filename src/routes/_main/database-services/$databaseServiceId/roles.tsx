@@ -7,6 +7,6 @@ export const Route = createFileRoute('/_main/database-services/$databaseServiceI
   component: DatabaseRolesPage,
 
   beforeLoad: ({ params }) => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} params={params} />,
+    breadcrumb: () => <CrumbLink to={Route.to} params={params} />,
   }),
 });

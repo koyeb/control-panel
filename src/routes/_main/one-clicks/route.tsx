@@ -6,6 +6,6 @@ export const Route = createFileRoute('/_main/one-clicks')({
   component: Outlet,
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

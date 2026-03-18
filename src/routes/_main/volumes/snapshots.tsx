@@ -21,7 +21,7 @@ export const Route = createFileRoute('/_main/volumes/snapshots')({
   },
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 
   async loader({ context: { queryClient } }) {

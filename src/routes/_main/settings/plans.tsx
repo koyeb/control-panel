@@ -7,6 +7,6 @@ export const Route = createFileRoute('/_main/settings/plans')({
   component: PlansPage,
 
   beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} />,
+    breadcrumb: () => <CrumbLink to={Route.to} />,
   }),
 });

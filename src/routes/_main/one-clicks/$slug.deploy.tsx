@@ -11,6 +11,6 @@ export const Route = createFileRoute('/_main/one-clicks/$slug/deploy')({
   },
 
   beforeLoad: ({ params }) => ({
-    breadcrumb: () => <CrumbLink to={Route.fullPath} params={params} />,
+    breadcrumb: () => <CrumbLink to={Route.to} params={params} />,
   }),
 });
