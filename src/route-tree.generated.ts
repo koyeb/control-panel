@@ -367,6 +367,7 @@ const MainAuthSsoCannyRoute = MainAuthSsoCannyRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof MainIndexRoute
   '/one-clicks': typeof MainOneClicksRouteRouteWithChildren
   '/sandboxes': typeof MainSandboxesRouteRouteWithChildren
   '/settings': typeof MainSettingsRouteRouteWithChildren
@@ -379,7 +380,6 @@ export interface FileRoutesByFullPath {
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signout': typeof AuthSignoutRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/': typeof MainIndexRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
   '/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
   '/sandboxes/$serviceId': typeof MainSandboxesServiceIdRouteRouteWithChildren
@@ -398,7 +398,7 @@ export interface FileRoutesByFullPath {
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/one-clicks/': typeof MainOneClicksIndexRoute
   '/sandboxes/': typeof MainSandboxesIndexRoute
-  '/services': typeof MainServicesIndexRoute
+  '/services/': typeof MainServicesIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/volumes/': typeof MainVolumesIndexRoute
   '/auth/sso/canny': typeof MainAuthSsoCannyRoute
@@ -418,7 +418,7 @@ export interface FileRoutesByFullPath {
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
-  '/project/settings': typeof MainProjectSettingsIndexRoute
+  '/project/settings/': typeof MainProjectSettingsIndexRoute
   '/sandboxes/$serviceId/': typeof MainSandboxesServiceIdIndexRoute
   '/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/user/settings/': typeof MainUserSettingsIndexRoute
@@ -533,6 +533,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/one-clicks'
     | '/sandboxes'
     | '/settings'
@@ -545,7 +546,6 @@ export interface FileRouteTypes {
     | '/auth/signin'
     | '/auth/signout'
     | '/auth/signup'
-    | '/'
     | '/database-services/$databaseServiceId'
     | '/one-clicks/$slug'
     | '/sandboxes/$serviceId'
@@ -564,7 +564,7 @@ export interface FileRouteTypes {
     | '/account/workos/callback'
     | '/one-clicks/'
     | '/sandboxes/'
-    | '/services'
+    | '/services/'
     | '/settings/'
     | '/volumes/'
     | '/auth/sso/canny'
@@ -584,7 +584,7 @@ export interface FileRouteTypes {
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId/'
     | '/one-clicks/$slug/'
-    | '/project/settings'
+    | '/project/settings/'
     | '/sandboxes/$serviceId/'
     | '/services/$serviceId/'
     | '/user/settings/'
@@ -712,7 +712,7 @@ declare module '@tanstack/react-router' {
     '/_main': {
       id: '/_main'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof MainRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -824,7 +824,7 @@ declare module '@tanstack/react-router' {
     '/_main/services/': {
       id: '/_main/services/'
       path: '/services'
-      fullPath: '/services'
+      fullPath: '/services/'
       preLoaderRoute: typeof MainServicesIndexRouteImport
       parentRoute: typeof MainRouteRoute
     }
@@ -978,7 +978,7 @@ declare module '@tanstack/react-router' {
     '/_main/project/settings/': {
       id: '/_main/project/settings/'
       path: '/project/settings'
-      fullPath: '/project/settings'
+      fullPath: '/project/settings/'
       preLoaderRoute: typeof MainProjectSettingsIndexRouteImport
       parentRoute: typeof MainRouteRoute
     }
