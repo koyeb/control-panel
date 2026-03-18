@@ -7,8 +7,6 @@ import { Flatten } from 'src/utils/types';
 import type translations from './en.json';
 import { TranslateFunction, createTranslationHelper } from './translation-helpers';
 
-/* eslint-disable react-refresh/only-export-components */
-
 export type TranslationKeys = keyof Flatten<typeof translations>;
 export type TranslateFn = TranslateFunction<TranslationKeys>;
 

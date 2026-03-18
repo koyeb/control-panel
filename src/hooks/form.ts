@@ -27,7 +27,7 @@ export function handleSubmit<Values extends FieldValues>(
   form: UseFormReturn<Values>,
   onValid: (values: Values) => unknown,
   onInvalid?: (errors: FieldErrors<Values>) => unknown,
-): React.FormEventHandler {
+): React.SubmitEventHandler {
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   return form.handleSubmit(
     // catch async errors to avoid reporting to sentry

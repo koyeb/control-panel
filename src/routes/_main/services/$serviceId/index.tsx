@@ -69,12 +69,16 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
       }),
 
       queryClient.ensureInfiniteQueryData({
-        queryKey: getApiQueryKey('get /v1/deployments', {
-          query: {
-            service_id: params.serviceId,
-            statuses: exclude(allApiDeploymentStatuses, 'STASHED'),
+        queryKey: getApiQueryKey(
+          'get /v1/deployments',
+          {
+            query: {
+              service_id: params.serviceId,
+              statuses: exclude(allApiDeploymentStatuses, 'STASHED'),
+            },
           },
-        }),
+          api,
+        ),
         queryFn: async ({ queryKey, pageParam }) => {
           return api('get /v1/deployments', {
             query: {

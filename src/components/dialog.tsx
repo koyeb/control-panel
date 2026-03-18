@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import {
   Dialog as BaseDialog,
   DialogFooter as BaseDialogFooter,

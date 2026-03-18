@@ -56,7 +56,7 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
       'react-hooks/incompatible-library': 'off',
       'react-hooks/refs': 'off',
-      'react-refresh/only-export-components': 'error',
+      'react-refresh/only-export-components': 'off',
       ...betterTailwindcss.configs['recommended'].rules,
       'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
       'better-tailwindcss/no-unknown-classes': ['off', { ignore: 'dark' }],

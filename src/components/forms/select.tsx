@@ -259,7 +259,6 @@ function useClickAway(elements: Array<Element | null>, cb: () => void) {
   }, [cb]);
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function multiSelectStateReducer<T>(
   state: UseSelectState<T>,
   { type, changes }: UseSelectStateChangeOptions<T>,

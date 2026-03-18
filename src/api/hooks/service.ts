@@ -61,12 +61,16 @@ export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStat
   const api = useApi();
 
   return useInfiniteQuery({
-    queryKey: getApiQueryKey('get /v1/deployments', {
-      query: {
-        service_id: serviceId,
-        statuses,
+    queryKey: getApiQueryKey(
+      'get /v1/deployments',
+      {
+        query: {
+          service_id: serviceId,
+          statuses,
+        },
       },
-    }),
+      api,
+    ),
 
     async queryFn({ queryKey: [, { query }], pageParam }) {
       return api('get /v1/deployments', {

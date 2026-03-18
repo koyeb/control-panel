@@ -17,7 +17,7 @@ export function useGithubAppQuery(refetchInterval?: number) {
   const api = useApi();
 
   return useQuery({
-    queryKey: getApiQueryKey('get /v1/github/installation', {}),
+    queryKey: getApiQueryKey('get /v1/github/installation', {}, api),
     queryFn: async ({ signal }) => {
       return api('get /v1/github/installation', {}, { signal }).catch((error) => {
         if (isNoGithubAppError(error)) {

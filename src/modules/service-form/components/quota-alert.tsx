@@ -27,7 +27,7 @@ export function QuotaAlert(props: QuotaAlertProps) {
 
   const { data: message } = useQuery({
     placeholderData: keepPreviousData,
-    queryKey: ['quotaAlert', { serviceId, dryRun: true, values }],
+    queryKey: ['quotaAlert', { projectId, serviceId, dryRun: true, values }, api],
     async queryFn({ signal }) {
       if (!(await wait(500, signal))) {
         return null;

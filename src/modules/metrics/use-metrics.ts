@@ -54,7 +54,7 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
       return {
         meta: { getAccessToken, showError: false },
         refetchInterval: refetchInterval(60 * 1000, 5 * 60 * 1000),
-        queryKey: getApiQueryKey('get /v1/streams/metrics', { query }),
+        queryKey: getApiQueryKey('get /v1/streams/metrics', { query }, api),
         queryFn: () => {
           const duration = timeFrameToDuration[timeFrame];
           const start = sub(new Date(), duration).toISOString();

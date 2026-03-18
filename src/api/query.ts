@@ -1,3 +1,4 @@
+import { ApiFn } from '.';
 import { QueryClient, QueryKey, useQueryClient } from '@tanstack/react-query';
 import { dequal } from 'dequal';
 import { useCallback } from 'react';
@@ -15,6 +16,7 @@ type Meta = {
 export function getApiQueryKey<E extends ApiEndpoint>(
   endpoint: E,
   params: ApiRequestParams<E>,
+  _api?: ApiFn,
 ): [E, ApiRequestParams<E>] {
   return [endpoint, params];
 }

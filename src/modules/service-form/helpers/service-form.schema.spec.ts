@@ -88,20 +88,20 @@ describe('serviceFormSchema', () => {
     parse();
 
     form.scaling.scaleToZero.idlePeriod = 0;
-    expect(() => parse()).toThrowError('Too small: expected number to be >60');
+    expect(() => parse()).toThrow('Too small: expected number to be >60');
 
     form.scaling.scaleToZero.idlePeriod = 1e10;
-    expect(() => parse()).toThrowError('Too big: expected number to be <3600');
+    expect(() => parse()).toThrow('Too big: expected number to be <3600');
 
     form.scaling.scaleToZero.idlePeriod = 60;
     form.scaling.scaleToZero.lightToDeepPeriod = 0;
-    expect(() => parse()).toThrowError('Too small: expected number to be >240');
+    expect(() => parse()).toThrow('Too small: expected number to be >240');
 
     form.scaling.scaleToZero.lightToDeepPeriod = 1e10;
-    expect(() => parse()).toThrowError('Too big: expected number to be <7140');
+    expect(() => parse()).toThrow('Too big: expected number to be <7140');
 
     form.scaling.scaleToZero.idlePeriod = 70;
-    expect(() => parse()).toThrowError('Too big: expected number to be <7130');
+    expect(() => parse()).toThrow('Too big: expected number to be <7130');
   });
 
   it('scale to zero on the hobby plan', () => {

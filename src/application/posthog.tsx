@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-imports, react-refresh/only-export-components */
+/* eslint-disable no-restricted-imports */
 import posthog from 'posthog-js';
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';

@@ -55,7 +55,6 @@ export function Pagination({ pagination }: { pagination: ReturnType<typeof usePa
 
 export type Pagination = ReturnType<typeof usePagination>;
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function usePagination(initialPageSize: PageSize = 10) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(initialPageSize);

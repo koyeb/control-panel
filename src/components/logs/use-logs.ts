@@ -103,18 +103,22 @@ function useLogsHistory(params: Omit<UseLogsParams, 'tail' | 'ansiMode'>) {
 
     placeholderData: keepPreviousData,
 
-    queryKey: getApiQueryKey('get /v1/streams/logs/query', {
-      query: {
-        deployment_id: deploymentId,
-        instance_id: instanceId,
-        type,
-        regions: regions?.length === 0 ? ['none'] : regions,
-        streams: streams?.length === 0 ? [''] : streams,
-        text: search || undefined,
-        limit: '100',
-        order: 'desc',
+    queryKey: getApiQueryKey(
+      'get /v1/streams/logs/query',
+      {
+        query: {
+          deployment_id: deploymentId,
+          instance_id: instanceId,
+          type,
+          regions: regions?.length === 0 ? ['none'] : regions,
+          streams: streams?.length === 0 ? [''] : streams,
+          text: search || undefined,
+          limit: '100',
+          order: 'desc',
+        },
       },
-    }),
+      api,
+    ),
 
     queryFn: async ({ queryKey: [endpoint, { query }], pageParam }) => {
       return api(endpoint, {

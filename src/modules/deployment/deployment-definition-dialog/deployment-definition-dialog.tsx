@@ -63,7 +63,10 @@ function DeploymentJson({ definition }: { definition: object }) {
         className="max-h-128 overflow-auto rounded-md bg-muted p-2 scrollbar-green dark:bg-neutral"
       />
 
-      <CopyIconButton text={JSON.stringify(definition)} className="absolute end-6 top-4 size-4 text-icon" />
+      <CopyIconButton
+        text={JSON.stringify(definition)}
+        className="absolute inset-e-6 top-4 size-4 text-icon"
+      />
     </div>
   );
 }

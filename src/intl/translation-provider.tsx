@@ -15,7 +15,6 @@ export function IntlProvider({ children }: IntlProviderProps) {
   );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function createTranslateFn(): TranslateFn {
   const intl = createIntl(
     {

@@ -52,7 +52,7 @@ const allTypes = [
   'user',
 ];
 
-export function ActivityPage() {
+function ActivityPage() {
   const t = T.useTranslate();
 
   const api = useApi();
@@ -61,7 +61,7 @@ export function ActivityPage() {
   const [types, setTypes] = useState(allTypes.filter((type) => type !== 'session'));
 
   const query = useInfiniteQuery({
-    queryKey: getApiQueryKey('get /v1/activities', { query: { types } }),
+    queryKey: getApiQueryKey('get /v1/activities', { query: { types } }, api),
     async queryFn({ pageParam }) {
       if (types.length === 0) {
         return [];
