@@ -1,8 +1,13 @@
-// eslint-disable-next-line no-restricted-imports
-import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
+/* eslint-disable no-restricted-imports, react-refresh/only-export-components */
+import posthog from 'posthog-js';
+import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 
 import { useLocation } from 'src/hooks/router';
+
+import { getConfig } from './config';
+
+export { type PostHog };
 
 type PostHogProviderProps = {
   client: PostHog | null;
@@ -11,27 +16,36 @@ type PostHogProviderProps = {
 
 export function PostHogProvider({ client, children }: PostHogProviderProps) {
   if (!client) {
+    return children;
+  }
+
+  return <PostHogJsProvider client={client}>{children}</PostHogJsProvider>;
+}
+
+export function initPosthog() {
+  const posthogApiHost = getConfig('posthogApiHost');
+  const posthogKey = getConfig('posthogKey');
+
+  if (posthogApiHost === undefined || posthogKey === undefined) {
     return null;
   }
 
-  return (
-    <PostHogJsProvider client={client}>
-      <TrackPageViews />
-      {children}
-    </PostHogJsProvider>
-  );
+  // cSpell:ignore pageleave autocapture
+  return posthog.init(posthogKey, {
+    api_host: posthogApiHost,
+    ui_host: 'https://eu.posthog.com',
+    capture_pageview: false,
+    capture_pageleave: true,
+    autocapture: false,
+  });
 }
 
-function usePostHog(): PostHog | undefined {
-  return usePostHogJs();
-}
-
-function TrackPageViews() {
+export function TrackPageViews() {
   const location = useLocation();
   const posthog = usePostHog();
 
   useEffect(() => {
-    posthog?.capture('$pageview', {
+    posthog.capture('$pageview', {
       $current_url: window.location.href,
     });
   }, [location, posthog]);
@@ -39,13 +53,12 @@ function TrackPageViews() {
   return null;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useTrackEvent() {
   const posthog = usePostHog();
 
   return useCallback(
     (event: string, properties: Record<string, unknown> = {}) => {
-      posthog?.capture(event, properties);
+      posthog.capture(event, properties);
     },
     [posthog],
   );

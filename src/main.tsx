@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom/client';
 import { ApiError } from './api';
 import { AuthKitProvider } from './application/authkit';
 import { notify } from './application/notify';
+import { PostHogProvider, TrackPageViews, initPosthog } from './application/posthog';
 import { reportError } from './application/sentry';
 import { configureZod } from './application/validation';
 import { SeonAdapter } from './hooks/seon';
@@ -105,8 +106,6 @@ function retry(failureCount: number, error: Error) {
   return failureCount <= 3;
 }
 
-const seon = new SeonAdapter();
-
 const queryClient = new QueryClient({
   queryCache,
   mutationCache,
@@ -121,6 +120,8 @@ const queryClient = new QueryClient({
   },
 });
 
+const seon = new SeonAdapter();
+const posthog = initPosthog();
 const translate = createTranslateFn();
 
 configureZod(translate);
@@ -140,16 +141,24 @@ const router = createRouter({
     authKit: undefined!,
     queryClient,
     seon,
-    posthog: null,
+    posthog,
     translate,
   },
   Wrap({ children }) {
     return (
-      <IntlProvider>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </IntlProvider>
+      <PostHogProvider client={posthog}>
+        <IntlProvider>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </IntlProvider>
+      </PostHogProvider>
     );
   },
+  InnerWrap: ({ children }) => (
+    <>
+      <TrackPageViews />
+      {children}
+    </>
+  ),
 });
 
 const rootElement = document.getElementById('root')!;

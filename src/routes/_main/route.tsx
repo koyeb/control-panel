@@ -1,7 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
-// eslint-disable-next-line no-restricted-imports
-import posthog from 'posthog-js';
 import z from 'zod';
 
 import {
@@ -17,7 +15,6 @@ import { getCurrentProjectId, setCurrentProjectId } from 'src/api/hooks/project'
 import { AuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useOnboardingStep } from 'src/application/onboarding';
-import { PostHogProvider } from 'src/application/posthog';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -26,22 +23,14 @@ import { useTrial } from 'src/modules/trial/use-trial';
 import { OnboardingPage } from 'src/pages/onboarding/onboarding.page';
 
 export const Route = createFileRoute('/_main')({
-  component: function RouteComponent() {
-    const { posthog } = Route.useRouteContext();
-
-    return (
-      <PostHogProvider client={posthog}>
-        <Component />
-      </PostHogProvider>
-    );
-  },
+  component: Component,
 
   validateSearch: z.object({
     'organization-id': z.string().optional(),
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ search, context: { authKit, seon, queryClient } }) {
+  async beforeLoad({ search, context: { authKit, seon, queryClient, posthog } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (search['organization-id']) {
@@ -77,8 +66,6 @@ export const Route = createFileRoute('/_main')({
         }
       }
     }
-
-    const posthog = initPosthog();
 
     posthog?.identify(user.id);
 
@@ -156,24 +143,6 @@ async function switchOrganization(authKit: AuthKit, externalId: string) {
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),
-  });
-}
-
-function initPosthog() {
-  const posthogApiHost = getConfig('posthogApiHost');
-  const posthogKey = getConfig('posthogKey');
-
-  if (posthogApiHost === undefined || posthogKey === undefined) {
-    return null;
-  }
-
-  // cSpell:ignore pageleave autocapture
-  return posthog.init(posthogKey, {
-    api_host: posthogApiHost,
-    ui_host: 'https://eu.posthog.com',
-    capture_pageview: false,
-    capture_pageleave: true,
-    autocapture: false,
   });
 }
 
