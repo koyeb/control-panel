@@ -15,6 +15,7 @@ import { getCurrentProjectId, setCurrentProjectId } from 'src/api/hooks/project'
 import { AuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useOnboardingStep } from 'src/application/onboarding';
+import { reportError } from 'src/application/sentry';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -30,7 +31,7 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ search, context: { authKit, seon, queryClient, posthog } }) {
+  async beforeLoad({ search, context: { authKit, queryClient, posthog } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (search['organization-id']) {
@@ -38,9 +39,7 @@ export const Route = createFileRoute('/_main')({
     }
 
     const [user, organization] = await Promise.all([
-      ensureApiQueryData('get /v1/account/profile', {
-        header: { 'seon-fp': await seon.getFingerprint() },
-      }).then(({ user }) => mapUser(user!)),
+      ensureApiQueryData('get /v1/account/profile', {}).then(({ user }) => mapUser(user!)),
       ensureApiQueryData('get /v1/account/organization', {})
         .then(({ organization }) => mapOrganization(organization!))
         .catch(() => undefined),
@@ -81,9 +80,10 @@ export const Route = createFileRoute('/_main')({
     };
   },
 
-  async loader({ context: { queryClient, organization } }) {
+  async loader({ context: { queryClient, organization, seon } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
+    seon.initialize(queryClient).catch(reportError);
     void preloadDatacentersLatencies(queryClient);
 
     const promises = new Set<Promise<unknown>>();
