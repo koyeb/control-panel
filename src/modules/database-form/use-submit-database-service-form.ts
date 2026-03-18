@@ -77,7 +77,7 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(api: ApiFn, projectId: string, appName: string): Promise<string> {
+async function getDatabaseAppId(api: ApiFn, projectId: string | undefined, appName: string): Promise<string> {
   const { apps } = await api('get /v1/apps', {
     query: { name: appName, project_id: projectId },
   });
@@ -95,7 +95,11 @@ async function getDatabaseAppId(api: ApiFn, projectId: string, appName: string):
   return app!.id!;
 }
 
-function createApiService(projectId: string, appId: string, values: DatabaseServiceForm): API.CreateService {
+function createApiService(
+  projectId: string | undefined,
+  appId: string,
+  values: DatabaseServiceForm,
+): API.CreateService {
   return {
     app_id: appId,
     project_id: projectId,

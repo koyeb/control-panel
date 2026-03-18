@@ -5,7 +5,6 @@ import { AppsFullFilters, getApi, listAppsFull } from 'src/api';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 import { AppsServicesList } from 'src/modules/services-list/apps-services-list';
-import { assert } from 'src/utils/assert';
 
 export const Route = createFileRoute('/_main/services/')({
   component: AppsServicesList,
@@ -33,16 +32,15 @@ export const Route = createFileRoute('/_main/services/')({
   async loader({ context: { authKit, queryClient, projectId } }) {
     const api = getApi(authKit.getAccessToken);
 
-    assert(projectId !== null);
-
     const filters: AppsFullFilters = {
+      projectId,
       types: ['WEB', 'WORKER', 'DATABASE'],
       statuses: ['STARTING', 'RESUMING', 'HEALTHY', 'DEGRADED', 'UNHEALTHY', 'PAUSED', 'DELETED'],
     };
 
     await queryClient.ensureQueryData({
-      queryKey: ['listAppsFull', { api, projectId, filters }],
-      queryFn: () => listAppsFull(api, projectId, filters),
+      queryKey: ['listAppsFull', { api, filters }],
+      queryFn: () => listAppsFull(api, filters),
     });
   },
 });

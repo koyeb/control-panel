@@ -130,7 +130,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
 
 async function initialize(
   app: OneClickApp,
-  projectId: string,
+  projectId: string | undefined,
   serviceForm: ServiceForm,
   searchParams: URLSearchParams,
   queryClient: QueryClient,

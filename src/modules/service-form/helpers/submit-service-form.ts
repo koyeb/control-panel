@@ -15,7 +15,7 @@ type SubmitServiceFormResult = {
 
 export async function submitServiceForm(
   api: ApiFn,
-  projectId: string,
+  projectId: string | undefined,
   form: ServiceForm,
 ): Promise<SubmitServiceFormResult> {
   let appId = form.meta.appId ?? undefined;
@@ -38,7 +38,7 @@ export async function submitServiceForm(
   }
 }
 
-async function findOrCreateApp(api: ApiFn, projectId: string, appName: string): Promise<string> {
+async function findOrCreateApp(api: ApiFn, projectId: string | undefined, appName: string): Promise<string> {
   const { apps } = await api('get /v1/apps', {
     query: { project_id: projectId, name: appName, limit: '100' },
   });
@@ -56,7 +56,7 @@ async function findOrCreateApp(api: ApiFn, projectId: string, appName: string): 
   return newApp!.id!;
 }
 
-async function createVolumes(api: ApiFn, projectId: string, form: ServiceForm): Promise<void> {
+async function createVolumes(api: ApiFn, projectId: string | undefined, form: ServiceForm): Promise<void> {
   const { volumes: existingVolumes } = await api('get /v1/volumes', {
     query: { project_id: projectId, limit: '100' },
   });
@@ -87,7 +87,7 @@ async function createVolumes(api: ApiFn, projectId: string, form: ServiceForm): 
 async function createVolume(
   api: ApiFn,
   index: number,
-  projectId: string,
+  projectId: string | undefined,
   name: string,
   size: number,
   region: string,
@@ -117,7 +117,7 @@ async function createVolume(
 
 async function createService(
   api: ApiFn,
-  projectId: string,
+  projectId: string | undefined,
   appId: string,
   form: ServiceForm,
   dryRun: true,
@@ -125,7 +125,7 @@ async function createService(
 
 async function createService(
   api: ApiFn,
-  projectId: string,
+  projectId: string | undefined,
   appId: string,
   form: ServiceForm,
   dryRun?: false,
@@ -133,7 +133,7 @@ async function createService(
 
 async function createService(
   api: ApiFn,
-  projectId: string,
+  projectId: string | undefined,
   appId: string,
   form: ServiceForm,
   dryRun = false,

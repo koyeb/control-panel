@@ -169,7 +169,7 @@ function useSearchServicesQuery(region: string, search: string) {
   });
 }
 
-async function listApps(api: ApiFn, projectId: string, signal: AbortSignal): Promise<App[]> {
+async function listApps(api: ApiFn, projectId: string | undefined, signal: AbortSignal): Promise<App[]> {
   return api('get /v1/apps', { query: { project_id: projectId, limit: '100' } }, { signal }).then(
     ({ apps }) => apps!.map(mapApp),
   );
@@ -181,7 +181,7 @@ async function getApp(api: ApiFn, appId: string, signal: AbortSignal): Promise<A
 
 async function searchServices(
   api: ApiFn,
-  projectId: string,
+  projectId: string | undefined,
   region: string,
   search: string,
   signal: AbortSignal,

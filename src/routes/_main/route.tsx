@@ -57,10 +57,10 @@ export const Route = createFileRoute('/_main')({
         .catch(() => undefined),
     ]);
 
-    let projectId = getCurrentProjectId();
+    let projectId = getCurrentProjectId() ?? undefined;
 
     if (organization !== undefined) {
-      if (projectId === null) {
+      if (projectId === undefined) {
         projectId = organization.defaultProjectId;
         setCurrentProjectId(projectId);
       }

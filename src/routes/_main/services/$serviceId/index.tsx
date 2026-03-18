@@ -5,7 +5,6 @@ import { createEnsureApiQueryData, getApi, getApiQueryKey, mapService } from 'sr
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
 import { exclude } from 'src/utils/arrays';
-import { assert } from 'src/utils/assert';
 
 export const Route = createFileRoute('/_main/services/$serviceId/')({
   component: function Component() {
@@ -42,8 +41,6 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
         }),
       });
     }
-
-    assert(projectId !== null);
 
     await Promise.all([
       ensureApiQueryData('get /v1/volumes', {

@@ -40,6 +40,7 @@ export function useApp(appId?: string) {
 }
 
 export type AppsFullFilters = Partial<{
+  projectId: string;
   name: string;
   types: Uppercase<ServiceType>[];
   statuses: ServiceStatus[];
@@ -47,11 +48,10 @@ export type AppsFullFilters = Partial<{
 
 export function useAppsFull(filters: AppsFullFilters = {}) {
   const api = useApi();
-  const [projectId] = useCurrentProjectId();
 
   return useQuery({
-    queryKey: ['listAppsFull', { api, projectId, filters }],
-    queryFn: ({ signal }) => listAppsFull(api, projectId, filters, signal),
+    queryKey: ['listAppsFull', { api, filters }],
+    queryFn: ({ signal }) => listAppsFull(api, filters, signal),
     placeholderData: keepPreviousData,
     refetchInterval(query) {
       const servicesCount = query.state.data?.services.length ?? 0;
@@ -93,19 +93,14 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
   });
 }
 
-export async function listAppsFull(
-  api: ApiFn,
-  projectId: string,
-  filters: AppsFullFilters = {},
-  signal?: AbortSignal,
-) {
+export async function listAppsFull(api: ApiFn, filters: AppsFullFilters = {}, signal?: AbortSignal) {
   if (filters.types?.length === 0 || filters.statuses?.length === 0) {
     return { apps: [], services: [], activeDeployments: [], latestDeployments: [] };
   }
 
   const [apps, services, deployments] = await Promise.all([
-    listApps(api, projectId, signal),
-    listServices(api, filters, projectId, signal),
+    listApps(api, filters.projectId, signal),
+    listServices(api, filters, signal),
     api('get /v1/deployments', { query: { limit: '100' } }, { signal }),
   ]);
 
@@ -157,7 +152,7 @@ export async function listAppsFull(
   };
 }
 
-async function listApps(api: ApiFn, projectId: string, signal?: AbortSignal) {
+async function listApps(api: ApiFn, projectId: string | undefined, signal?: AbortSignal) {
   const apps: API.App[] = [];
   let hasNext = true;
 
@@ -175,7 +170,7 @@ async function listApps(api: ApiFn, projectId: string, signal?: AbortSignal) {
   return apps;
 }
 
-async function listServices(api: ApiFn, filters: AppsFullFilters, projectId: string, signal?: AbortSignal) {
+async function listServices(api: ApiFn, { projectId, ...filters }: AppsFullFilters, signal?: AbortSignal) {
   const services: API.Service[] = [];
   let hasNext = true;
 

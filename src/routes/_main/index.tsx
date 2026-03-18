@@ -1,7 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import { createEnsureApiQueryData, listAppsFull, mapOrganization, useAppsFull } from 'src/api';
+import {
+  AppsFullFilters,
+  createEnsureApiQueryData,
+  listAppsFull,
+  mapOrganization,
+  useAppsFull,
+} from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -10,7 +17,6 @@ import { Activities } from 'src/modules/home/activities/activities';
 import { Apps } from 'src/modules/home/apps/apps';
 import { HomePageBanner } from 'src/modules/home/banner/banner';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
-import { assert } from 'src/utils/assert';
 
 export const Route = createFileRoute('/_main/')({
   component: HomePage,
@@ -39,11 +45,14 @@ export const Route = createFileRoute('/_main/')({
     );
 
     if (organization.status === 'ACTIVE') {
-      assert(projectId !== null);
+      const filters: AppsFullFilters = {
+        projectId,
+        types: ['WEB', 'WORKER', 'DATABASE'],
+      };
 
       await queryClient.ensureQueryData({
-        queryKey: ['listAppsFull', { api, projectId, filters: { types: ['WEB', 'WORKER', 'DATABASE'] } }],
-        queryFn: () => listAppsFull(api, projectId, { types: ['WEB', 'WORKER', 'DATABASE'] }),
+        queryKey: ['listAppsFull', { api, filters }],
+        queryFn: () => listAppsFull(api, filters),
       });
     }
   },
@@ -63,7 +72,8 @@ const banner = {
 };
 
 function HomePage() {
-  const query = useAppsFull({ types: ['WEB', 'WORKER', 'DATABASE'] });
+  const [projectId] = useCurrentProjectId();
+  const query = useAppsFull({ projectId, types: ['WEB', 'WORKER', 'DATABASE'] });
 
   if (query.isPending) {
     return <Loading />;

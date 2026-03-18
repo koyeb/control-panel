@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 
 import { useApps, useAppsFull } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { QueryGuard } from 'src/components/query-error';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
@@ -38,7 +39,10 @@ export function AppsServicesList() {
   const apps = useApps();
   const showServiceCreation = apps?.length === 0;
 
+  const [projectId] = useCurrentProjectId();
+
   const query = useAppsFull({
+    projectId,
     name: searchDebounced || undefined,
     types,
     statuses,

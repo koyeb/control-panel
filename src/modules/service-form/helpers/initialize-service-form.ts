@@ -42,7 +42,7 @@ type ApiFn = ReturnType<typeof createEnsureApiQueryData>;
 
 export async function initializeServiceForm(
   params: URLSearchParams,
-  projectId: string,
+  projectId: string | undefined,
   serviceId: string | undefined,
   expandedSection: ServiceFormSection | undefined,
   queryClient: QueryClient,
@@ -275,7 +275,7 @@ async function getDeployment(api: ApiFn, deploymentId: string) {
     });
 }
 
-async function getVolumes(api: ApiFn, projectId: string) {
+async function getVolumes(api: ApiFn, projectId: string | undefined) {
   // todo: handle pagination at some point
   return api('get /v1/volumes', { query: { project_id: projectId, limit: '100' } }).then(
     ({ volumes }) => volumes,
