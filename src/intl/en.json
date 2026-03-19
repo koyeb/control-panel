@@ -1856,7 +1856,7 @@
         "default": "default"
       },
       "breadcrumbs": {
-        "/services/": "Services",
+        "/services": "Services",
         "/volumes": "Volumes",
         "/volumes/new": "Create volume",
         "/volumes/snapshots": "Snapshots",
@@ -1887,7 +1887,7 @@
         "/sandboxes": "Sandboxes",
         "/sandboxes/$serviceId/metrics": "Metrics",
         "/sandboxes/$serviceId/console": "Console",
-        "/project/settings/": "Project settings"
+        "/project/settings": "Project settings"
       }
     },
     "secondary": {
