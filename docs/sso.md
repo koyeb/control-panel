@@ -5,7 +5,7 @@ Koyeb users can sign in to some third party websites using SSO. Currently, this 
 - Canny (feedback.koyeb.com)
 - Discourse (community.koyeb.com)
 
-When users want to log in, they click a button that redirected them to the control panel, where they can
+When users want to log in, they click a button that redirects them to the control panel, where they
 authenticate (if needed). Once they're logged in, the control panel redirects back to where they came from,
 and they are authenticated.
 
@@ -41,4 +41,13 @@ the third party website, and the user will be authenticated there.
 - Redirect URL: `https://community.koyeb.com/session/sso_login`
 - Redirect query parameters: `sso` and `sig` (from the API)
 
-> Note: don't use URLSearchParams to redirect to discourse, as `sso` is already url encoded
+> Note: don't use URLSearchParams to redirect to Discourse, as `sso` is already URL-encoded
+
+## Error Handling
+
+If the SSO API call fails, both routes show an error toast and redirect the user to the home page.
+
+## Route Files
+
+- `src/routes/_main/auth/sso.canny.tsx`
+- `src/routes/_main/auth/sso.discourse.tsx`

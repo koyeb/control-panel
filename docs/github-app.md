@@ -1,54 +1,65 @@
-# GitHub app installation flow
+# GitHub App Installation Flow
 
-Here is an overview of the github app installation process.
+Overview of the GitHub app installation process.
 
 1. The user clicks the "Install GitHub app" button
-2. The control panel calls the API to retrieve a github URL and redirects to it
-3. The user follows the process on github, and gets redirected to the control panel
+2. The control panel calls the API to retrieve a GitHub URL and redirects to it
+3. The user follows the process on GitHub and gets redirected to the control panel
 4. The control panel calls the API to confirm the installation
 5. The API indexes the repositories
 
-## Retrieve the github redirect URL
+## Retrieve the GitHub Redirect URL
 
-To retrieve the github URL that will be used to redirect the user, the control panel calls the
+To retrieve the GitHub URL that will be used to redirect the user, the control panel calls the
 `POST /v1/github/installation` API endpoint.
 
 This endpoint accepts a `metadata` property, that will be preserved during the flow. It is used to store the current
 URL, and redirect to it once the installation is done.
 
-## Redirection from github
+## Redirection from GitHub
 
-When the user has completed their part on github, they get redirected to the control panel's `/api/app/github/callback`
+When the user has completed their part on GitHub, they get redirected to the control panel's `/account/oauth/github/callback`
 page with some query parameters:
 
-- `setup_action`: `install`
-- `state`: a json web token
-- `code`: a string
-- `installation_id`: a string
+- `setup_action` — `install`
+- `state` — a JSON web token
+- `code` — a string
+- `installation_id` — a string
 
-The `state`'s payload contains the `metadata` property.
+The `state` JWT payload contains:
 
-## Confirm the installation
+- `metadata` — The URL to redirect back to after the flow (default: `/`)
+- `organization_id` — The Koyeb organization ID
+- `action` — The action that triggered the flow
 
-To confirm the installation, the control panel needs to call the `POST /v1/account/oauth` API endpoint with the 3 query
-parameters (`installation_id`, `setup_action` and `state`) in the request's body.
+## Confirm the Installation
 
-## 2-step installation
+To confirm the installation, the control panel calls the `POST /v1/account/oauth` API endpoint with the query
+parameters (`installation_id`, `setup_action`, `code`, and `state`) in the request body.
 
-If the user does not have the required permissions on github to install the app, this process ends up in a pending
-installation request, which should be validated by an admin of their github organization.
+After confirmation, the user is redirected back to the URL stored in `metadata`.
 
-In this case, the query parameters returned by github are:
+## 2-Step Installation
 
-- `setup_action`: `request`
-- `code`: a string
-- `state`: a json web token
+If the user does not have the required permissions on GitHub to install the app, this process ends up in a pending
+installation request, which should be validated by an admin of their GitHub organization.
 
-When the installation is validated, the github admin is redirected to the github callback page, with the query
-parameters:
+In this case, the query parameters returned by GitHub are:
 
-- `setup_action`: `install`
-- `code`: a string
-- `installation_id`: a string
+- `setup_action` — `request`
+- `code` — a string
+- `state` — a JSON web token
 
-Note that as this happens asynchronously, the user who validates the installation might not be authenticated.
+The user is redirected back with `githubAppInstallationRequested: true` in the router state, so the UI can show a "pending approval" message.
+
+When the installation is validated by the admin, GitHub redirects to the callback page with:
+
+- `setup_action` — `install`
+- `code` — a string
+- `installation_id` — a string
+
+Note that as this happens asynchronously, the admin who validates the installation might not be authenticated. In this case, the `state` parameter is absent, and the control panel shows a confirmation page instead of redirecting.
+
+## Route File
+
+- `src/routes/account/oauth.github.callback.tsx`

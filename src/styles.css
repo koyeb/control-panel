@@ -69,7 +69,7 @@
   --toastify-font-family: var(--font-sans);
   --toastify-toast-shadow: none;
   --toastify-toast-padding: 0;
-  --toastify-z-index: 70;
+  --toastify-z-index: 60;
 }
 
 @keyframes notification {
