@@ -51,7 +51,6 @@
     "date-fns": "^4.1.0",
     "dequal": "^2.0.3",
     "diff": "^8.0.3",
-    "ditox": "^3.3.0",
     "downshift": "^9.3.2",
     "framer-motion": "^12.38.0",
     "highlight.js": "^11.11.1",
