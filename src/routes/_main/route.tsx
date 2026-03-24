@@ -5,6 +5,7 @@ import z from 'zod';
 import {
   ApiError,
   createEnsureApiQueryData,
+  getApi,
   mapCatalogDatacenter,
   mapOrganization,
   mapUser,
@@ -14,8 +15,9 @@ import {
 import { getCurrentProjectId, setCurrentProjectId } from 'src/api/hooks/project';
 import { AuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
+import { identifyUserInIntercom } from 'src/application/intercom';
 import { useOnboardingStep } from 'src/application/onboarding';
-import { reportError } from 'src/application/sentry';
+import { identifyUserInSentry, reportError } from 'src/application/sentry';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -32,6 +34,7 @@ export const Route = createFileRoute('/_main')({
   }),
 
   async beforeLoad({ search, context: { authKit, queryClient, posthog } }) {
+    const api = getApi(authKit.getAccessToken);
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (search['organization-id']) {
@@ -66,6 +69,8 @@ export const Route = createFileRoute('/_main')({
       }
     }
 
+    void identifyUserInIntercom(api, user);
+    identifyUserInSentry(user);
     posthog?.identify(user.id);
 
     if (organization) {
