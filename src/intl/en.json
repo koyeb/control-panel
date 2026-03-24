@@ -2410,21 +2410,45 @@
         }
       },
       "paymentMethod": {
-        "sidebar": "Start for free. Only pay for what you use, by the second. Scale with your team and stay in control with autoscaling limits.",
+        "title": "Welcome to Koyeb",
+        "description": "To get started deploying, add your payment information",
+        "planInfo": {
+          "title": "What's included",
+          "description": "Pro plan is $30 per month and pay as you go  with flexible spending limits",
+          "plan": "{plan} plan",
+          "includedCredit": "Included credit",
+          "includedCreditTooltip": "This credit can be used towards your monthly usage",
+          "features": {
+            "feature1": "$10 monthly compute included",
+            "feature2": "10 users",
+            "feature3": "100 services",
+            "feature4": "CPU and GPU access",
+            "feature5": "Scale-to-Zero and Autoscaling",
+            "feature6": "NVMe Volumes and Snapshots"
+          }
+        },
         "creditCard": {
           "title": "Verify your credit card",
-          "description": "Starter plan is $0 per month and pay as you go with flexible spending limits",
           "addressLabel": "Address",
           "addressPlaceholder": "Street address",
-          "temporaryHoldMessage": "A temporary hold will be placed on the card of $1 and refunded immediately"
+          "billingAlert": {
+            "label": "Configure billing alert",
+            "description": "Get email alerts when you're near your spending limit",
+            "inputStart": "$",
+            "inputEnd": "/month"
+          }
         },
-        "billingAlert": {
-          "title": "Set billing alert",
-          "description": "Receive email notifications when your monthly usage gets close to the spending limit",
-          "inputStart": "$",
-          "inputEnd": "/month"
+        "recap": {
+          "title": "Subtotal",
+          "couponCode": {
+            "add": "Add Promo code",
+            "placeholder": "Apply promo code"
+          },
+          "plan": "{plan} plan",
+          "total": "Total"
         },
-        "submit": "Verify my card and account"
+        "submit": "Continue",
+        "chargeMessage": "By clicking Continue, you will be charged $30 per month plus any applicable taxes and fees, starting today. Cancel anytime, charges are prorated. <link>Learn more about pricing</link>."
       },
       "automaticReview": {
         "pending": "Your account is being validated"
