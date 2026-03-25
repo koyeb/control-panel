@@ -172,13 +172,15 @@ export function EnvironmentVariableValueField({
                 result.sections.push(
                   <Fragment key={key}>
                     {items.length > 0 && (
-                      <MenuItem className="pointer-events-none font-medium text-dim">{label}</MenuItem>
+                      <MenuItem key={`${key}-label`} className="pointer-events-none font-medium text-dim">
+                        {label}
+                      </MenuItem>
                     )}
 
                     {items.map((item, index) => (
                       <MenuItem
                         {...getItemProps({ item, index: index + result.offset })}
-                        key={item}
+                        key={`${key}-${item}`}
                         highlighted={index + result.offset === highlightedIndex}
                       >
                         {item === '__new_secret__' ? <T id="createSecret" /> : item}
