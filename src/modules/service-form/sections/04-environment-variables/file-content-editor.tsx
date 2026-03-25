@@ -5,8 +5,7 @@ import { useController, useFormContext } from 'react-hook-form';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { hasMessage } from 'src/application/validation';
-import { CodeEditor, CodeEditorLanguageSelect } from 'src/components/code-editor/code-editor';
-import { useCodeEditor } from 'src/components/code-editor/use-code-editor';
+import { CodeEditor } from 'src/components/code-editor';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { FullScreen } from 'src/components/full-screen';
 import { IconFullscreen, IconX } from 'src/icons';
@@ -45,8 +44,6 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
   const mountPath = form.watch(`files.${index}.mountPath`);
   const [fullScreen, setFullScreen] = useState(false);
 
-  const codeEditor = useCodeEditor(mountPath);
-
   return (
     <FileDropZone onDrop={([file]) => file && onFileDropped(file)}>
       <Field
@@ -54,8 +51,6 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
         label={
           <div className="row flex-wrap items-end gap-2 self-stretch">
             <FieldLabel className="me-auto">{<T id="label" />}</FieldLabel>
-
-            <CodeEditorLanguageSelect codeEditor={codeEditor} placeholder={t('languageSelect.placeholder')} />
 
             <IconButton size={1} color="gray" Icon={IconFullscreen} onClick={() => setFullScreen(true)}>
               <T id="toggleFullScreen" />
@@ -78,14 +73,7 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
             </div>
           )}
 
-          <CodeEditor
-            autoFocus
-            id={id}
-            editor={codeEditor}
-            value={field.value}
-            onChange={field.onChange}
-            className="flex-1"
-          />
+          <CodeEditor autoFocus id={id} value={field.value} onChange={field.onChange} className="flex-1" />
         </FullScreen>
       </Field>
     </FileDropZone>
