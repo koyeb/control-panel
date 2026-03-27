@@ -107,7 +107,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
-    "happy-dom": "^20.8.4",
+    "happy-dom": "^20.8.8",
     "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.1",
     "storybook": "^10.3.0",
