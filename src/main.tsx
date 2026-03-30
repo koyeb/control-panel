@@ -34,8 +34,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-window.indexedDB.deleteDatabase('tanstack-query');
-
 const queryCache = new QueryCache({
   onError(error, query) {
     if (error.name === 'AbortError') {
