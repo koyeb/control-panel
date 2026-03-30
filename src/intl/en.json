@@ -2419,12 +2419,12 @@
           "includedCredit": "Included credit",
           "includedCreditTooltip": "This credit can be used towards your monthly usage",
           "features": {
-            "feature1": "$10 monthly compute included",
-            "feature2": "10 users",
-            "feature3": "100 services",
-            "feature4": "CPU and GPU access",
-            "feature5": "Scale-to-Zero and Autoscaling",
-            "feature6": "NVMe Volumes and Snapshots"
+            "feature1": "10 users",
+            "feature2": "100 services",
+            "feature3": "CPU and GPU access",
+            "feature4": "Scale-to-Zero and Autoscaling",
+            "feature5": "NVMe Volumes and Snapshots",
+            "feature6": "US, EU, and Asia regions"
           }
         },
         "creditCard": {
@@ -2448,7 +2448,7 @@
           "total": "Total"
         },
         "submit": "Continue",
-        "chargeMessage": "By clicking Continue, you will be charged $30 per month plus any applicable taxes and fees, starting today. Cancel anytime, charges are prorated. <link>Learn more about pricing</link>."
+        "chargeMessage": "By clicking Continue, you will be charged the amount displayed above plus any applicable taxes and fees. Cancel anytime, charges are prorated. <link>Learn more about pricing</link>."
       },
       "automaticReview": {
         "pending": "Your account is being validated"

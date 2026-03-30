@@ -140,7 +140,7 @@ function Form() {
         city: '',
         country: '',
       },
-      billingAlertAmount: 20,
+      billingAlertAmount: 50,
       couponCode: '',
     },
   });
