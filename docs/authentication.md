@@ -6,28 +6,21 @@ WorkOS [AuthKit](https://www.authkit.com/) is used to handle authentication, inc
 
 The control panel has 3 routes dedicated to AuthKit:
 
-- `/auth/signin` (`src/routes/auth/signin.tsx`)
-- `/auth/signup` (`src/routes/auth/signup.tsx`)
-- `/auth/signout` (`src/routes/auth/signout.tsx`)
+- `/auth/signin` 
+- `/auth/signup` 
+- `/auth/signout`
 
 These routes call AuthKit methods, which handle the corresponding authentication flows internally. If a WorkOS authentication page is accessed while being authenticated, the browser redirects back to the control panel.
 
-The authentication pages themselves are managed by WorkOS, and they can be [customized through the dashboard](https://dashboard.workos.com/branding).
+The authentication pages themselves are managed by WorkOS, and can be [customized through the dashboard](https://dashboard.workos.com/branding).
 
-When the user is not logged in, any call to `getAccessToken` throws a `LoginRequiredError`. When this happens inside a query (and it should always be the case), the query client's `onError` handler in `src/main.tsx` triggers a redirection to the `/auth/signin` page.
+When the user is not logged in, any call to `getAccessToken` throws a `LoginRequiredError`. When this happens inside a query (and it should always be the case), the query client's `onError` handler (`src/main.tsx`) triggers a redirection to the `/auth/signin` page.
 
 > **Warning**: If a user falls in a state where they are correctly authenticated in the WorkOS authentication page, but AuthKit does not see them as authenticated, a redirection loop will happen between WorkOS and the control panel.
 
 ### Preserving the current URL after authentication
 
 If a `next` query parameter is passed to the `/auth/signin` page, it is forwarded to the AuthKit `signIn` method's `state` parameter, which is preserved throughout the whole authentication flow:
-
-```tsx
-await authKit.signIn({
-  loginHint: deps.email,
-  state: deps.next ? { next: deps.next } : undefined,
-});
-```
 
 After the user completes the flow from the hosted WorkOS pages, they are redirected to the control panel, where AuthKit calls the provider's `onRedirectCallback` function. The `next` parameter can be retrieved from the state, and the control panel redirects to it (or to `/` if not set).
 
@@ -41,39 +34,17 @@ Logout calls `authKit.signOut()`. There are two ways it is triggered:
 
 **Automatic** — the `/auth/signout` route is navigated to programmatically. It calls `signOut()` in `beforeLoad` and then awaits a never-resolving promise to prevent further rendering:
 
-```tsx
-async beforeLoad({ context: { authKit } }) {
-  authKit.signOut();
-  await new Promise(() => {});
-}
-```
-
 ### Sign out when the session is revoked
 
-If a session gets revoked (for example if the user is kicked from an organization), the current access token stays valid until it's refreshed (as JWTs are immutable).
+If a session gets revoked (e.g when a user is removed from an organization), the current access token stays valid until it's refreshed (as JWTs are immutable).
 
-To avoid users using their valid access token from a revoked session, the session validity is checked in WorkOS from the `get /v1/account/organization` endpoint. If this endpoint returns a 403, the control panel clears the current session by navigating to the `/auth/signout` route:
-
-```tsx
-if (query.queryKey[0] === 'get /v1/account/organization' && ApiError.is(error, 403)) {
-  void router.navigate({ to: '/auth/signout' });
-}
-```
+To avoid users using their valid access token from a revoked session, the session validity is checked in WorkOS from the `get /v1/account/organization` endpoint. If this endpoint returns a 403, the control panel navigates to `/auth/signout`, to trigger a logout.
 
 ## Refreshing the access token
 
 Access tokens are short-lived (5 minutes by default), and they need to be refreshed periodically. This is fully handled by AuthKit — the token is refreshed automatically 10 seconds before it expires.
 
-`LoginRequiredError` is retried once before triggering a redirect, to allow for a silent token refresh:
-
-```tsx
-function retry(failureCount: number, error: Error) {
-  if (error instanceof LoginRequiredError) {
-    return failureCount === 0;
-  }
-  // ...
-}
-```
+If a query throws a `LoginRequiredError`, it is retried once before triggering a redirect.
 
 ## Route protection
 

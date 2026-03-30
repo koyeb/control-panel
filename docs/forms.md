@@ -6,13 +6,15 @@ Forms use [React Hook Form](https://react-hook-form.com/) with [Zod](https://zod
 
 Form controls (form fields) are divided into three layers:
 
-1. **Base form control** — a standalone component living in the design system
-2. **Wrapped form control** — a base component wrapped with an optional label and error message
-3. **React Hook Form adapter** — an adapter component for RHF (controlled)
+1. A base, standalone component living in the design system
+2. A component wrapping an optional label, a base control and an optional error message
+3. An adapter component for React Hook Form (controlled)
 
-These components (excluding the base ones) live in `src/components/forms/`. React Hook Form adapters leverage `useController`, auto-wiring `field.value`, `field.onChange`, `fieldState.invalid`, and `fieldState.error.message`. They also expose an `onChangeEffect` prop for convenience, allowing to add side-effects to change events.
+These components (excluding the base ones) live in `src/components/forms/`. React Hook Form adapters leverage `useController`, auto-wiring `field.value`, `field.onChange`, `fieldState.invalid`, and `fieldState.error.message`.
 
-Available form controls:
+Most form controls also expose an `onChangeEffect` prop for convenience, allowing to run side-effects to change events.
+
+Usage examples are available in storybook. Available form controls:
 
 - `Input`
 - `TextArea`
@@ -23,8 +25,6 @@ Available form controls:
 - `Select`
 - `Combobox`
 - `SelectBox`
-
-Usage examples are available in storybook.
 
 ### Select and Combobox
 

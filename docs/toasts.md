@@ -1,6 +1,6 @@
 # Toast notifications
 
-Toast notifications use [react-toastify](https://fkhadra.github.io/react-toastify/) with a custom `Notification` component from `@koyeb/design-system`.
+Toast notifications use [react-toastify](https://fkhadra.github.io/react-toastify/) with a custom `Notification` component from the design system.
 
 ## `notify`
 
@@ -21,17 +21,13 @@ Each method accepts an optional second argument with `title` and `autoClose` (du
 notify.error('Payment failed', { title: 'Billing error', autoClose: false });
 ```
 
+## Styling
+
+react-toastify is themed via CSS custom properties in `src/styles.css`.
+
 ## Deduplication
 
 Toasts are deduplicated by text content. If a toast with the same text is already visible, the call is ignored.
-
-## Styling
-
-react-toastify is themed via CSS custom properties in `src/styles.css`:
-
-- Transparent background, no shadow, no padding (the `Notification` component handles its own styling)
-- Width set to `--container-md`
-- z-index: 60
 
 ## Automatic error toasts
 

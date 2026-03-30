@@ -34,7 +34,3 @@ new StoredValue('shellInitialCommand', {
 ```ts
 const projectId = useSyncExternalStore(storedProjectId.listen, storedProjectId.read);
 ```
-
-## Early theme read
-
-`index.html` reads `koyeb.theme` from `localStorage` in a blocking `<script>` to apply the theme class before React mounts, preventing a flash of incorrect styling.

@@ -6,12 +6,12 @@ How API calls are made, typed, and organized in this project.
 
 ```
 src/api/
-├── api.generated.d.ts   # Generated types from OpenAPI spec (DO NOT EDIT)
+├── api.generated.d.ts   # Generated types from OpenAPI spec
 ├── api-types.ts         # Friendly type aliases for generated schemas
 ├── api.ts               # Low-level fetch client
 ├── api-error.ts         # ApiError class
-├── query.ts             # React Query helpers (apiQuery, apiMutation, etc.)
-├── index.ts             # Re-exports, useApi hook
+├── query.ts             # React Query adapters
+├── index.ts             # Re-exports, top level APIs
 ├── hooks/               # Domain-specific query hooks
 └── mappers/             # API response → domain model transformers
 ```
