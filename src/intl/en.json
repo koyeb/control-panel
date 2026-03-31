@@ -3218,43 +3218,7 @@
       }
     },
     "team": {
-      "title": "Team",
-      "membersList": {
-        "title": "Organization members",
-        "description": "Below are all members and invitations of the <strong>{organizationName}</strong> organization",
-        "member": "Team member",
-        "invited": "Invite pending",
-        "role": "Role",
-        "owner": "Owner",
-        "joined": "Joined",
-        "actions": {
-          "deleteInvitation": "Remove",
-          "deleteInvitationSuccessNotification": "The invitation sent to <strong>{email}</strong> was removed",
-          "resendInvitation": "Resend",
-          "resendInvitationSuccessNotification": "The invitation was sent again to <strong>{email}</strong>",
-          "removeMember": "Remove",
-          "removeMemberSuccessNotification": "<strong>{memberName}</strong> was removed from the organization <strong>{organizationName}</strong>",
-          "leave": "Leave"
-        },
-        "removeMember": {
-          "title": "Remove member",
-          "description": "Are you sure you want to remove <strong>{name}</strong> from the <strong>{organizationName}</strong> organization?",
-          "submitButton": "Remove member"
-        },
-        "leaveOrganization": {
-          "title": "Leave organization",
-          "description": "Are you sure you want to leave the <strong>{organizationName}</strong> organization?",
-          "submitButton": "Leave organization"
-        }
-      },
-      "inviteMember": {
-        "title": "Invite new member",
-        "description": "Invite teammate to join <strong>{organizationName}</strong> organization",
-        "emailPlaceholder": "team@example.com",
-        "submitButton": "Invite",
-        "successNotification": "Invitation sent to {email}",
-        "hobbyPlanUpgrade": "This feature is available on the Pro and Scale plans. <upgrade>View all plans and upgrade →</upgrade>"
-      }
+      "title": "Team"
     },
     "volumes": {
       "documentTitle": "Volumes",

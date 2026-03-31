@@ -5,11 +5,7 @@ import { lazy } from 'react';
 
 import { apiQuery, useOrganizationQuotas } from 'src/api';
 import { Title } from 'src/components/title';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
-
-import { InviteMemberForm } from './components/invite-member-form';
-import { MembersList } from './components/members-list';
 
 const T = createTranslate('pages.team');
 
@@ -19,18 +15,7 @@ export function TeamPage() {
   return (
     <div className="col gap-4">
       <Title title={<T id="title" />} />
-
-      <FeatureFlag
-        feature="workos-user-management"
-        fallback={
-          <>
-            <MembersList />
-            <InviteMemberForm />
-          </>
-        }
-      >
-        <WorkOSUsersManagement />
-      </FeatureFlag>
+      <WorkOSUsersManagement />
     </div>
   );
 }
