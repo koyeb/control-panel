@@ -9,6 +9,7 @@ import { PostHog } from 'src/application/posthog';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { closeDialog } from 'src/components/dialog';
 import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
+import { LogoLoading } from 'src/components/logo-loading';
 import { NotificationContainer } from 'src/components/notification';
 import { SeonAdapter } from 'src/hooks/seon';
 import { TranslateFn } from 'src/intl/translate';
@@ -26,6 +27,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   component: Component,
   errorComponent: ErrorComponent,
   notFoundComponent: NotFoundComponent,
+  pendingComponent: LogoLoading,
 
   // wait for the authkit client to be provided
   async beforeLoad() {},
