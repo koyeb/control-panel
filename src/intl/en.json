@@ -3218,7 +3218,8 @@
       }
     },
     "team": {
-      "title": "Team"
+      "title": "Team",
+      "upgradeToInvite": "Inviting users is possible on the Pro plan and above. <upgrade>Upgrade</upgrade>"
     },
     "volumes": {
       "documentTitle": "Volumes",

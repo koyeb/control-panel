@@ -1,3 +1,4 @@
+import { Alert } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useAuth } from '@workos-inc/authkit-react';
@@ -44,7 +45,13 @@ function WorkOSUsersManagement() {
   return (
     <WorkOSWidgetsProvider>
       <div className="mt-4 col gap-4">
-        {!canAddMembers && <style>{hideInviteUserButton}</style>}
+        {!canAddMembers && (
+          <>
+            <style>{hideInviteUserButton}</style>
+            <Alert description={<T id="upgradeToInvite" />} />
+          </>
+        )}
+
         <UsersManagement authToken={getAccessToken} />
       </div>
     </WorkOSWidgetsProvider>
