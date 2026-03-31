@@ -3219,7 +3219,7 @@
     },
     "team": {
       "title": "Team",
-      "upgradeToInvite": "Inviting users is possible on the Pro plan and above. <upgrade>Upgrade</upgrade>"
+      "upgradeToInvite": "You reached the maximum number of users in your organization on your current plan. <upgrade>Upgrade</upgrade>"
     },
     "volumes": {
       "documentTitle": "Volumes",
