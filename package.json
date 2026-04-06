@@ -116,7 +116,7 @@
     "type-fest": "^5.4.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.1",
-    "vite": "^7.3.1",
+    "vite": "^7.3.2",
     "vite-plugin-preload": "^0.4.4",
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^6.1.1",
