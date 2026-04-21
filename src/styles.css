@@ -106,7 +106,7 @@
 
 /* WorkOS */
 
-.woswidgets-root {
+.woswidgets-root[data-is-root-theme='true'] {
   min-height: unset;
 }
 
