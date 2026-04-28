@@ -1,5 +1,5 @@
 import { Collapse, useBreakpoint } from '@koyeb/design-system';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 import clsx from 'clsx';
 import { useState } from 'react';
 

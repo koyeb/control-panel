@@ -1,7 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 import { UsersManagement } from '@workos-inc/widgets';
 import { lazy } from 'react';
 

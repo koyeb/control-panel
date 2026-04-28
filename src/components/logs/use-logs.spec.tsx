@@ -13,7 +13,7 @@ import { useLogs } from './use-logs';
 
 const getAccessToken = () => Promise.resolve('');
 
-vi.mock('@workos-inc/authkit-react', () => ({
+vi.mock('src/application/authkit', () => ({
   useAuth: () => ({ getAccessToken }),
 }));
 

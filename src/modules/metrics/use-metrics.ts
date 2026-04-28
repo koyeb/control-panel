@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 import { Duration, sub } from 'date-fns';
 
 import type { API } from 'src/api';

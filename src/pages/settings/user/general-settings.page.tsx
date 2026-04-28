@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 import { UserProfile, UserSecurity } from '@workos-inc/widgets';
 import { lazy } from 'react';
 

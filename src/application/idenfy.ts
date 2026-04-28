@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 
 import { apiQuery } from 'src/api';
 

@@ -5,7 +5,7 @@ import {
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 import { AnsiUp } from 'ansi_up';
 import { addMilliseconds, sub } from 'date-fns';
 import { useEffect, useLayoutEffect, useMemo, useReducer } from 'react';

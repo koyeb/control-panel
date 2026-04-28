@@ -1,7 +1,7 @@
 import { Button, Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 
 import { ApiError, apiQuery, mapInvitation } from 'src/api';
 import { HandleInvitation } from 'src/components/handle-invitations';

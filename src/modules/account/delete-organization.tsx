@@ -1,6 +1,6 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 
 import { apiMutation, apiQuery, useOrganization, useOrganizationsList, useSwitchOrganization } from 'src/api';
 import { QueryError } from 'src/components/query-error';

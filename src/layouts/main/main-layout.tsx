@@ -1,4 +1,4 @@
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import z from 'zod';

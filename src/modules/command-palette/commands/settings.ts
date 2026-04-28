@@ -1,5 +1,5 @@
 import { CommandPalette } from '@koyeb/design-system';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 
 import { useSetThemeMode } from 'src/hooks/theme';
 import { IconLaptop, IconLogOut, IconMoon, IconSunDim, IconSunMoon } from 'src/icons';

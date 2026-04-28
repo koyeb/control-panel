@@ -1,6 +1,6 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 
 import { apiMutation, useOrganization, useUser } from 'src/api';
 import { closeDialog, openDialog } from 'src/components/dialog';

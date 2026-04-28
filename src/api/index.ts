@@ -1,4 +1,4 @@
-import { useAuth } from '@workos-inc/authkit-react';
+import { useAuth } from 'src/application/authkit';
 import { useCallback } from 'react';
 
 import { getConfig } from 'src/application/config';
