@@ -1,12 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router';
-
-import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
-import { SecretsPage } from 'src/pages/secrets/secrets.page';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_main/secrets')({
-  component: SecretsPage,
-
-  beforeLoad: () => ({
-    breadcrumb: () => <CrumbLink to={Route.to} />,
-  }),
+  beforeLoad: () => {
+    throw redirect({ to: '/project/secrets' });
+  },
 });

@@ -69,15 +69,6 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
               label={<T id="domains" />}
               to="/domains"
             />
-
-            <NavigationItem
-              collapsed={collapsed}
-              disabled={disableComputeLinks}
-              Icon={IconFileKey}
-              label={<T id="secrets" />}
-              to="/secrets"
-            />
-
             <NavigationItem
               collapsed={collapsed}
               disabled={disableComputeLinks}
@@ -188,14 +179,6 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
         </div>
 
         <ol className="col gap-1 sm:gap-2">
-          <NavigationItem
-            collapsed={collapsed}
-            disabled={disableComputeLinks}
-            Icon={IconFileKey}
-            label={<T id="secrets" />}
-            to="/secrets"
-          />
-
           <NavigationItem collapsed={collapsed} Icon={IconUsers} label={<T id="team" />} to="/team" />
 
           <NavigationItem

@@ -18,7 +18,7 @@ function RouteComponent() {
 
   return (
     <FeatureFlag feature="simple-projects">
-      <SecretsPage key={projectId} scope="project" />
+      <SecretsPage key={projectId} />
     </FeatureFlag>
   );
 }
