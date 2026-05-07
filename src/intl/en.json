@@ -2476,7 +2476,8 @@
       }
     },
     "secrets": {
-      "title": "Project Secrets",
+      "title": "Secrets",
+      "projectTitle": "Project Secrets",
       "createSecret": "Create secret",
       "deleteSecrets": "Delete selected ({count})",
       "importSecrets": "Import secrets",

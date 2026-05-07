@@ -69,6 +69,15 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
               label={<T id="domains" />}
               to="/domains"
             />
+
+            <NavigationItem
+              collapsed={collapsed}
+              disabled={disableComputeLinks}
+              Icon={IconFileKey}
+              label={<T id="secrets" />}
+              to="/secrets"
+            />
+
             <NavigationItem
               collapsed={collapsed}
               disabled={disableComputeLinks}

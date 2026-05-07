@@ -23,15 +23,22 @@ import { SecretsList } from './components/secrets-list';
 
 const T = createTranslate('pages.secrets');
 
-export function SecretsPage() {
+type SecretsPageProps = {
+  scope?: 'organization' | 'project';
+  title?: React.ReactNode;
+  documentTitle?: string;
+};
+
+export function SecretsPage({ scope = 'project', title, documentTitle }: SecretsPageProps) {
   const t = T.useTranslate();
   const [projectId] = useCurrentProjectId();
+  const scopedProjectId = scope === 'project' ? projectId : undefined;
 
   useOnRouteStateCreate(() => {
     openDialog('CreateSecret');
   });
 
-  const [query, pagination] = useSecretsQuery('SIMPLE', { projectId });
+  const [query, pagination] = useSecretsQuery('SIMPLE', { projectId: scopedProjectId });
   const secrets = query.data?.secrets;
 
   const [selected, { toggle, set, clear }] = useSet<Secret>();
@@ -55,10 +62,10 @@ export function SecretsPage() {
 
   return (
     <div className="col gap-8">
-      <DocumentTitle title={t('title')} />
+      <DocumentTitle title={documentTitle ?? t('title')} />
 
       <Title
-        title={<T id="title" />}
+        title={title ?? <T id="title" />}
         end={
           <div className="row items-center gap-2">
             {selected.size > 0 && (
@@ -96,8 +103,8 @@ export function SecretsPage() {
 
       {pagination.hasPages && <Pagination pagination={pagination} />}
 
-      <BulkCreateSecretsDialog projectId={projectId} onCreated={onChanged} />
-      <CreateSecretDialog projectId={projectId} onCreated={onChanged} />
+      <BulkCreateSecretsDialog projectId={scopedProjectId} onCreated={onChanged} />
+      <CreateSecretDialog projectId={scopedProjectId} onCreated={onChanged} />
       <EditSecretDialog />
     </div>
   );
