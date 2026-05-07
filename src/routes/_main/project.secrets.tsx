@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 import { SecretsPage } from 'src/pages/secrets/secrets.page';
@@ -13,9 +14,11 @@ export const Route = createFileRoute('/_main/project/secrets')({
 });
 
 function RouteComponent() {
+  const [projectId] = useCurrentProjectId();
+
   return (
     <FeatureFlag feature="simple-projects">
-      <SecretsPage scope="project" />
+      <SecretsPage key={projectId} scope="project" />
     </FeatureFlag>
   );
 }

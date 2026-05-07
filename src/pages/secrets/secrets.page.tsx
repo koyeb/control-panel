@@ -2,7 +2,8 @@ import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { useApi, useCurrentProjectId, useInvalidateApiQuery, useSecretsQuery } from 'src/api';
+import { useApi, useInvalidateApiQuery, useSecretsQuery } from 'src/api';
+import { useCurrentProjectId } from 'src/api/hooks/project';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
