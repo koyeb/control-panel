@@ -1888,8 +1888,7 @@
         "/sandboxes/$serviceId/metrics": "Metrics",
         "/sandboxes/$serviceId/console": "Console",
         "/project/secrets": "Project secrets",
-        "/project/settings": "Project settings",
-        "/project/settings/": "Project settings"
+        "/project/settings": "Project settings"
       }
     },
     "secondary": {
