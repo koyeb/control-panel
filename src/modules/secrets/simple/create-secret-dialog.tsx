@@ -8,10 +8,11 @@ import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 const T = createTranslate('modules.secrets.simpleSecretForm');
 
 type CreateSecretDialogProps = {
+  projectId?: string;
   onCreated?: (secretName: string) => void;
 };
 
-export function CreateSecretDialog({ onCreated }: CreateSecretDialogProps) {
+export function CreateSecretDialog({ projectId, onCreated }: CreateSecretDialogProps) {
   const t = T.useTranslate();
 
   return (
@@ -23,6 +24,7 @@ export function CreateSecretDialog({ onCreated }: CreateSecretDialogProps) {
       </p>
 
       <SecretForm
+        projectId={projectId}
         renderFooter={(formState) => (
           <DialogFooter>
             <CloseDialogButton>

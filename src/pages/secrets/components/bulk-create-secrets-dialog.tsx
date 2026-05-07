@@ -16,7 +16,12 @@ import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.secrets.bulkCreate');
 
-export function BulkCreateSecretsDialog({ onCreated }: { onCreated?: () => void }) {
+type BulkCreateSecretsDialogProps = {
+  projectId?: string;
+  onCreated?: () => void;
+};
+
+export function BulkCreateSecretsDialog({ projectId, onCreated }: BulkCreateSecretsDialogProps) {
   const t = T.useTranslate();
 
   const api = useApi();
@@ -42,7 +47,14 @@ export function BulkCreateSecretsDialog({ onCreated }: { onCreated?: () => void 
 
       const results = await Promise.allSettled(
         Object.entries(values).map(([name, value]) =>
-          api('post /v1/secrets', { body: { type: 'SIMPLE', name, value } }),
+          api('post /v1/secrets', {
+            body: {
+              type: 'SIMPLE',
+              name,
+              value,
+              ...(projectId !== undefined ? { project_id: projectId } : {}),
+            },
+          }),
         ),
       );
 

@@ -24,11 +24,12 @@ const schema = z.object({
 
 type SecretFormProps = {
   secret?: Secret;
+  projectId?: string;
   renderFooter: (formState: FormState<FieldValues>) => React.ReactNode;
   onSubmitted: (secretName: string) => void;
 };
 
-export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProps) {
+export function SecretForm({ secret, projectId, renderFooter, onSubmitted }: SecretFormProps) {
   const t = T.useTranslate();
 
   const api = useApi();
@@ -59,7 +60,11 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
         });
       } else {
         return api('post /v1/secrets', {
-          body: { type: 'SIMPLE', ...param },
+          body: {
+            type: 'SIMPLE',
+            ...param,
+            ...(projectId !== undefined ? { project_id: projectId } : {}),
+          },
         });
       }
     },

@@ -6,13 +6,18 @@ import { SecretType } from 'src/model';
 import { mapSecret } from '../mappers/secret';
 import { apiQuery } from '../query';
 
-export function useSecretsQuery(type?: SecretType) {
+type UseSecretsQueryOptions = {
+  projectId?: string;
+};
+
+export function useSecretsQuery(type?: SecretType, options: UseSecretsQueryOptions = {}) {
   const pagination = usePagination(100);
 
   const query = useQuery({
     ...apiQuery('get /v1/secrets', {
       query: {
         ...pagination.query,
+        project_id: options.projectId,
         types: type !== undefined ? [type] : undefined,
       },
     }),
@@ -28,6 +33,6 @@ export function useSecretsQuery(type?: SecretType) {
   return [query, pagination] as const;
 }
 
-export function useSecrets(type?: SecretType) {
-  return useSecretsQuery(type)[0].data?.secrets;
+export function useSecrets(type?: SecretType, options?: UseSecretsQueryOptions) {
+  return useSecretsQuery(type, options)[0].data?.secrets;
 }

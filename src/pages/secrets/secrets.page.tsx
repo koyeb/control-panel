@@ -2,7 +2,7 @@ import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { useApi, useInvalidateApiQuery, useSecretsQuery } from 'src/api';
+import { useApi, useCurrentProjectId, useInvalidateApiQuery, useSecretsQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
@@ -22,14 +22,22 @@ import { SecretsList } from './components/secrets-list';
 
 const T = createTranslate('pages.secrets');
 
-export function SecretsPage() {
+type SecretsPageProps = {
+  scope?: 'organization' | 'project';
+};
+
+export function SecretsPage({ scope = 'organization' }: SecretsPageProps) {
   const t = T.useTranslate();
+  const [projectId] = useCurrentProjectId();
+  const projectScoped = scope === 'project';
+  const scopedProjectId = projectScoped ? projectId : undefined;
+  const titleId = projectScoped ? 'projectTitle' : 'organizationTitle';
 
   useOnRouteStateCreate(() => {
     openDialog('CreateSecret');
   });
 
-  const [query, pagination] = useSecretsQuery('SIMPLE');
+  const [query, pagination] = useSecretsQuery('SIMPLE', { projectId: scopedProjectId });
   const secrets = query.data?.secrets;
 
   const [selected, { toggle, set, clear }] = useSet<Secret>();
@@ -53,10 +61,10 @@ export function SecretsPage() {
 
   return (
     <div className="col gap-8">
-      <DocumentTitle title="Secrets" />
+      <DocumentTitle title={t(titleId)} />
 
       <Title
-        title={<T id="title" />}
+        title={<T id={titleId} />}
         end={
           <div className="row items-center gap-2">
             {selected.size > 0 && (
@@ -94,8 +102,8 @@ export function SecretsPage() {
 
       {pagination.hasPages && <Pagination pagination={pagination} />}
 
-      <BulkCreateSecretsDialog onCreated={onChanged} />
-      <CreateSecretDialog onCreated={onChanged} />
+      <BulkCreateSecretsDialog projectId={scopedProjectId} onCreated={onChanged} />
+      <CreateSecretDialog projectId={scopedProjectId} onCreated={onChanged} />
       <EditSecretDialog />
     </div>
   );
