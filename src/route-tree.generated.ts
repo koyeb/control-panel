@@ -16,6 +16,7 @@ import { Route as AuthSignoutRouteImport } from './routes/auth/signout'
 import { Route as AuthSigninRouteImport } from './routes/auth/signin'
 import { Route as MainTeamRouteImport } from './routes/_main/team'
 import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
+import { Route as MainProjectSecretsRouteImport } from './routes/_main/project.secrets'
 import { Route as MainDomainsRouteImport } from './routes/_main/domains'
 import { Route as MainDeployRouteImport } from './routes/_main/deploy'
 import { Route as MainActivityRouteImport } from './routes/_main/activity'
@@ -89,6 +90,11 @@ const AuthSigninRoute = AuthSigninRouteImport.update({
   id: '/auth/signin',
   path: '/auth/signin',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MainProjectSecretsRoute = MainProjectSecretsRouteImport.update({
+  id: '/project/secrets',
+  path: '/project/secrets',
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainTeamRoute = MainTeamRouteImport.update({
   id: '/team',
@@ -376,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
+  '/project/secrets': typeof MainProjectSecretsRoute
   '/team': typeof MainTeamRoute
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signout': typeof AuthSignoutRoute
@@ -428,6 +435,7 @@ export interface FileRoutesByTo {
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
+  '/project/secrets': typeof MainProjectSecretsRoute
   '/team': typeof MainTeamRoute
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signout': typeof AuthSignoutRoute
@@ -482,6 +490,7 @@ export interface FileRoutesById {
   '/_main/deploy': typeof MainDeployRoute
   '/_main/domains': typeof MainDomainsRoute
   '/_main/secrets': typeof MainSecretsRoute
+  '/_main/project/secrets': typeof MainProjectSecretsRoute
   '/_main/team': typeof MainTeamRoute
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signout': typeof AuthSignoutRoute
@@ -542,6 +551,7 @@ export interface FileRouteTypes {
     | '/deploy'
     | '/domains'
     | '/secrets'
+    | '/project/secrets'
     | '/team'
     | '/auth/signin'
     | '/auth/signout'
@@ -594,6 +604,7 @@ export interface FileRouteTypes {
     | '/deploy'
     | '/domains'
     | '/secrets'
+    | '/project/secrets'
     | '/team'
     | '/auth/signin'
     | '/auth/signout'
@@ -647,6 +658,7 @@ export interface FileRouteTypes {
     | '/_main/deploy'
     | '/_main/domains'
     | '/_main/secrets'
+    | '/_main/project/secrets'
     | '/_main/team'
     | '/auth/signin'
     | '/auth/signout'
@@ -756,6 +768,13 @@ declare module '@tanstack/react-router' {
       path: '/secrets'
       fullPath: '/secrets'
       preLoaderRoute: typeof MainSecretsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/project/secrets': {
+      id: '/_main/project/secrets'
+      path: '/project/secrets'
+      fullPath: '/project/secrets'
+      preLoaderRoute: typeof MainProjectSecretsRouteImport
       parentRoute: typeof MainRouteRoute
     }
     '/_main/domains': {
@@ -1270,6 +1289,7 @@ interface MainRouteRouteChildren {
   MainDeployRoute: typeof MainDeployRoute
   MainDomainsRoute: typeof MainDomainsRoute
   MainSecretsRoute: typeof MainSecretsRoute
+  MainProjectSecretsRoute: typeof MainProjectSecretsRoute
   MainTeamRoute: typeof MainTeamRoute
   MainIndexRoute: typeof MainIndexRoute
   MainDatabaseServicesDatabaseServiceIdRouteRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
@@ -1293,6 +1313,7 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainDeployRoute: MainDeployRoute,
   MainDomainsRoute: MainDomainsRoute,
   MainSecretsRoute: MainSecretsRoute,
+  MainProjectSecretsRoute: MainProjectSecretsRoute,
   MainTeamRoute: MainTeamRoute,
   MainIndexRoute: MainIndexRoute,
   MainDatabaseServicesDatabaseServiceIdRouteRoute:

@@ -1887,6 +1887,7 @@
         "/sandboxes": "Sandboxes",
         "/sandboxes/$serviceId/metrics": "Metrics",
         "/sandboxes/$serviceId/console": "Console",
+        "/project/secrets": "Project secrets",
         "/project/settings": "Project settings"
       }
     },
@@ -2476,6 +2477,8 @@
     },
     "secrets": {
       "title": "Secrets",
+      "organizationTitle": "Organization Secrets",
+      "projectTitle": "Project Secrets",
       "createSecret": "Create secret",
       "deleteSecrets": "Delete selected ({count})",
       "importSecrets": "Import secrets",
