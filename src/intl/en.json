@@ -2665,6 +2665,8 @@
       },
       "metrics": {
         "title": "Metrics",
+        "timeFrame": "Time frame",
+        "step": "Step",
         "cpu": {
           "label": "CPU usage",
           "tooltip": "Percentage of used CPU for the selected instance"

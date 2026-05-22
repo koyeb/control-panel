@@ -13,7 +13,13 @@ import { HttpThroughputGraph } from 'src/modules/metrics/graphs/http-throughput-
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { PublicDataTransferGraph } from 'src/modules/metrics/graphs/public-data-transfer-graph';
 import { ResponseTimeGraph } from 'src/modules/metrics/graphs/response-time-graph';
-import { MetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
+import {
+  MetricsStep,
+  MetricsTimeFrame,
+  getDefaultStep,
+  getValidStepsForTimeFrame,
+  metricsTimeFrames,
+} from 'src/modules/metrics/metrics-helpers';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
 import { inArray } from 'src/utils/arrays';
 
@@ -22,31 +28,60 @@ const T = createTranslate('pages.service.metrics');
 type MetricsPageProps = {
   serviceId: string;
   timeFrame: MetricsTimeFrame;
+  step?: MetricsStep;
 };
 
-export function ServiceMetricsPage({ serviceId, timeFrame }: MetricsPageProps) {
+export function ServiceMetricsPage({ serviceId, timeFrame, step: stepProp }: MetricsPageProps) {
+  const validSteps = getValidStepsForTimeFrame(timeFrame);
+  const step: MetricsStep = stepProp && validSteps.includes(stepProp) ? stepProp : getDefaultStep(timeFrame);
+
   return (
     <>
       <Title
         title="Metrics"
         end={
-          <ButtonGroup>
-            {metricsTimeFrames.map((s) => (
-              <LinkButton
-                key={s}
-                from="/services/$serviceId/metrics"
-                search={{ 'time-frame': s }}
-                type="button"
-                variant={s === timeFrame ? 'solid' : 'outline'}
-              >
-                {s.toUpperCase()}
-              </LinkButton>
-            ))}
-          </ButtonGroup>
+          <div className="col gap-2">
+            <div className="col gap-1">
+              <span className="px-1 text-xs text-dim">
+                <T id="timeFrame" />
+              </span>
+              <ButtonGroup>
+                {metricsTimeFrames.map((s) => (
+                  <LinkButton
+                    key={s}
+                    from="/services/$serviceId/metrics"
+                    search={{ 'time-frame': s }}
+                    type="button"
+                    variant={s === timeFrame ? 'solid' : 'outline'}
+                  >
+                    {s.toUpperCase()}
+                  </LinkButton>
+                ))}
+              </ButtonGroup>
+            </div>
+            <div className="col gap-1">
+              <span className="px-1 text-xs text-dim">
+                <T id="step" />
+              </span>
+              <ButtonGroup>
+                {validSteps.map((s) => (
+                  <LinkButton
+                    key={s}
+                    from="/services/$serviceId/metrics"
+                    search={{ 'time-frame': timeFrame, step: s }}
+                    type="button"
+                    variant={s === step ? 'solid' : 'outline'}
+                  >
+                    {s.toUpperCase()}
+                  </LinkButton>
+                ))}
+              </ButtonGroup>
+            </div>
+          </div>
         }
       />
 
-      <ServiceMetrics serviceId={serviceId} timeFrame={timeFrame} />
+      <ServiceMetrics serviceId={serviceId} timeFrame={timeFrame} step={step} />
     </>
   );
 }
@@ -63,15 +98,23 @@ const metrics: API.MetricName[] = [
   'PUBLIC_DATA_TRANSFER_OUT',
 ] as const;
 
-function ServiceMetrics({ serviceId, timeFrame }: { serviceId: string; timeFrame: MetricsTimeFrame }) {
+function ServiceMetrics({
+  serviceId,
+  timeFrame,
+  step,
+}: {
+  serviceId: string;
+  timeFrame: MetricsTimeFrame;
+  step: MetricsStep;
+}) {
   const service = useService(serviceId);
-  const queries = useMetricsQueries({ serviceId, metrics, timeFrame });
+  const queries = useMetricsQueries({ serviceId, metrics, timeFrame, step });
   const instance = useServiceInstanceType(serviceId);
 
   return (
     <>
-      <div className="col gap-4 lg:row">
-        <GraphCard label={<T id="cpu.label" />} tooltip={<T id="cpu.tooltip" />} className="flex-1">
+      <div className="col gap-4">
+        <GraphCard label={<T id="cpu.label" />} tooltip={<T id="cpu.tooltip" />}>
           <CpuGraph
             loading={queries.isPending}
             error={queries.error['CPU_TOTAL_PERCENT']}
@@ -79,7 +122,7 @@ function ServiceMetrics({ serviceId, timeFrame }: { serviceId: string; timeFrame
           />
         </GraphCard>
 
-        <GraphCard label={<T id="memory.label" />} tooltip={<T id="memory.tooltip" />} className="flex-1">
+        <GraphCard label={<T id="memory.label" />} tooltip={<T id="memory.tooltip" />}>
           <MemoryGraph
             loading={queries.isPending}
             error={queries.error['MEM_RSS']}
