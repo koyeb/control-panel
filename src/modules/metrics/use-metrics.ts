@@ -7,7 +7,7 @@ import { getApiQueryKey, refetchInterval, useApi } from 'src/api';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
 
-import { MetricsTimeFrame } from './metrics-helpers';
+import { MetricsStep, MetricsTimeFrame, getDefaultStep } from './metrics-helpers';
 import { DataPoint, Metric } from './metrics-types';
 
 const timeFrameToDuration: Record<MetricsTimeFrame, Duration> = {
@@ -20,26 +20,19 @@ const timeFrameToDuration: Record<MetricsTimeFrame, Duration> = {
   '7d': { days: 7 },
 };
 
-const timeFrameToStep: Record<MetricsTimeFrame, string> = {
-  '5m': '1m',
-  '15m': '1m',
-  '1h': '1m',
-  '6h': '5m',
-  '1d': '30m',
-  '2d': '1h',
-  '7d': '3h',
-};
-
 type UseMetricsOptions = {
   serviceId?: string;
   instanceId?: string;
   metrics: API.MetricName[];
   timeFrame: MetricsTimeFrame;
+  step?: MetricsStep;
 };
 
-export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }: UseMetricsOptions) {
+export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame, step }: UseMetricsOptions) {
   const api = useApi();
   const { getAccessToken } = useAuth();
+
+  const resolvedStep = step ?? getDefaultStep(timeFrame);
 
   return useQueries({
     queries: metrics.map((name) => {
@@ -47,7 +40,7 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
         name,
         service_id: serviceId,
         instance_id: instanceId,
-        step: timeFrameToStep[timeFrame],
+        step: resolvedStep,
         time_frame: timeFrame,
       };
 
