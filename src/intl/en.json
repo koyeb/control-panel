@@ -2414,7 +2414,7 @@
         "description": "To get started deploying, add your payment information",
         "planInfo": {
           "title": "What's included",
-          "description": "Pro plan is $30 per month and pay as you go  with flexible spending limits",
+          "description": "Pro plan is $29 per month and pay as you go  with flexible spending limits",
           "plan": "{plan} plan",
           "includedCredit": "Included credit",
           "includedCreditTooltip": "This credit can be used towards your monthly usage",
