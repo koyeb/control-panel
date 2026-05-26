@@ -24,7 +24,7 @@ import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { Address, OrganizationPlan } from 'src/model';
 
 const planId: OrganizationPlan = 'pro';
-const planPrice = 30 * 100;
+const planPrice = 29 * 100;
 const includedCredits = 10 * 100;
 
 const T = createTranslate('pages.onboarding.paymentMethod');
