@@ -52,9 +52,12 @@ export async function api<E extends ApiEndpoint>(
     init.body = JSON.stringify(params.body);
   }
 
-  const projectId = getProjectId(params);
+  // Every request is scoped to the currently selected project, so source the
+  // project id from the global store rather than the request payload. An explicit
+  // x-koyeb-project-id header (set above) always takes precedence.
+  const projectId = getCurrentProjectId();
 
-  if (projectId !== undefined && !headers.has('x-koyeb-project-id')) {
+  if (projectId !== null && !headers.has('x-koyeb-project-id')) {
     headers.set('x-koyeb-project-id', projectId);
   }
 
@@ -95,27 +98,6 @@ export function apiStream<E extends ApiEndpoint>(
   url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
 
   return new WebSocket(url, protocols);
-}
-
-function getProjectId(params: object): string | undefined {
-  // Prefer an explicit project_id passed with the request (body, query or path).
-  // This keeps working even while the body field is being deprecated, and lets
-  // callers target a project other than the one currently selected.
-  for (const source of ['body', 'query', 'path'] as const) {
-    const container = (params as Record<string, unknown>)[source];
-
-    if (container && typeof container === 'object' && 'project_id' in container) {
-      const value = (container as Record<string, unknown>).project_id;
-
-      if (typeof value === 'string' && value !== '') {
-        return value;
-      }
-    }
-  }
-
-  // Otherwise fall back to the globally stored current project, so the header is
-  // sent even once the project_id request field is removed.
-  return getCurrentProjectId() ?? undefined;
 }
 
 function buildUrl(
