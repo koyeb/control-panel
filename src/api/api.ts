@@ -51,6 +51,12 @@ export async function api<E extends ApiEndpoint>(
     init.body = JSON.stringify(params.body);
   }
 
+  const projectId = getProjectId(params);
+
+  if (projectId !== undefined && !headers.has('x-koyeb-project-id')) {
+    headers.set('x-koyeb-project-id', projectId);
+  }
+
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
   }
@@ -88,6 +94,22 @@ export function apiStream<E extends ApiEndpoint>(
   url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
 
   return new WebSocket(url, protocols);
+}
+
+function getProjectId(params: object): string | undefined {
+  for (const source of ['body', 'query', 'path'] as const) {
+    const container = (params as Record<string, unknown>)[source];
+
+    if (container && typeof container === 'object' && 'project_id' in container) {
+      const value = (container as Record<string, unknown>).project_id;
+
+      if (typeof value === 'string' && value !== '') {
+        return value;
+      }
+    }
+  }
+
+  return undefined;
 }
 
 function buildUrl(
