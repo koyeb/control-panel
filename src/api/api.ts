@@ -3,6 +3,7 @@ import { OmitBy, ValueOf } from 'src/utils/types';
 
 import { ApiError } from './api-error';
 import { paths } from './api.generated';
+import { getCurrentProjectId } from './current-project-id';
 
 export type ApiEndpoint = Compute<
   ValueOf<{
@@ -97,6 +98,9 @@ export function apiStream<E extends ApiEndpoint>(
 }
 
 function getProjectId(params: object): string | undefined {
+  // Prefer an explicit project_id passed with the request (body, query or path).
+  // This keeps working even while the body field is being deprecated, and lets
+  // callers target a project other than the one currently selected.
   for (const source of ['body', 'query', 'path'] as const) {
     const container = (params as Record<string, unknown>)[source];
 
@@ -109,7 +113,9 @@ function getProjectId(params: object): string | undefined {
     }
   }
 
-  return undefined;
+  // Otherwise fall back to the globally stored current project, so the header is
+  // sent even once the project_id request field is removed.
+  return getCurrentProjectId() ?? undefined;
 }
 
 function buildUrl(
