@@ -1,11 +1,13 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useSyncExternalStore } from 'react';
 
-import { StoredValue } from 'src/application/storage';
 import { Project } from 'src/model';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
+import { getCurrentProjectId, setCurrentProjectId, storedCurrentProjectId } from '../current-project-id';
 import { apiQuery } from '../query';
+
+export { getCurrentProjectId, setCurrentProjectId };
 
 export function useProjectsQuery({ search, limit }: Partial<{ search: string; limit: number }> = {}) {
   return useQuery({
@@ -35,14 +37,6 @@ export function useProjectQuery(projectId?: string) {
 export function useProject(projectId?: string) {
   return useProjectQuery(projectId).data;
 }
-
-const storedCurrentProjectId = new StoredValue<string>('currentProjectId', {
-  parse: String,
-  stringify: String,
-});
-
-export const getCurrentProjectId = storedCurrentProjectId.read;
-export const setCurrentProjectId = storedCurrentProjectId.write;
 
 export function useCurrentProjectId(): [string | undefined, (projectId: string) => void] {
   const projectId = useSyncExternalStore(storedCurrentProjectId.listen, storedCurrentProjectId.read);
