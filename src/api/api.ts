@@ -3,6 +3,7 @@ import { OmitBy, ValueOf } from 'src/utils/types';
 
 import { ApiError } from './api-error';
 import { paths } from './api.generated';
+import { getCurrentProjectId } from './current-project-id';
 
 export type ApiEndpoint = Compute<
   ValueOf<{
@@ -49,6 +50,15 @@ export async function api<E extends ApiEndpoint>(
   if ('body' in params) {
     headers.set('Content-Type', 'application/json');
     init.body = JSON.stringify(params.body);
+  }
+
+  // Every request is scoped to the currently selected project, so source the
+  // project id from the global store rather than the request payload. An explicit
+  // x-koyeb-project-id header (set above) always takes precedence.
+  const projectId = getCurrentProjectId();
+
+  if (projectId !== null && !headers.has('x-koyeb-project-id')) {
+    headers.set('x-koyeb-project-id', projectId);
   }
 
   if (token) {
