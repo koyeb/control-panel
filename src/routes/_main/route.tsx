@@ -51,22 +51,21 @@ export const Route = createFileRoute('/_main')({
     let projectId = getCurrentProjectId() ?? undefined;
 
     if (organization !== undefined) {
-      if (projectId === undefined) {
+      // The current project id is persisted across reloads and organization
+      // switches (including silent ones done through the WorkOS widgets). Make
+      // sure it still points to a project that belongs to the active
+      // organization, otherwise reset it to the organization's default project.
+      // Without this, a stale id would be sent as the x-koyeb-project-id header
+      // on every request and rejected by the API.
+      if (
+        projectId === undefined ||
+        !(await projectBelongsToOrganization(ensureApiQueryData, projectId, organization.id))
+      ) {
         projectId = organization.defaultProjectId;
         setCurrentProjectId(projectId);
       }
 
-      try {
-        await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
-      } catch (error) {
-        if (ApiError.is(error, 404)) {
-          projectId = organization.defaultProjectId;
-          setCurrentProjectId(projectId);
-          await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
-        } else {
-          throw error;
-        }
-      }
+      await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
     }
 
     void identifyUserInIntercom(api, user);
@@ -142,6 +141,23 @@ export const Route = createFileRoute('/_main')({
     await Promise.all(promises);
   },
 });
+
+async function projectBelongsToOrganization(
+  ensureApiQueryData: ReturnType<typeof createEnsureApiQueryData>,
+  projectId: string,
+  organizationId: string,
+) {
+  try {
+    const { project } = await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
+    return project?.organization_id === organizationId;
+  } catch (error) {
+    if (ApiError.is(error, 404)) {
+      return false;
+    }
+
+    throw error;
+  }
+}
 
 async function switchOrganization(authKit: AuthKit, externalId: string) {
   await authKit.switchToOrganization({ organizationId: externalId });
