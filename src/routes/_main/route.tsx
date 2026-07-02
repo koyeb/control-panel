@@ -151,7 +151,10 @@ async function projectBelongsToOrganization(
     const { project } = await ensureApiQueryData('get /v1/projects/{id}', { path: { id: projectId } });
     return project?.organization_id === organizationId;
   } catch (error) {
-    if (ApiError.is(error, 404)) {
+    // 404: the project no longer exists. 401: the stored project belongs to
+    // another organization and is rejected. In both cases the id is stale and
+    // must be replaced by the organization's default project.
+    if (ApiError.is(error, 404) || ApiError.is(error, 401)) {
       return false;
     }
 
