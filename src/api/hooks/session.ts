@@ -14,7 +14,7 @@ import { apiQuery, refetchInterval } from 'src/api';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 
-import { useCurrentProjectId } from './project';
+import { setCurrentProjectId } from './project';
 
 export function useUserQuery() {
   return useQuery({
@@ -44,7 +44,6 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
   const posthog = usePostHog();
   const queryClient = useQueryClient();
   const { switchToOrganization } = useAuth();
-  const [, setCurrentProjectId] = useCurrentProjectId();
   const invalidateWidgets = useWidgetsInvalidator();
 
   return useMutation({
@@ -52,17 +51,24 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
     async onSuccess() {
       await queryClient.cancelQueries();
 
+      // The stored project belongs to the previous organization. Clear it before
+      // issuing any request, otherwise its id is sent as the x-koyeb-project-id
+      // header and rejected with a 401 against the newly selected organization.
+      setCurrentProjectId(null);
+
       const organization = await queryClient
         .fetchQuery(apiQuery('get /v1/account/organization', {}))
         .then(({ organization }) => mapOrganization(organization!));
 
       posthog.group('segment_group', organization.id);
 
+      // Point at the new organization's default project before fetching it, so
+      // the request carries the correct project header.
+      setCurrentProjectId(organization.defaultProjectId);
+
       await queryClient.fetchQuery(
         apiQuery('get /v1/projects/{id}', { path: { id: organization.defaultProjectId } }),
       );
-
-      setCurrentProjectId(organization.defaultProjectId);
 
       await queryClient.invalidateQueries();
       queryClient.removeQueries({ predicate: (query) => !query.isActive() });
