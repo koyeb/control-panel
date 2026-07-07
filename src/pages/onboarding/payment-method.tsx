@@ -1,16 +1,18 @@
 import { Badge, InputEnd, InputStart, Spinner } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 import { FormattedNumber } from 'react-intl';
 
-import { ApiError, apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
+import { ApiError, apiMutation, apiQuery, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
+import { mapOrganization } from 'src/api/mappers/session';
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
 import { AddressField } from 'src/components/address-field/address-field';
 import { AuthButton } from 'src/components/auth-button';
 import { ControlledInput } from 'src/components/forms';
 import { ExternalLink } from 'src/components/link';
+import { LogoLoading } from 'src/components/logo-loading';
 import { PaymentFormFields, PaymentMethodTimeout } from 'src/components/payment-form';
 import { PlanIcon } from 'src/components/plan-icon';
 import { InfoTooltip } from 'src/components/tooltip';
@@ -37,6 +39,42 @@ type Coupon = {
 };
 
 export function PaymentMethod() {
+  const { data: organizations = [], isPending } = useQuery({
+    ...apiQuery('get /v1/account/organizations', {
+      query: {
+        statuses: ['ACTIVE'],
+      },
+    }),
+    select: ({ organizations }) => organizations!.map(mapOrganization),
+  });
+
+  if (isPending) {
+    return <LogoLoading />;
+  }
+  if (!organizations.some((org) => org.status === 'ACTIVE')) {
+    return (
+      <OnboardingLayout className="max-w-4xl max-md:my-8">
+        <div className="mb-6 col gap-4">
+          <h1 className="text-xl font-medium">
+            <T id="title2" />
+          </h1>
+          <div className="text-base text-dim">
+            <T
+              id="description2"
+              values={{
+                link: (children) => (
+                  <ExternalLink className="text-green" href="https://tally.so/r/nGLjGo" openInNewTab>
+                    {children}
+                  </ExternalLink>
+                ),
+              }}
+            />
+          </div>
+        </div>
+      </OnboardingLayout>
+    );
+  }
+
   return (
     <OnboardingLayout className="max-w-4xl max-md:my-8">
       <div className="mb-6 col gap-4">
@@ -47,7 +85,6 @@ export function PaymentMethod() {
           <T id="description" />
         </div>
       </div>
-
       <div className="col items-stretch gap-10 md:row">
         <PlanInfo />
 
