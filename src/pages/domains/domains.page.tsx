@@ -104,8 +104,8 @@ function useCustomDomainsQuery() {
 
   return useQuery({
     ...apiQuery('get /v1/domains', {
+      projectId,
       query: {
-        project_id: projectId,
         limit: '100',
         types: ['CUSTOM'],
       },

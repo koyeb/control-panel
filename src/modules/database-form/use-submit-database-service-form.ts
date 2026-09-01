@@ -41,9 +41,9 @@ export function useSubmitDatabaseServiceForm(
         return databaseServiceId;
       } else {
         const { service } = await api('post /v1/services', {
+          projectId,
           query: { dry_run: false },
           body: createApiService(
-            projectId,
             appId ?? (await getDatabaseAppId(api, projectId, values.serviceName)),
             values,
           ),
@@ -79,7 +79,8 @@ export function useSubmitDatabaseServiceForm(
 
 async function getDatabaseAppId(api: ApiFn, projectId: string | undefined, appName: string): Promise<string> {
   const { apps } = await api('get /v1/apps', {
-    query: { name: appName, project_id: projectId },
+    projectId,
+    query: { name: appName },
   });
 
   for (const app of apps!) {
@@ -89,20 +90,16 @@ async function getDatabaseAppId(api: ApiFn, projectId: string | undefined, appNa
   }
 
   const { app } = await api('post /v1/apps', {
-    body: { name: appName, project_id: projectId },
+    projectId,
+    body: { name: appName },
   });
 
   return app!.id!;
 }
 
-function createApiService(
-  projectId: string | undefined,
-  appId: string,
-  values: DatabaseServiceForm,
-): API.CreateService {
+function createApiService(appId: string, values: DatabaseServiceForm): API.CreateService {
   return {
     app_id: appId,
-    project_id: projectId,
     definition: {
       type: 'DATABASE',
       name: values.serviceName,

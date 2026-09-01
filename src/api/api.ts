@@ -32,7 +32,8 @@ export async function api<E extends ApiEndpoint>(
   { baseUrl, token, delay, signal }: ApiRequestOptions = {},
 ): Promise<ApiResponseBody<E>> {
   const [method, path] = endpoint.split(' ') as [string, string];
-  const url = buildUrl(path, params, baseUrl);
+  const requestParams: ApiTransportParams = params;
+  const url = buildUrl(path, requestParams, baseUrl);
   const headers = new Headers();
 
   const init: RequestInit = {
@@ -41,21 +42,20 @@ export async function api<E extends ApiEndpoint>(
     signal,
   };
 
-  if ('header' in params) {
-    for (const [name, value] of Object.entries(params.header)) {
+  if (requestParams.header !== undefined) {
+    for (const [name, value] of Object.entries(requestParams.header)) {
       headers.set(name, String(value));
     }
   }
 
-  if ('body' in params) {
+  if (requestParams.body !== undefined) {
     headers.set('Content-Type', 'application/json');
-    init.body = JSON.stringify(params.body);
+    init.body = JSON.stringify(requestParams.body);
   }
 
-  // Every request is scoped to the currently selected project, so source the
-  // project id from the global store rather than the request payload. An explicit
-  // x-koyeb-project-id header (set above) always takes precedence.
-  const projectId = getCurrentProjectId();
+  // Prefer the request scope so the query key and request use the same project.
+  // Fall back to the selected project. An explicit header always takes precedence.
+  const projectId = requestParams.projectId ?? getCurrentProjectId();
 
   if (projectId !== null && !headers.has('x-koyeb-project-id')) {
     headers.set('x-koyeb-project-id', projectId);
@@ -100,11 +100,15 @@ export function apiStream<E extends ApiEndpoint>(
   return new WebSocket(url, protocols);
 }
 
-function buildUrl(
-  path: string,
-  params: Partial<Record<'path' | 'query', Partial<Record<string, unknown>>>>,
-  baseUrl?: string,
-) {
+type ApiTransportParams = {
+  projectId?: string;
+  path?: Record<string, string>;
+  query?: Record<string, unknown>;
+  header?: Record<string, string>;
+  body?: unknown;
+};
+
+function buildUrl(path: string, params: ApiTransportParams, baseUrl?: string) {
   const url = new URL(path, baseUrl ?? window.location.origin);
 
   for (const [key, value] of Object.entries(params.path ?? {})) {
@@ -135,15 +139,20 @@ export type ApiRequestParams<E extends ApiEndpoint> =
       header?: infer Header extends Record<string, string> | undefined;
     };
   }
-    ? ProcessApiParams<{ path: Path; query: Query; header: Header; body: ApiRequestBody<E> }>
+    ? ProcessApiParams<{
+        path: Path;
+        query: WithoutProjectId<Query>;
+        header: Header;
+        body: WithoutProjectId<ApiRequestBody<E>>;
+      }>
     : never;
 
 type ProcessApiParams<P> =
-  LiftOptional<OmitBy<P, undefined>> extends infer Output
-    ? keyof Output extends never
-      ? Record<string, never>
-      : Output
+  LiftOptional<OmitBy<P, undefined>> extends infer Output extends object
+    ? Compute<Output & { projectId?: string }>
     : never;
+
+type WithoutProjectId<T> = T extends Record<string, unknown> ? Omit<T, 'project_id'> : T;
 
 type ApiRequestBody<E extends ApiEndpoint> =
   GetApiEndpoint<E> extends {

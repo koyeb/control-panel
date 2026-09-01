@@ -34,7 +34,8 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
     })),
     async onSuccess(_, service) {
       const { services } = await api('get /v1/services', {
-        query: { project_id: projectId, app_id: service.appId },
+        projectId,
+        query: { app_id: service.appId },
       });
 
       // status: deleting

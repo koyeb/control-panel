@@ -40,7 +40,8 @@ export async function submitServiceForm(
 
 async function findOrCreateApp(api: ApiFn, projectId: string | undefined, appName: string): Promise<string> {
   const { apps } = await api('get /v1/apps', {
-    query: { project_id: projectId, name: appName, limit: '100' },
+    projectId,
+    query: { name: appName, limit: '100' },
   });
 
   const app = apps?.find(hasProperty('name', appName));
@@ -50,7 +51,8 @@ async function findOrCreateApp(api: ApiFn, projectId: string | undefined, appNam
   }
 
   const { app: newApp } = await api('post /v1/apps', {
-    body: { project_id: projectId, name: appName },
+    projectId,
+    body: { name: appName },
   });
 
   return newApp!.id!;
@@ -58,7 +60,8 @@ async function findOrCreateApp(api: ApiFn, projectId: string | undefined, appNam
 
 async function createVolumes(api: ApiFn, projectId: string | undefined, form: ServiceForm): Promise<void> {
   const { volumes: existingVolumes } = await api('get /v1/volumes', {
-    query: { project_id: projectId, limit: '100' },
+    projectId,
+    query: { limit: '100' },
   });
 
   for (const volume of form.volumes) {
@@ -94,8 +97,8 @@ async function createVolume(
 ): Promise<string> {
   try {
     const response = await api('post /v1/volumes', {
+      projectId,
       body: {
-        project_id: projectId,
         name,
         max_size: size,
         region,
@@ -145,9 +148,9 @@ async function createService(
   }
 
   const result = await api('post /v1/services', {
+    projectId,
     query: { dry_run: dryRun },
     body: {
-      project_id: projectId,
       app_id: appId,
       definition,
     },

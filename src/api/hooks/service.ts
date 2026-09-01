@@ -22,7 +22,7 @@ export function useServicesQuery(appId?: string) {
   const [projectId] = useCurrentProjectId();
 
   return useQuery({
-    ...apiQuery('get /v1/services', { query: { limit: '100', app_id: appId, project_id: projectId } }),
+    ...apiQuery('get /v1/services', { projectId, query: { limit: '100', app_id: appId } }),
     refetchInterval: refetchInterval(),
     select: ({ services }) => services!.map(mapService),
   });

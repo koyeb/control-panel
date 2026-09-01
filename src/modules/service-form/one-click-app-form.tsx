@@ -141,8 +141,8 @@ async function initialize(
     .then(mapGithubApp)
     .catch(() => null);
 
-  const volumes = await api('get /v1/volumes', { query: { project_id: projectId, limit: '100' } }).then(
-    ({ volumes }) => volumes!.map(mapVolume),
+  const volumes = await api('get /v1/volumes', { projectId, query: { limit: '100' } }).then(({ volumes }) =>
+    volumes!.map(mapVolume),
   );
 
   merge(

@@ -38,9 +38,9 @@ export function VolumesListSection() {
 
   const query = useQuery({
     ...apiQuery('get /v1/volumes', {
+      projectId,
       query: {
         ...pagination.query,
-        project_id: projectId,
         name: name || undefined,
       },
     }),

@@ -51,8 +51,8 @@ function CreateSnapshotForm({ volume }: { volume: Volume }) {
 
   const mutation = useMutation({
     ...apiMutation('post /v1/snapshots', ({ name }: FormValues<typeof form>) => ({
+      projectId,
       body: {
-        project_id: projectId,
         parent_volume_id: volume.id,
         name,
       },

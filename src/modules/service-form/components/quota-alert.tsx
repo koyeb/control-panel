@@ -44,9 +44,9 @@ export function QuotaAlert(props: QuotaAlertProps) {
           });
         } else {
           await api('post /v1/services', {
+            projectId,
             query: { dry_run: true },
             body: {
-              project_id: projectId,
               app_id: values.meta.appId ?? '15c6a049-6594-4df0-99c3-a5c262e69624',
               definition,
             },
