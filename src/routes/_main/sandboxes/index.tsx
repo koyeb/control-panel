@@ -37,9 +37,9 @@ function SandboxesListRoute() {
 
   const query = useQuery({
     ...apiQuery('get /v1/services', {
+      projectId,
       query: {
         ...pagination.query,
-        project_id: projectId,
         types: ['SANDBOX'],
         name: search || undefined,
         statuses,
@@ -54,7 +54,7 @@ function SandboxesListRoute() {
   });
 
   const hasSandboxes = useQuery({
-    ...apiQuery('get /v1/services', { query: { project_id: projectId, types: ['SANDBOX'] } }),
+    ...apiQuery('get /v1/services', { projectId, query: { types: ['SANDBOX'] } }),
     refetchInterval: refetchInterval(),
     select: ({ count }) => count! > 0,
   });

@@ -148,7 +148,7 @@ function useVolumeItems() {
   const [projectId] = useCurrentProjectId();
 
   const volumesQuery = useQuery({
-    ...apiQuery('get /v1/volumes', { query: { project_id: projectId, limit: '100', region } }),
+    ...apiQuery('get /v1/volumes', { projectId, query: { limit: '100', region } }),
     select({ volumes }) {
       return volumes!
         .map(mapVolume)

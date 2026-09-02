@@ -23,7 +23,8 @@ export const Route = createFileRoute('/_main/volumes/')({
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     const volumes = await ensureApiQueryData('get /v1/volumes', {
-      query: { project_id: projectId, offset: '0', limit: '10' },
+      projectId,
+      query: { offset: '0', limit: '10' },
     }).then(({ volumes }) => volumes!.map(mapVolume));
 
     await Promise.all(

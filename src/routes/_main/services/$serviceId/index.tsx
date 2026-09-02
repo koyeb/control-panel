@@ -44,7 +44,8 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
 
     await Promise.all([
       ensureApiQueryData('get /v1/volumes', {
-        query: { project_id: projectId, limit: String(100) },
+        projectId,
+        query: { limit: String(100) },
       }),
 
       ensureApiQueryData('get /v1/streams/metrics', {

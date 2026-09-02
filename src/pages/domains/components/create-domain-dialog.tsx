@@ -81,8 +81,8 @@ function DomainForm({ onCreated, renderFooter }: DomainFormProps) {
 
   const mutation = useMutation({
     ...apiMutation('post /v1/domains', (values: FormValues) => ({
+      projectId,
       body: {
-        project_id: projectId,
         name: values.domainName,
         app_id: values.appId ?? undefined,
         type: 'CUSTOM' as const,

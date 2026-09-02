@@ -43,7 +43,7 @@ describe('initializeServiceForm', () => {
 
   function mockApi<E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>, response: unknown) {
     const [method, path] = endpoint.split(' ') as [string, string];
-    const pathParams = params.path as Record<string, string> | undefined;
+    const pathParams = ('path' in params ? params.path : undefined) as Record<string, string> | undefined;
 
     fetch.mock(
       method,
@@ -178,7 +178,7 @@ describe('initializeServiceForm', () => {
       { deployment: createApiDeployment({ definition: createApiDeploymentDefinition() }) },
     );
 
-    mockApi('get /v1/volumes', { query: { project_id: 'projectId', limit: '100' } }, { volumes: [volume] });
+    mockApi('get /v1/volumes', { projectId: 'projectId', query: { limit: '100' } }, { volumes: [volume] });
 
     const values = await initialize('serviceId');
 

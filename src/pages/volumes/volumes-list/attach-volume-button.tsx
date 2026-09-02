@@ -35,7 +35,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const searchQuery = useSearchServicesQuery(regionId, search);
 
   const servicesCountQuery = useQuery({
-    ...apiQuery('get /v1/services', { query: { project_id: projectId, limit: '1', regions: [regionId] } }),
+    ...apiQuery('get /v1/services', { projectId, query: { limit: '1', regions: [regionId] } }),
     select: ({ count }) => count,
   });
 
@@ -170,8 +170,8 @@ function useSearchServicesQuery(region: string, search: string) {
 }
 
 async function listApps(api: ApiFn, projectId: string | undefined, signal: AbortSignal): Promise<App[]> {
-  return api('get /v1/apps', { query: { project_id: projectId, limit: '100' } }, { signal }).then(
-    ({ apps }) => apps!.map(mapApp),
+  return api('get /v1/apps', { projectId, query: { limit: '100' } }, { signal }).then(({ apps }) =>
+    apps!.map(mapApp),
   );
 }
 
@@ -189,8 +189,8 @@ async function searchServices(
   return api(
     'get /v1/services',
     {
+      projectId,
       query: {
-        project_id: projectId,
         name: search,
         regions: [region],
         limit: String(limit),

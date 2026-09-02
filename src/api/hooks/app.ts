@@ -16,7 +16,7 @@ export function useAppsQuery() {
   const [projectId] = useCurrentProjectId();
 
   return useQuery({
-    ...apiQuery('get /v1/apps', { query: { limit: '100', project_id: projectId } }),
+    ...apiQuery('get /v1/apps', { projectId, query: { limit: '100' } }),
     refetchInterval: refetchInterval(),
     select: ({ apps }) => apps!.map(mapApp),
   });
@@ -159,7 +159,7 @@ async function listApps(api: ApiFn, projectId: string | undefined, signal?: Abor
   while (hasNext) {
     const response = await api(
       'get /v1/apps',
-      { query: { limit: '100', offset: String(apps.length), project_id: projectId } },
+      { projectId, query: { limit: '100', offset: String(apps.length) } },
       { signal },
     );
 
@@ -177,7 +177,7 @@ async function listServices(api: ApiFn, { projectId, ...filters }: AppsFullFilte
   while (hasNext) {
     const response = await api(
       'get /v1/services',
-      { query: { limit: '100', offset: String(services.length), project_id: projectId, ...filters } },
+      { projectId, query: { limit: '100', offset: String(services.length), ...filters } },
       { signal },
     );
 

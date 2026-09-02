@@ -68,8 +68,8 @@ export function CreateVolumeForm({ regions, onCreated }: CreateVolumeFormProps) 
 
   const mutation = useMutation({
     ...apiMutation('post /v1/volumes', ({ name, size }: FormValues<typeof form>) => ({
+      projectId,
       body: {
-        project_id: projectId,
         volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK' as const,
         name,
         max_size: size,
