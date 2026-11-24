@@ -4,7 +4,7 @@ import { databaseRoleSecret } from './use-submit-database-service-form';
 
 describe('databaseRoleSecret', () => {
   test('plain name', () => {
-    expect(databaseRoleSecret('mydb', 'abc')).toEqual('mydb-abc');
+    expect(databaseRoleSecret('database', 'abc')).toEqual('database-abc');
   });
 
   test('name with a dot', () => {
