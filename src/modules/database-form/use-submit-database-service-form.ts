@@ -119,6 +119,13 @@ function createApiService(
   };
 }
 
-function databaseRoleSecret(databaseServiceName: string) {
-  return `${databaseServiceName}-${randomString()}`;
+// Secret names only allow [a-zA-Z0-9-_], start with a letter or _ and are <= 64 chars, unlike database names (e.g. dots).
+export function databaseRoleSecret(databaseServiceName: string, suffix = randomString()) {
+  let prefix = databaseServiceName.replaceAll(/[^a-zA-Z0-9-_]/g, '-');
+
+  if (!/^[a-zA-Z_]/.test(prefix)) {
+    prefix = `_${prefix}`;
+  }
+
+  return `${prefix.slice(0, Math.max(1, 64 - suffix.length - 1))}-${suffix}`;
 }
